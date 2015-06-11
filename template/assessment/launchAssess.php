@@ -154,7 +154,7 @@ EOF;
                     </tr>
                     <tr>
                         <td align="right">考核类型选择：&nbsp;</td>
-                        <td id="attr_type_checkboxes_td">
+                        <td id="assess_attr_type">
                             <input type="checkbox" name="assess_attr_type" value="1">[任务/指标]类&nbsp;
                             <input type="checkbox" name="assess_attr_type" value="2">打分类&nbsp;
                             <input type="checkbox" name="assess_attr_type" value="3">提成类&nbsp;
