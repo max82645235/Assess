@@ -64,7 +64,8 @@ if(checkUserAuthority()){
     $tpl = new NewTpl('assessment/launchAssess.php',array(
         'record_info'=>$record_info,
         'attrTypeMaps'=>$attrTypeMaps,
-        'assessAttrWidget'=>$assessAttrWidget
+        'assessAttrWidget'=>$assessAttrWidget,
+        'cfg'=>$cfg
     ));
 
     $tpl->render();

@@ -1,5 +1,31 @@
 var Assess = function(){};
 Assess.prototype = {
+    triggerBusSelect:function(){
+       var bus_area_parent =  $("#bus_area_parent").val();
+        console.log(bus_area_parent);
+        this.getAjaxBusChildList(bus_area_parent);
+    },
+
+    getAjaxBusChildList:function(bus_area_parent){
+        $.ajax({
+            type:'get',
+            url:'/index.php',
+            data:{m:'assessment',a:'ajaxBusClassify',bus_area_parent:bus_area_parent},
+            dataType:'json',
+            success:function(ret){
+                if(ret.status=='success'){
+                    var opList = "<option value=''>请选择</option>";
+                    var p_id = $("#bus_area_child_hidden").val();
+                    for(var i=0;i<ret.data.length;i++){
+                        var selected = (p_id==ret.data[i].value)?"selected=selected":"";
+                        opList+="<option value='"+ret.data[i].value+"' "+selected+">"+ret.data[i].name+"</option>";
+                    }
+                    $("#bus_area_child").html(opList);
+                }
+            }
+        });
+    },
+
     getLeadDirectSetValue:function(){
         return ($("#lead_direct_set_status").is(":checked"))?1:0;
     },
@@ -172,6 +198,8 @@ Assess.prototype = {
         }
         return attrData;
     },
+
+    /*添加指标*/
     addItem:function(jDom,type){
         var itemContainer = jDom.parent().find('.kctjcon:eq(1) .sm_div table');
         var clonedItemDom = itemContainer.find('tr:eq(0)');
@@ -179,6 +207,8 @@ Assess.prototype = {
         itemContainer.append("<tr>"+cDom.html()+"</tr>");
          this.clearItemData(itemContainer.find('tr:last'),type);
     },
+
+    /*清空克隆item节点里面的数据*/
     clearItemData:function(itemDom,type){
         switch (type){
             case '1':

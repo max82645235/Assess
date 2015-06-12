@@ -17,6 +17,7 @@
     <script>
         var AssessInstance =  new Assess();
         $(function(){
+            AssessInstance.triggerBusSelect();
             $("#attr_type_checkboxes_td input").click(function(){
                 var v = $(this).val();
                 $("#attr_type_checkboxes_td input").each(function(){
@@ -28,8 +29,6 @@
             });
 
             $("#lead_direct_set_status").click(function(){
-                AssessInstance.formSubHandle();
-                return false;
                 AssessInstance.selectLeadSetStatus();
             });
 
@@ -43,6 +42,11 @@
                 var type = $(this).parent('').attr('flag');
                 AssessInstance.addItem($(this),type);
             });
+
+            $("#bus_area_parent").change(function(){
+                AssessInstance.triggerBusSelect();
+            });
+
         });
     </script>
 </head>
@@ -90,19 +94,18 @@ EOF;
                         <td align="right" valign="top"><em class="c-yel">*</em> 业务单元：&nbsp;</td>
                         <td>
                             <div class="jssel" style="z-index:98">
-                                <select id="bus_area_parent" name="bus_area_parent">
-                                    <option value="1">房产事业部</option>
-                                    <option value="2">房产事业部1</option>
-                                    <option value="3">房产事业部2</option>
-                                </select>
+                                <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
+                                    <?php foreach($cfg['tixi'] as $k=>$v){?>
+                                        <option value="<?=$k?>"><?=$v['title']?></option>
+                                    <?php }?>
+                                </select> &nbsp;&nbsp;
+                                <input type="hidden" name="bus_area_parent_hidden" id="bus_area_parent_hidden">
                             </div>
 
                             <div class="jssel" style="z-index:49">
-                                <select id="bus_area_child" name="bus_area_child">
-                                    <option value="1">南京大区1</option>
-                                    <option value="2">南京大区2</option>
-                                    <option value="3">南京大区3</option>
+                                <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
                                 </select>
+                                <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden">
                             </div>
                         </td>
                     </tr>
