@@ -1,4 +1,4 @@
-<div class="attr_form_3" flag="3" style="<?php if(!$renderData){?>display: none;<?php }?>">
+<div class="attr_form_3" flag="4" style="<?php if(!$renderData){?>display: none;<?php }?>">
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">提成类</b></p>
     </div>
@@ -6,9 +6,7 @@
     <div class="kctjcon">
         <div class="sm_div mlr30"  style="padding:10px;">
             基本设置：<br /><br />
-            1分 ＝ <input type="text" value="" name="attr3_money"  class="width80 j-notnull" /> 元
-            &nbsp; <input type="checkbox" name="write_by_lead_status" /> 由直接领导设置
-            &nbsp; <input type="checkbox" name="write_by_staff_status" /> 由员工设置
+            1分 ＝ <input type="text" value="" name="attr3_cash"  class="width80 j-notnull" /> 元
         </div>
     </div>
     <div class="kctjcon">
@@ -18,12 +16,14 @@
                     <td width="75%">
                         <div class="smfl">
                             <span><em class="c-yel">*</em>考核项： </span>
-                            <input type="text" value="考核项1" name="attr2_name" class="width160 j-notnull" />
+                            <input type="text" value="考核项1" name="score_name" class="width160 j-notnull" />
                         </div>
                     </td>
-                    <td align="right" class="j-del">
-                        <input type="checkbox" name="attr2_lead_write_status" /> 由直接领导填写
-                        <input type="checkbox" name="attr2_staff_write_status" /> 由员工填写
+                    <td width="17%" class="sm_xsmbadd_td1">
+                        <div class="smfl">
+                            <span><em class="c-yel">*</em> 指标阈值：</span>
+                            <input type="text" value="" name="zbyz"  class="width40 j-notnull"/>
+                        </div>
                     </td>
                 </tr>
             </table>

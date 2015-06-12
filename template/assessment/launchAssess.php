@@ -28,7 +28,20 @@
             });
 
             $("#lead_direct_set_status").click(function(){
+                AssessInstance.formSubHandle();
+                return false;
                 AssessInstance.selectLeadSetStatus();
+            });
+
+            $("#sub_form").submit(function(e){
+                AssessInstance.formSubHandle();
+                return false;
+                e.preventDefault();
+            });
+
+            $(".sm_target").click(function(){
+                var type = $(this).parent('').attr('flag');
+                AssessInstance.addItem($(this),type);
             });
         });
     </script>
@@ -64,7 +77,7 @@ EOF;
         <div class="kctjcon">
             <p class="tjtip">注：*为必填项</p>
 
-            <form action="" method="post" onsubmit="" class="clearfix" >
+            <form action="" method="post" id="sub_form" class="clearfix" >
                 <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td width="188" align="right"><em class="c-yel">*</em> 考核名称：&nbsp;</td>
@@ -107,10 +120,10 @@ EOF;
                         <td align="right"><em class="c-yel">*</em> 考核周期：&nbsp;</td>
                         <td class="jsline">
                             <select name="assess_period_type" id="assess_period_type">
-                                <option name="">一个月</option>
-                                <option name="">一季度</option>
-                                <option name="">半年</option>
-                                <option name="">一年</option>
+                                <option value="1">一个月</option>
+                                <option value="2">一季度</option>
+                                <option value="3">半年</option>
+                                <option value="4">一年</option>
                             </select>
                         </td>
                     </tr>
@@ -154,7 +167,7 @@ EOF;
                     </tr>
                     <tr>
                         <td align="right">考核类型选择：&nbsp;</td>
-                        <td id="assess_attr_type">
+                        <td id="attr_type_checkboxes_td">
                             <input type="checkbox" name="assess_attr_type" value="1">[任务/指标]类&nbsp;
                             <input type="checkbox" name="assess_attr_type" value="2">打分类&nbsp;
                             <input type="checkbox" name="assess_attr_type" value="3">提成类&nbsp;
