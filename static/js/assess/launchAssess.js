@@ -1,5 +1,5 @@
 var Assess = function(){};
-Assess.prototype = {
+Assess.prototype = {222
     triggerBusSelect:function(){
        var bus_area_parent =  $("#bus_area_parent").val();
         this.getAjaxBusChildList(bus_area_parent);
