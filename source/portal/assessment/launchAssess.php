@@ -35,6 +35,24 @@ function getAssessRecordInfo($base_id){
     return $record_info;
 }
 
+//部门二级分类
+if($_REQUEST['act']=='ajaxBusClassify'){
+    if(isset($_GET['bus_area_parent']) && isset($cfg['tixi'])){
+        $bus_area_parent = $_GET['bus_area_parent'];
+        $retData = array();
+        if(isset($cfg['tixi'][$bus_area_parent])){
+            foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
+                $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
+                $retData['data'][] = $tmp;
+            }
+            $retData['status'] = 'success';
+        }
+        echo json_encode($retData);
+        die();
+    }
+}
+
+
 $base_id = getgpc('base_id'); //考核表主键
 $user_id = '';//当前用户身份Id
 

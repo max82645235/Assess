@@ -2,7 +2,6 @@ var Assess = function(){};
 Assess.prototype = {
     triggerBusSelect:function(){
        var bus_area_parent =  $("#bus_area_parent").val();
-        console.log(bus_area_parent);
         this.getAjaxBusChildList(bus_area_parent);
     },
 
@@ -10,7 +9,7 @@ Assess.prototype = {
         $.ajax({
             type:'get',
             url:'/index.php',
-            data:{m:'assessment',a:'ajaxBusClassify',bus_area_parent:bus_area_parent},
+            data:{m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent},
             dataType:'json',
             success:function(ret){
                 if(ret.status=='success'){
