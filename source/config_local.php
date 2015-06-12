@@ -44,7 +44,7 @@ $cfg['POWER'] = array(
     ),
     'assessment' => array(
         'name' => "¿¼ºË¹ÜÀí",
-        'detail' => array('list'=>'¿¼ºË¹ÜÀí'),
+        'detail' => array('list'=>'¿¼ºË¹ÜÀí','launchAssess'=>'·¢Æğ¿¼ºË'),
         'list' => array('edit' => '±à¼­'),
     ),
     'myassessment' => array(

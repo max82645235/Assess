@@ -16,7 +16,7 @@
                     <td width="75%">
                         <div class="smfl">
                             <span><em class="c-yel">*</em>¿¼ºËÏî£º </span>
-                            <input type="text" value="¿¼ºËÏî1" name="score_name" class="width160 j-notnull" />
+                            <input type="text" value="" name="score_name" class="width160 j-notnull" />
                         </div>
                     </td>
                     <td width="17%" class="sm_xsmbadd_td1">

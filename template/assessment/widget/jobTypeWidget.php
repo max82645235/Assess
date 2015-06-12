@@ -16,7 +16,7 @@
                     <td width="26%">
                         <div class="smfl">
                             <span><em class="c-yel">*</em>工作任务名称： </span>
-                            <input type="text" value="工作任务1" name="job_name" class="width160 j-notnull" />
+                            <input type="text" value="" name="job_name" class="width160 j-notnull" />
                         </div>
                     </td>
                     <td width="17%" class="sm_xsmbadd_td1">

@@ -13,11 +13,14 @@
     <script src="<?=P_JSPATH?>calendar-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-setup-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-zh-new.js" type="text/javascript"></script>
-    <script src="/static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <script src="<?=P_SYSPATH?>/static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script>
         var AssessInstance =  new Assess();
         $(function(){
+            //刚进页面时触发一次部门二级联动ajax查询
             AssessInstance.triggerBusSelect();
+
+            //点击考核类型checkbox
             $("#attr_type_checkboxes_td input").click(function(){
                 var v = $(this).val();
                 $("#attr_type_checkboxes_td input").each(function(){
@@ -28,21 +31,25 @@
                 AssessInstance.selectAttrType();
             });
 
+            //点击直接领导设置checkbox
             $("#lead_direct_set_status").click(function(){
                 AssessInstance.selectLeadSetStatus();
             });
 
+            //表单提交sub
             $("#sub_form").submit(function(e){
                 AssessInstance.formSubHandle();
                 return false;
                 e.preventDefault();
             });
 
+            //追加属性节点
             $(".sm_target").click(function(){
                 var type = $(this).parent('').attr('flag');
                 AssessInstance.addItem($(this),type);
             });
 
+            //业务部门父类选择
             $("#bus_area_parent").change(function(){
                 AssessInstance.triggerBusSelect();
             });

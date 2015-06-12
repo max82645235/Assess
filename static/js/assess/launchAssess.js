@@ -8,7 +8,7 @@ Assess.prototype = {
     getAjaxBusChildList:function(bus_area_parent){
         $.ajax({
             type:'get',
-            url:'/index.php',
+            url:'/salary/index.php',
             data:{m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent},
             dataType:'json',
             success:function(ret){

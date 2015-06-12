@@ -34,6 +34,46 @@ function getAssessRecordInfo($base_id){
 
     return $record_info;
 }
+$_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
+if($_REQUEST['act']=='launchAssess'){
+    $base_id = getgpc('base_id'); //考核表主键
+    $user_id = '';//当前用户身份Id
+
+    if(checkUserAuthority()){
+        //ajax表单提交
+        if(isset($_REQUEST['formSub'])){
+
+        }else{
+            //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
+            $record_info = array();
+            if($base_id){
+                $record_info = getAssessRecordInfo($base_id);
+            }
+        }
+
+
+        $attrTypeMaps = array(
+            '1'=>'量化指标类',
+            '2'=>'工作任务类',
+            '3'=>'打分类',
+            '4'=>'提成类'
+        );
+
+        require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
+        $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+
+        $tpl = new NewTpl('assessment/launchAssess.php',array(
+            'record_info'=>$record_info,
+            'attrTypeMaps'=>$attrTypeMaps,
+            'assessAttrWidget'=>$assessAttrWidget,
+            'cfg'=>$cfg
+        ));
+
+        $tpl->render();
+        die();
+    }
+}
+
 
 //部门二级分类
 if($_REQUEST['act']=='ajaxBusClassify'){
@@ -53,39 +93,5 @@ if($_REQUEST['act']=='ajaxBusClassify'){
 }
 
 
-$base_id = getgpc('base_id'); //考核表主键
-$user_id = '';//当前用户身份Id
 
-if(checkUserAuthority()){
-    //ajax表单提交
-    if(isset($_REQUEST['formSub'])){
-
-    }else{
-        //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
-        $record_info = array();
-        if($base_id){
-            $record_info = getAssessRecordInfo($base_id);
-        }
-    }
-
-
-    $attrTypeMaps = array(
-        '1'=>'量化指标类',
-        '2'=>'工作任务类',
-        '3'=>'打分类',
-        '4'=>'提成类'
-    );
-
-    require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
-    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
-
-    $tpl = new NewTpl('assessment/launchAssess.php',array(
-        'record_info'=>$record_info,
-        'attrTypeMaps'=>$attrTypeMaps,
-        'assessAttrWidget'=>$assessAttrWidget,
-        'cfg'=>$cfg
-    ));
-
-    $tpl->render();
-}
 
