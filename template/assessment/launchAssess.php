@@ -13,7 +13,7 @@
     <script src="<?=P_JSPATH?>calendar-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-setup-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-zh-new.js" type="text/javascript"></script>
-    <script src="<?=P_SYSPATH?>/static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script>
         var AssessInstance =  new Assess();
         $(function(){
@@ -130,10 +130,10 @@ EOF;
                         <td align="right"><em class="c-yel">*</em> 考核周期：&nbsp;</td>
                         <td class="jsline">
                             <select name="assess_period_type" id="assess_period_type">
-                                <option value="1">一个月</option>
-                                <option value="2">一季度</option>
-                                <option value="3">半年</option>
-                                <option value="4">一年</option>
+                                <option value="1">月度</option>
+                                <option value="2">季度</option>
+                                <option value="3">半年度</option>
+                                <option value="4">年度</option>
                             </select>
                         </td>
                     </tr>
@@ -176,6 +176,12 @@ EOF;
                         </td>
                     </tr>
                     <tr>
+                        <td align="right"><em class="c-yel">*</em> 由直接领导设置：&nbsp;</td>
+                        <td>
+                            <input type="checkbox" name="lead_direct_set_status"  value="1" id="lead_direct_set_status">
+                        </td>
+                    </tr>
+                    <tr>
                         <td align="right">考核类型选择：&nbsp;</td>
                         <td id="attr_type_checkboxes_td">
                             <input type="checkbox" name="assess_attr_type" value="1">[任务/指标]类&nbsp;
@@ -183,14 +189,7 @@ EOF;
                             <input type="checkbox" name="assess_attr_type" value="3">提成类&nbsp;
                         </td>
                     </tr>
-                    <tr>
-                        <td align="right"><em class="c-yel">*</em> 由直接领导设置：&nbsp;</td>
-                        <td>
-                            <input type="checkbox" name="lead_direct_set_status"  value="1" id="lead_direct_set_status">
-                        </td>
-                    </tr>
                 </table>
-
                 <div class="attr_content">
                     <!--任务/指标类-->
                     <?=$assessAttrWidget->renderAttr($record_info,1)?>

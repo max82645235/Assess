@@ -7,7 +7,7 @@ define('P_OA','http://oa.house365.com/');
 $p_oa = P_OA;
 
 define('P_SYSTITLE','365¼¨Ð§¿¼ºËÏµÍ³');
-define('P_SYSPATH','http://221.231.141.162/salary/');
+define('P_SYSPATH','http://www.salary.com/');
 define('P_STATICPATH',P_SYSPATH.'static/');
 define('P_IMGPATH',P_STATICPATH.'images/');
 define('P_CSSPATH',P_STATICPATH.'css/');
