@@ -6,7 +6,7 @@
     <div class="kctjcon">
         <div class="sm_div mlr30" style="padding:10px;">
             基本设置：<br /><br />
-            整体权重：<input type="text" value="" name="attr2_widget"  class="width80 j-notnull" />
+            整体权重：<input type="text" value="" name="attr2_weight"  class="width80 j-notnull" />
         </div>
     </div>
     <div class="kctjcon">

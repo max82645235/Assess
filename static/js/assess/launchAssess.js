@@ -142,7 +142,7 @@ Assess.prototype = {
                 //量化指标类
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table");
-                c_data.height = $(".attr_form_1[flag=1] input[name=attr1_widget]").val();
+                c_data.height = $(".attr_form_1[flag=1] input[name=attr1_height]").val();
                 c_table.find("tr").each(function(){
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
@@ -155,7 +155,7 @@ Assess.prototype = {
                 //工作任务类
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table");
-                j_data.height = $(".attr_form_1[flag=2] input[name=attr2_widget]").val();
+                j_data.height = $(".attr_form_1[flag=2] input[name=attr2_height]").val();
                 j_table.find("tr").each(function(k,v){
                     var tmp = {};
                     tmp.job_name = $(this).find("input[name=job_name]").val();

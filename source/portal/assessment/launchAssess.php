@@ -22,6 +22,7 @@ if($_REQUEST['act']=='launchAssess'){
         //ajax表单提交
         if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
             if(isset($_REQUEST['subFormData']['baseData']) && isset($_REQUEST['subFormData']['attrData'])){
+                //assess_base主表保存
                 if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData']['baseSubDataList'])){
                     $attrRecord = array();
                     $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
@@ -29,12 +30,14 @@ if($_REQUEST['act']=='launchAssess'){
                         $tmp = array();
                         $tmp['base_id'] = $base_id;
                         $tmp['attr_type'] = $attrRecordType[$key];
-                        $tmp['weight'] = $data['height'];
-
+                        $tmp['height'] = $data['height'];
+                        $tmp['itemData'] = $data['table_data'];
+                        $attrRecord[$key] = $tmp;
                     }
-                    if($attrResult = $assessDao->setAssessAttrRecord($base_id,$_REQUEST['subFormData']['attrData'])){
+                    //assess_attr表保存
+                    if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
                         $uids = $_REQUEST['subFormData']['baseData']['baseSubDataList']['uids'];
-                        if($_REQUEST['subFormData']['baseData']['baseSubDataList']['lead_direct_set_status']==0){//没有勾选直接由领导设置
+                        if($_REQUEST['subFormData']['baseData']['baseSubDataList']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
                         }
                     }
