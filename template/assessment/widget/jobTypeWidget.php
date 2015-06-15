@@ -6,7 +6,7 @@
     <div class="kctjcon">
         <div class="sm_div mlr30" style="padding:10px;">
             基本设置：<br /><br />
-            整体权重：<input type="text" value="" name="attr2_widget"  class="width80 j-notnull" />
+            整体权重：<input type="text" value="" name="attr2_weight"  class="width80 j-notnull" />
         </div>
     </div>
     <div class="kctjcon">
@@ -29,6 +29,11 @@
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input type="text" value="" name="qz"  class="width40 j-notnull" />
+                        </div>
+                    </td>
+                    <td width="15%" class="sm_xsmbadd_td2">
+                        <div class="del_td" onclick="Assess.prototype.delItemDom(this)">
+                            <input type="button" class="btn67" value="删除">
                         </div>
                     </td>
                 </tr>

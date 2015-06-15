@@ -11,43 +11,43 @@
 function checkUserAuthority(){
     return true;
 }
+require_once BATH_PATH.'source/Dao/AssessDao.php';
 
-
-//根据base_id获取考核相关信息
-function getAssessRecordInfo($base_id){
-    global $db;
-
-    $record_info = array();
-    //获取基础表相关信息
-    $base_sql = "select * from sa_assess_base where base_id={$base_id} ";
-    $base_info = $db->GetOne($base_sql);
-    if($base_info){
-        $record_info['base_info'] = $base_info;
-    }
-
-    //获取属性类型表相关信息
-    $attr_sql = "select * from sa_assess_attr where  base_id={$base_id}";
-    $attr_info = $db->GetAll($attr_sql);
-    if($attr_info){
-        $record_info['attr_info'] = $attr_info;
-    }
-
-    return $record_info;
-}
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
 if($_REQUEST['act']=='launchAssess'){
     $base_id = getgpc('base_id'); //考核表主键
     $user_id = '';//当前用户身份Id
-
+    $assessDao = new AssessDao();
     if(checkUserAuthority()){
         //ajax表单提交
-        if(isset($_REQUEST['formSub'])){
-
+        if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
+            if(isset($_REQUEST['subFormData']['baseData']) && isset($_REQUEST['subFormData']['attrData'])){
+                //assess_base主表保存
+                if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData']['baseSubDataList'])){
+                    $attrRecord = array();
+                    $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
+                    foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
+                        $tmp = array();
+                        $tmp['base_id'] = $base_id;
+                        $tmp['attr_type'] = $attrRecordType[$key];
+                        $tmp['height'] = $data['height'];
+                        $tmp['itemData'] = $data['table_data'];
+                        $attrRecord[$key] = $tmp;
+                    }
+                    //assess_attr表保存
+                    if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
+                        $uids = $_REQUEST['subFormData']['baseData']['baseSubDataList']['uids'];
+                        if($_REQUEST['subFormData']['baseData']['baseSubDataList']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+                            $assessDao->setAssessUserItemRecord($uids,$attrResult);
+                        }
+                    }
+                }
+            }
         }else{
             //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
             $record_info = array();
             if($base_id){
-                $record_info = getAssessRecordInfo($base_id);
+                $record_info = $assessDao->getAssessRecordInfo($base_id);
             }
         }
 

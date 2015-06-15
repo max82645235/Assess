@@ -25,6 +25,11 @@
                             <input type="text" value="" name="zbyz"  class="width40 j-notnull"/>
                         </div>
                     </td>
+                    <td width="15%" class="sm_xsmbadd_td2">
+                        <div class="del_td" onclick="Assess.prototype.delItemDom(this)">
+                            <input type="button" class="btn67" value="É¾³ý">
+                        </div>
+                    </td>
                 </tr>
             </table>
         </div>

@@ -1,11 +1,7 @@
 var Assess = function(){};
 Assess.prototype = {
     triggerBusSelect:function(){
-       var bus_area_parent =  $("#bus_area_parent").val();
-        this.getAjaxBusChildList(bus_area_parent);
-    },
-
-    getAjaxBusChildList:function(bus_area_parent){
+        var bus_area_parent =  $("#bus_area_parent").val();
         $.ajax({
             type:'get',
             url:'/salary/index.php',
@@ -57,14 +53,24 @@ Assess.prototype = {
         }
     },
     formSubHandle:function(){
-        var subFormData = this.getSubFormData();
-        console.log(subFormData);
-    },
-    getSubFormData:function(){
         var subFormData = {};
         subFormData.baseData = this.getBaseData();
         subFormData.attrData = this.getAttrData();
-        return subFormData;
+        console.log(subFormData);return;
+        $.ajax({
+            url:'/salary/index.php',
+            data:{
+                    m:'assessment',
+                    a:'launchAssess',
+                    formSubTag:1,
+                    subFormData:subFormData
+            },
+            type:'post',
+            success:function(retData){
+
+            }
+        });
+
     },
 
     //获取表单基本数据
@@ -131,15 +137,12 @@ Assess.prototype = {
                 }
                 return this;
             },
-            getHandlerData:function(){
-                return this.retData;
-            },
 
             c_j_handler:function(){
                 //量化指标类
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table");
-                c_data.height = $(".attr_form_1[flag=1] input[name=attr1_widget]").val();
+                c_data.height = $(".attr_form_1[flag=1] input[name=attr1_height]").val();
                 c_table.find("tr").each(function(){
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
@@ -152,7 +155,7 @@ Assess.prototype = {
                 //工作任务类
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table");
-                j_data.height = $(".attr_form_1[flag=2] input[name=attr2_widget]").val();
+                j_data.height = $(".attr_form_1[flag=2] input[name=attr2_height]").val();
                 j_table.find("tr").each(function(k,v){
                     var tmp = {};
                     tmp.job_name = $(this).find("input[name=job_name]").val();
@@ -188,11 +191,15 @@ Assess.prototype = {
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};
+            },
+
+            getHandlerData:function(){
+                return this.retData;
             }
 
         };
         var attrCheckedType = this.getAttrTypeCheckedValue();
-        if(true || !this.getLeadDirectSetValue()){
+        if(!this.getLeadDirectSetValue()){
             attrData['fromData'] = fHandler.getHandler(attrCheckedType).getHandlerData();
         }
         return attrData;
@@ -204,7 +211,7 @@ Assess.prototype = {
         var clonedItemDom = itemContainer.find('tr:eq(0)');
         var cDom = $.extend(true,{}, clonedItemDom);
         itemContainer.append("<tr>"+cDom.html()+"</tr>");
-         this.clearItemData(itemContainer.find('tr:last'),type);
+        this.clearItemData(itemContainer.find('tr:last'),type);
     },
 
     /*清空克隆item节点里面的数据*/
@@ -233,5 +240,12 @@ Assess.prototype = {
                 break;
         }
         return itemDom;
+    },
+
+    //删除item节点
+    delItemDom:function(dBtn){
+        if($(dBtn).parents('table').find('tr').length>1){
+            $(dBtn).parents('tr').remove();
+        }
     }
 };
