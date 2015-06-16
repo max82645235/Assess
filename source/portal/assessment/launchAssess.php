@@ -52,7 +52,7 @@ if($_REQUEST['act']=='launchAssess'){
             if($base_id){
 
                 $record_info = $assessDao->getAssessRecordInfo($base_id);
-               // var_dump($record_info);exit;
+                // var_dump($record_info);exit;
             }
         }
 

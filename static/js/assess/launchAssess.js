@@ -54,7 +54,7 @@ Assess.prototype = {
     },
     formSubHandle:function(){
         var subFormData = {};
-        subFormData.baseData = this.getBaseData().baseSubDataList
+        subFormData.baseData = this.getBaseData().baseSubDataList;
         subFormData.attrData = this.getAttrData();
         var data = {
             m:'assessment',
@@ -69,7 +69,7 @@ Assess.prototype = {
             data:data,
             contentType:'application/x-www-form-urlencoded; charset=GBK',
             success:function(retData){
-
+                alert('保存成功！')
             }
         });
     },
@@ -123,7 +123,7 @@ Assess.prototype = {
             retData :{},
             getHandler:function(attrCheckedType){
                 var type = attrCheckedType;
-               this.retData.type = type;
+                this.retData.type = type;
                 switch (type){
                     case '1':
                         this.retData.handlerData = this.c_j_handler();
@@ -210,8 +210,13 @@ Assess.prototype = {
     /*添加指标*/
     addItem:function(jDom,type){
         var itemContainer = jDom.parent().find('.kctjcon:eq(1) .sm_div table');
-        var clonedItemDom = itemContainer.find('tr:eq(0)');
-        var cDom = $.extend(true,{}, clonedItemDom);
+        if( itemContainer.find('tr').length>0){
+            var clonedItemDom = itemContainer.find('tr:eq(0)');
+            var cDom = $.extend(true,{}, clonedItemDom);
+        }else if(this.delTrCache[type] !=undefined){
+            var cDom = this.delTrCache[type];
+        }
+
         itemContainer.append("<tr>"+cDom.html()+"</tr>");
         this.clearItemData(itemContainer.find('tr:last'),type);
     },
@@ -220,34 +225,36 @@ Assess.prototype = {
     clearItemData:function(itemDom,type){
         switch (type){
             case '1':
-                        itemDom.find("select[name=indicator_parent] option:eq(0)").attr("checked",true);
-                        itemDom.find("select[name=indicator_child] option:eq(0)").attr("checked",true);
-                        itemDom.find("input[name=zbyz]").val('');
-                        itemDom.find("input[name=qz]").val('');
+                itemDom.find("select[name=indicator_parent] option:eq(0)").attr("checked",true);
+                itemDom.find("select[name=indicator_child] option:eq(0)").attr("checked",true);
+                itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=qz]").val('');
                 break;
 
             case '2':
-                        itemDom.find("input[name=job_name]").val('');
-                        itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=job_name]").val('');
+                itemDom.find("input[name=zbyz]").val('');
                 break;
 
             case '3':
-                        itemDom.find("input[name=score_name]").val('');
-                        itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=score_name]").val('');
+                itemDom.find("input[name=zbyz]").val('');
                 break;
 
             case '4':
-                        itemDom.find("input[name=score_name]").val('');
-                        itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=score_name]").val('');
+                itemDom.find("input[name=zbyz]").val('');
                 break;
         }
         return itemDom;
     },
 
+    delTrCache:{},
     //删除item节点
-    delItemDom:function(dBtn){
-        if($(dBtn).parents('table').find('tr').length>1){
-            $(dBtn).parents('tr').remove();
+    delItemDom:function(dBtn,type){
+        if($(dBtn).parents('table').find('tr').length==1){
+            this.delTrCache[type] =  $.extend(true,{}, $(dBtn).parents('tr'));
         }
+        $(dBtn).parents('tr').remove();
     }
 };

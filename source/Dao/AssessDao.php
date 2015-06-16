@@ -2,10 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: wmc
-* Date: 15-6-13
-* Time: 下午1:25
-* Describe: 考核表业务SQL
-*/
+ * Date: 15-6-13
+ * Time: 下午1:25
+ * Describe: 考核表业务SQL
+ */
 class AssessDao{
     public $db;
     public function __construct(){
@@ -22,10 +22,14 @@ class AssessDao{
         '12'=>'年度'
     );
 
+
     static $AttrRecordTypeMaps = array(
         '1'=>'commission','2'=>'job','3'=>'score','4'=>'target'
     );
 
+
+    const UserAssessStatus_L_Create = 1;//待领导创建
+    const UserAssessStatus_S_Pre_Write = 1;//待员工填写
     static  function get_insert_sql($tbl,$arrFields){
         $ctn = 0;
         foreach($arrFields as $k=>$val){
@@ -101,7 +105,7 @@ class AssessDao{
                 }
             }
             $baseRecord['base_name'] = iconv('UTF-8','GBK',$baseRecord['base_name']);
-            if(isset($baseRecord['base_id'])){
+            if(isset($baseRecord['base_id']) && $baseRecord['base_id']){
                 $base_sql = "select * from sa_assess_base where base_id={$baseRecord['base_id']} ";
                 $findRecord = $this->db->GetRow($base_sql);
                 if($findRecord['assess_attr_type']!=$baseRecord['assess_attr_type']){
@@ -116,9 +120,8 @@ class AssessDao{
 
                 $baseRecord['update_time'] = date("Y-m-d H:i:s");
 
-                 $where = " base_id={$findRecord['base_id']}";
+                $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
-                echo $sql;exit;
                 $this->db->Execute($sql);
                 $base_id = $findRecord['base_id'];
             }else{
@@ -192,10 +195,13 @@ class AssessDao{
     //设置考核人员item表信息
     public function setAssessUserItemRecord($uidArr,$attrResult){
         if($uidArr && $attrResult){
-            $tbl = "`".DB_PREFIX."assess_user_item`";
+
             foreach($uidArr as $uid){
                 $tmpArr = array();
                 foreach($attrResult as $k=>$attrData){
+
+                    //assess_user_item表更新 start---
+                    $tbl = "`".DB_PREFIX."assess_user_item`";
                     $tmpArr['uid'] = $uid;
                     $tmpArr['attr_id'] = $attrData['attr_id'];
                     $tmpArr['itemData'] = $attrData['itemData'];
@@ -215,6 +221,17 @@ class AssessDao{
                         $sql = self::get_insert_sql($tbl,$tmpArr);
                         $this->db->Execute($sql);
                     }
+                    //end ---assess_user_item表更新
+
+
+                    //assess_user_relation表更新 ----start
+                    $tbl = "`".DB_PREFIX."assess_user_relation`";
+                    $relationTmp = array();
+                    $relationTmp['uid'] = $uid;
+                    $relationTmp['base_id'] = $attrData['base_id'];
+
+                    //end --- assess_user_relation表更新
+
                 }
             }
 

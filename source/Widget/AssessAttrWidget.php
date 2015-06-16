@@ -3,8 +3,8 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 15-6-11
-* Time: обнГ1:26
-*/
+ * Time: обнГ1:26
+ */
 class AssessAttrWidget{
     public $tpl;
     public function __construct($tpl){

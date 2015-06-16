@@ -16,33 +16,33 @@
                 if(isset($renderData['itemData']) && $renderData['itemData']){
                     $itemDataList = unserialize($renderData['itemData']);
                     ?>
-                     <?php if($itemDataList){?>
+                    <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $itemData){?>
-                                <tr>
-                                    <td width="26%">
-                                        <div class="smfl">
-                                            <span><em class="c-yel">*</em>工作任务名称： </span>
-                                            <input type="text" value="<?=$itemData['job_name']?>" name="job_name" class="width160 j-notnull" />
-                                        </div>
-                                    </td>
-                                    <td width="17%" class="sm_xsmbadd_td1">
-                                        <div class="smfl">
-                                            <span><em class="c-yel">*</em> 指标阈值：</span>
-                                            <input type="text" value="<?=$itemData['zbyz']?>" name="zbyz"  class="width40 j-notnull"/>
-                                        </div>
-                                    </td>
-                                    <td width="15%" class="sm_xsmbadd_td2">
-                                        <div class="smfl">
-                                            <span><em class="c-yel">*</em> 权重：</span>
-                                            <input type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />
-                                        </div>
-                                    </td>
-                                    <td width="15%" class="sm_xsmbadd_td2">
-                                        <div class="del_td" onclick="Assess.prototype.delItemDom(this)">
-                                            <input type="button" class="btn67" value="删除">
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td width="26%">
+                                    <div class="smfl">
+                                        <span><em class="c-yel">*</em>工作任务名称： </span>
+                                        <input type="text" value="<?=$itemData['job_name']?>" name="job_name" class="width160 j-notnull" />
+                                    </div>
+                                </td>
+                                <td width="17%" class="sm_xsmbadd_td1">
+                                    <div class="smfl">
+                                        <span><em class="c-yel">*</em> 指标阈值：</span>
+                                        <input type="text" value="<?=$itemData['zbyz']?>" name="zbyz"  class="width40 j-notnull"/>
+                                    </div>
+                                </td>
+                                <td width="15%" class="sm_xsmbadd_td2">
+                                    <div class="smfl">
+                                        <span><em class="c-yel">*</em> 权重：</span>
+                                        <input type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />
+                                    </div>
+                                </td>
+                                <td width="15%" class="sm_xsmbadd_td2">
+                                    <div class="del_td" onclick="Assess.prototype.delItemDom(this,2)">
+                                        <input type="button" class="btn67" value="删除">
+                                    </div>
+                                </td>
+                            </tr>
                         <?php }?>
                     <?php }?>
                 <?php }?>
@@ -68,7 +68,7 @@
                             </div>
                         </td>
                         <td width="15%" class="sm_xsmbadd_td2">
-                            <div class="del_td" onclick="Assess.prototype.delItemDom(this)">
+                            <div class="del_td" onclick="Assess.prototype.delItemDom(this,2)">
                                 <input type="button" class="btn67" value="删除">
                             </div>
                         </td>
