@@ -6,15 +6,8 @@
  * Time: 下午1:25
  * Describe: 考核表业务SQL
  */
-class AssessDao{
-    public $db;
-    public function __construct(){
-        global $db;
-        global $ADODB_FETCH_MODE;
-        $this->db = $db;
-        $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
-    }
-
+require_once 'BaseDao.php';
+class AssessDao extends BaseDao{
     static $AssessPeriodTypeMaps = array(
         '1'=>'月度',
         '3'=>'季度',
@@ -22,14 +15,17 @@ class AssessDao{
         '12'=>'年度'
     );
 
-
     static $AttrRecordTypeMaps = array(
         '1'=>'commission','2'=>'job','3'=>'score','4'=>'target'
     );
 
 
-    const UserAssessStatus_L_Create = 1;//待领导创建
-    const UserAssessStatus_S_Pre_Write = 1;//待员工填写
+    const AssessCreate= 0;//待领导创建
+    const AssessPreStaffWrite = 1;//待员工填写
+    const AssessPreLeadVIew = 2;//待领导初审|员工已填写完成预期
+    const AssessPreSuccess = 3;//领导初审通过
+    const AssessRealLeadView = 4;//待领导终审|员工已填写完实际
+    const AssessRealSuccess = 5;//领导终审通过
     static  function get_insert_sql($tbl,$arrFields){
         $ctn = 0;
         foreach($arrFields as $k=>$val){
@@ -75,7 +71,7 @@ class AssessDao{
         }
 
         //获取属性类型表相关信息
-        $attr_sql = "select * from sa_assess_attr where  base_id={$base_id}";
+        $attr_sql = "select * from sa_assess_attr where  base_id={$base_id} order  by attr_type asc";
         $attr_info = $this->db->GetAll($attr_sql);
         if($attr_info){
             $record_info['attr_info'] = $attr_info;
@@ -86,7 +82,7 @@ class AssessDao{
 
     //根据考核周期，开始时间获取考核结束时间
     static function getAssessBaseEndDate($periodType,$startDate){
-        return date('Y-m-d H:i:s',strtotime('+'.$periodType.' month',strtotime($startDate)));
+        return date('Y-m-d',strtotime('+'.$periodType.' month',strtotime($startDate)));
     }
 
     //设置考核基础表信息
@@ -95,7 +91,7 @@ class AssessDao{
             $tableSafeAttr = array(
                 'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','lead_plan_end_date','lead_plan_start_date',
                 'lead_sub_end_date','lead_sub_start_date','staff_plan_end_date','staff_plan_start_date','staff_sub_end_date','staff_sub_start_date',
-                'uid','assess_attr_type','assess_period_type'
+                'uid','assess_attr_type','assess_period_type','base_end_date'
             );
             $tbl = "`".DB_PREFIX."assess_base`";
             $baseRecord['base_end_date'] = self::getAssessBaseEndDate($baseRecord['assess_period_type'],$baseRecord['base_start_date']);
@@ -150,7 +146,7 @@ class AssessDao{
             $tbl = "`".DB_PREFIX."assess_attr`";
 
             foreach($attrRecords as $key=>$data){
-                $findRecordSql = "select * from {$tbl} where base_id = {$data['base_id']} and  attr_type = {$data['attr_type']}";
+                $findRecordSql = "select * from {$tbl} where base_id = {$data['base_id']} and  attr_type = {$data['attr_type']} ";
                 $tableSafeAttr = array(
                     'attr_id','base_id','weight','attr_type','itemData','cash'
                 );
@@ -162,9 +158,7 @@ class AssessDao{
                     if($k=='itemData' && is_array($data['itemData'])){
                         foreach($data['itemData'] as $i=>$tt){
                             foreach($tt as $attr=>$v){
-                                if(mb_detect_encoding($v,'UTF-8,GBK')=='UTF-8'){
-                                    $data['itemData'][$i][$attr] = iconv('UTF-8','GBK',$v);
-                                }
+                                $data['itemData'][$i][$attr] = iconv('UTF-8','GBK',$v);
                             }
                         }
                         $data['itemData'] = serialize($data['itemData']);
@@ -195,7 +189,6 @@ class AssessDao{
     //设置考核人员item表信息
     public function setAssessUserItemRecord($uidArr,$attrResult){
         if($uidArr && $attrResult){
-
             foreach($uidArr as $uid){
                 $tmpArr = array();
                 foreach($attrResult as $k=>$attrData){
@@ -229,7 +222,7 @@ class AssessDao{
                     $relationTmp = array();
                     $relationTmp['uid'] = $uid;
                     $relationTmp['base_id'] = $attrData['base_id'];
-
+                    $relationTmp['user_assess_status'] = self::AssessCreate;
                     //end --- assess_user_relation表更新
 
                 }

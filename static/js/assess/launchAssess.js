@@ -256,5 +256,39 @@ Assess.prototype = {
             this.delTrCache[type] =  $.extend(true,{}, $(dBtn).parents('tr'));
         }
         $(dBtn).parents('tr').remove();
+    },
+    triggerIndicatorSelect:function(jSelectDom){
+        var jSelectDom =jSelectDom;
+        var indicator_parent =  jSelectDom.find("option:selected").val();
+        if(this.delTrCache.indicator_ajax_cache==undefined){
+            this.delTrCache.indicator_ajax_cache = {};
+        }
+        var ajax_cache = this.delTrCache.indicator_ajax_cache;
+        ajax_cache.replaceChildSelect = function(jSelectDom,data){
+            var opList = "<option value=''>ÇëÑ¡Ôñ</option>";
+            var p_id = jSelectDom.parent().find('.indicator_parent_hidden').val();
+            for(var i=0;i<data.length;i++){
+                var selected = (p_id==data[i].childId)?"selected=selected":"";
+                opList+="<option value='"+data[i].childId+"' "+selected+">"+data[i].title+"</option>";
+            }
+            jSelectDom.parent().find('.commission_indicator_child').html(opList);
+        }
+
+        if(ajax_cache[indicator_parent] == undefined){
+            $.ajax({
+                type:'get',
+                url:'/salary/index.php',
+                data:{m:'assessment',a:'launchAssess',act:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
+                dataType:'json',
+                success:function(ret){
+                    if(ret.status=='success'){
+                        ajax_cache[indicator_parent] = ret.data; //»º´æajax½á¹û
+                        ajax_cache.replaceChildSelect(jSelectDom,ret.data)
+                    }
+                }
+            });
+        }else{
+            ajax_cache.replaceChildSelect(jSelectDom,ajax_cache[indicator_parent])
+        }
     }
 };

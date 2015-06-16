@@ -50,9 +50,7 @@ if($_REQUEST['act']=='launchAssess'){
             //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
             $record_info = array();
             if($base_id){
-
                 $record_info = $assessDao->getAssessRecordInfo($base_id);
-                // var_dump($record_info);exit;
             }
         }
 
@@ -92,6 +90,19 @@ if($_REQUEST['act']=='ajaxBusClassify'){
             }
             $retData['status'] = 'success';
         }
+        echo json_encode($retData);
+        die();
+    }
+}
+
+if($_REQUEST['act']=='ajaxIndicatorClassify'){
+    if(isset($_GET['indicator_parent'])){
+        $indicator_parent = $_GET['indicator_parent'];
+        $retData = array();
+        require_once BATH_PATH.'source/Dao/IndicatorDao.php';
+        $ind_dao = new IndicatorDao();
+        $retData['data'] = $ind_dao->getIndicatorChildList($indicator_parent);
+        $retData['status'] = 'success';
         echo json_encode($retData);
         die();
     }

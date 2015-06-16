@@ -2,52 +2,70 @@
 defined('IN_UF') or exit('Access Denied');
 
 $pageurl = '?m='.$m.'&a='.$a;
-$where = ' WHERE 1';
-$tbl = "`".DB_PREFIX."log`";
+$where = ' WHERE `status`=1';
+$tbl = "`".DB_PREFIX."indicator_type`";
 
-if($_REQUEST['act'] == 'search'){
-    $pageurl .= '&act=search';
+if($_POST['act'] == "add" || ($_POST['act'] == "edit" && $_POST['id'])){
+    check_auth($m,$a,"edit",1);
 
-    if($_REQUEST['search_path'] == "操作路径"){
-        $_REQUEST['search_path'] = "";
+    $page_title = "添加量化指标分类";
+
+    if($_POST['id']){
+        $page_title = "编辑量化指标分类";
+
+        $sql = "SELECT * FROM $tbl WHERE `typeid`=".intval($_POST['id']);
+        $r = $db->GetRow($sql);
     }
 
-    if($_REQUEST['search_object'] == "操作对象"){
-        $_REQUEST['search_object'] = "";
+    include(Template($m."_".$a."_modify"));
+    exit();
+}
+
+if($_POST['act'] == "update"){
+    check_auth($m,$a,"edit",1);
+
+    if($_POST['type'] == ""){
+        halt("请填写量化指标分类名称~~");
     }
 
-    if($_REQUEST['search_name'] == "操作人"){
-        $_REQUEST['search_name'] = "";
+    $_POST['id'] = intval($_POST['id']);
+    $_POST['type'] = iconv("utf-8","gbk//ignore",$_POST['type']);
+
+    $info = array();
+
+    $info['type'] = $_POST['type'];
+    $info['dateline'] = time();
+
+    if($_POST['id'] > 0){
+        $sql = get_update_sql($tbl,$info,"typeid=".$_POST['id']);
+        $db->Execute($sql);
+
+        admin_log('量化指标分类修改','bindid',$_POST['id']);
+    }else{
+        $sql = get_insert_sql($tbl,$info);
+        $db->Execute($sql);
+        $id = $db->Insert_ID();
+
+        admin_log('量化指标分类添加','bindid',$id);
     }
 
-    if($search_path = $_REQUEST['search_path']){
-        $where .= " AND `action`='".$search_path."'";
-        $pageurl .= '&search_path='.urlencode($search_path);
-    }
+    echo("true");
+    exit();
+}
 
-    if($search_object = $_REQUEST['search_object']){
-        $where .= " AND `bindid`='".$search_object."'";
-        $pageurl .= '&search_object='.urlencode($search_object);
-    }
+if($_POST['act'] == "del" && $_POST['id']){
+    check_auth($m,$a,"del",1);
 
-    if($search_name = $_REQUEST['search_name']){
-        $where .= " AND (`username` LIKE '%".$search_name."%' OR `uid` LIKE '%".$search_name."%')";
-        $pageurl .= '&search_name='.urlencode($search_name);
-    }
+    $info = array();
+    $info['status'] = 0;
 
-    if($search_btime = $_REQUEST['search_btime']){
-        if($search_timecut = @strtotime($search_btime)){
-            $where .= " AND `dateline`>='".$search_timecut."'";
-            $pageurl .= '&search_btime='.urlencode($search_btime);
-        }
-    }
+    $sql = get_update_sql($tbl,$info,"typeid=".intval($_POST['id']));
+    $db->Execute($sql);
 
-    if($search_etime = $_REQUEST['search_etime']){
-        if($search_timecut = @strtotime($search_etime)){
-            $where .= " AND `dateline`<'".($search_timecut + 86400)."'";
-            $pageurl .= '&search_etime='.urlencode($search_etime);
-        }
-    }
+    admin_log('量化指标分类删除','bindid',intval($_POST['id']));
+
+    echo("true");
+    exit();
 }
 
 $sql = "SELECT COUNT(*) FROM ".$tbl.$where;
@@ -59,8 +77,17 @@ $offset = ($page-1)*$limit;
 
 $page_nav = page($count,$limit,$page,$pageurl);
 
-$sql = "SELECT * FROM ".$tbl.$where." ORDER BY `id` DESC LIMIT {$offset},{$limit}";
+$sql = "SELECT * FROM ".$tbl.$where." ORDER BY `typeid` ASC LIMIT {$offset},{$limit}";
 $rs = $db->GetAll($sql);
+
+$canadd = intval($p_power[$m."_".$a."_edit"]);
+
+if(is_array($rs)){
+    foreach($rs as $k => $r){
+        $rs[$k]['canedit'] = intval($p_power[$m."_".$a."_edit"]);
+        $rs[$k]['candel'] = intval($p_power[$m."_".$a."_del"]);
+    }
+}
 
 include(Template($m."_".$a));
 ?>

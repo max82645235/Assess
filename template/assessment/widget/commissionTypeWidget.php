@@ -1,3 +1,9 @@
+<?php
+    require_once BATH_PATH.'source/Dao/IndicatorDao.php';
+    $ind_dao = new IndicatorDao();
+    $indicatorList = $ind_dao->getAllTypeList();
+?>
+
 <div class="attr_form_1" flag="1" style="<?php if(!$renderData){?>display: none;<?php }?>">
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">量化指标类</b></p>
@@ -20,18 +26,18 @@
                             <tr>
                                 <td width="26%">
                                     <em class="c-yel">*</em>
-                                    <select name="indicator_parent">
-                                        <option value="1">指标分类1</option>
-                                        <option value="2">指标分类2</option>
-                                        <option value="3">指标分类3</option>
-                                        <option value="4">指标分类4</option>
+                                    <select name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
+                                        <?php if($indicatorList){?>
+                                            <?php foreach($indicatorList as $k=>$data){?>
+                                                <option value="<?=$data['id']?>"
+                                                    <?php if($itemData['indicator_parent']==$data['id']){?>  selected="selected" <?php }?>><?=$data['name']?>
+                                                </option>
+                                            <?php }?>
+                                        <?php }?>
                                     </select>
-                                    <select name="indicator_child" >
-                                        <option value="1">指标1</option>
-                                        <option value="2">指标2</option>
-                                        <option value="3">指标3</option>
-                                        <option value="4">指标4</option>
+                                    <select name="indicator_child" class="commission_indicator_child" >
                                     </select>
+                                    <input type="hidden" name="indicator_child_hidden" class="indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
                                 </td>
 
                                 <td width="17%" class="sm_xsmbadd_td1">
@@ -59,17 +65,15 @@
                     <tr>
                         <td width="26%">
                             <em class="c-yel">*</em>
-                            <select name="indicator_parent">
-                                <option value="1">指标分类1</option>
-                                <option value="2">指标分类2</option>
-                                <option value="3">指标分类3</option>
-                                <option value="4">指标分类4</option>
+                            <select name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))>
+                                <?php if($indicatorList){?>
+                                    <?php foreach($indicatorList as $k=>$data){?>
+                                        <option value="<?=$data['id']?>"><?=$data['name']?></option>
+                                    <?php }?>
+                                <?php }?>
                             </select>
-                            <select name="indicator_child" >
-                                <option value="1">指标1</option>
-                                <option value="2">指标2</option>
-                                <option value="3">指标3</option>
-                                <option value="4">指标4</option>
+                            <select name="indicator_child" class="commission_indicator_child">
+                                <option value="">请选择</option>
                             </select>
                         </td>
 

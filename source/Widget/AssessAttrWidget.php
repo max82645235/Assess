@@ -20,7 +20,9 @@ class AssessAttrWidget{
         $index = $attrType;
         if(array_key_exists($index,self::$renderPathMaps)){
             $prefixPathArr = explode(',',self::$renderPathMaps[$index]);
+
             foreach($prefixPathArr as $prefix){
+
                 $renderData = array();
                 foreach($renderDataList as $key=>$d){
                     if(AssessDao::$AttrRecordTypeMaps[$d['attr_type']]==$prefix){

@@ -17,8 +17,10 @@
     <script>
         var AssessInstance =  new Assess();
         $(function(){
-            //刚进页面时触发一次部门二级联动ajax查询
-            AssessInstance.triggerBusSelect();
+            AssessInstance.triggerBusSelect(); //刚进页面时触发一次部门二级联动ajax查询
+            $(".commission_indicator_parent").each(function(){
+                AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
+            });
 
             //点击考核类型checkbox
             $("#attr_type_checkboxes_td input").click(function(){
@@ -53,7 +55,6 @@
             $("#bus_area_parent").change(function(){
                 AssessInstance.triggerBusSelect();
             });
-
         });
     </script>
 </head>
