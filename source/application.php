@@ -35,6 +35,7 @@ if($_SERVER['SERVER_NAME']=='www.salary.com'){
 
 require_once dirname(__FILE__).'/function.php';
 require_once dirname(__FILE__).'/adodb/adodb.inc.php';
+
 $db = NewADOConnection($cfg['DB_TYPE'].'://'.$cfg['DB_USER'].':'.$cfg['DB_PWD'].'@'.$cfg['DB_HOST'].':'.$cfg['DB_PORT'].'/'.$cfg['DB_NAME']);
 mysql_query("set names 'gbk'");
 

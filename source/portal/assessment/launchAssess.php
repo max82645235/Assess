@@ -23,31 +23,36 @@ if($_REQUEST['act']=='launchAssess'){
         if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
             if(isset($_REQUEST['subFormData']['baseData']) && isset($_REQUEST['subFormData']['attrData'])){
                 //assess_base主表保存
-                if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData']['baseSubDataList'])){
+                if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
                     $attrRecord = array();
                     $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
                     foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
                         $tmp = array();
                         $tmp['base_id'] = $base_id;
                         $tmp['attr_type'] = $attrRecordType[$key];
-                        $tmp['height'] = $data['height'];
+                        $tmp['weight'] = (isset($data['weight']))?$data['weight']:'';
+                        $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
                         $tmp['itemData'] = $data['table_data'];
                         $attrRecord[$key] = $tmp;
                     }
+
                     //assess_attr表保存
                     if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
-                        $uids = $_REQUEST['subFormData']['baseData']['baseSubDataList']['uids'];
-                        if($_REQUEST['subFormData']['baseData']['baseSubDataList']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+                        $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
+                        if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
                         }
                     }
                 }
             }
+            die();
         }else{
             //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
             $record_info = array();
             if($base_id){
+
                 $record_info = $assessDao->getAssessRecordInfo($base_id);
+               // var_dump($record_info);exit;
             }
         }
 

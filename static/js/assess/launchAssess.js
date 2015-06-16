@@ -54,29 +54,31 @@ Assess.prototype = {
     },
     formSubHandle:function(){
         var subFormData = {};
-        subFormData.baseData = this.getBaseData();
+        subFormData.baseData = this.getBaseData().baseSubDataList
         subFormData.attrData = this.getAttrData();
-        console.log(subFormData);return;
+        var data = {
+            m:'assessment',
+            a:'launchAssess',
+            formSubTag:1,
+            subFormData:subFormData
+        };
+
         $.ajax({
-            url:'/salary/index.php',
-            data:{
-                    m:'assessment',
-                    a:'launchAssess',
-                    formSubTag:1,
-                    subFormData:subFormData
-            },
             type:'post',
+            url:'/salary/index.php',
+            data:data,
+            contentType:'application/x-www-form-urlencoded; charset=GBK',
             success:function(retData){
 
             }
         });
-
     },
 
     //获取表单基本数据
     getBaseData:function(){
         var baseData = {
             baseIdsNameList:[
+                'base_id',
                 'base_name',
                 'bus_area_parent',
                 'bus_area_child',
@@ -142,25 +144,25 @@ Assess.prototype = {
                 //量化指标类
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table");
-                c_data.height = $(".attr_form_1[flag=1] input[name=attr1_height]").val();
+                c_data.weight = $(".attr_form_1[flag=1] input[name=attr1_weight]").val();
                 c_table.find("tr").each(function(){
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
                     tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.weight = $(this).find("input[name=qz]").val();
+                    tmp.qz = $(this).find("input[name=qz]").val();
                     c_data['table_data'].push(tmp);
                 });
 
                 //工作任务类
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table");
-                j_data.height = $(".attr_form_1[flag=2] input[name=attr2_height]").val();
+                j_data.weight = $(".attr_form_1[flag=2] input[name=attr2_weight]").val();
                 j_table.find("tr").each(function(k,v){
                     var tmp = {};
                     tmp.job_name = $(this).find("input[name=job_name]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.weight = $(this).find("input[name=qz]").val();
+                    tmp.qz = $(this).find("input[name=qz]").val();
                     j_data['table_data'].push(tmp);
                 });
                 return {commission:c_data,job:j_data};

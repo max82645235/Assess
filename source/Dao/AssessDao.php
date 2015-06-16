@@ -10,7 +10,9 @@ class AssessDao{
     public $db;
     public function __construct(){
         global $db;
+        global $ADODB_FETCH_MODE;
         $this->db = $db;
+        $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
     }
 
     static $AssessPeriodTypeMaps = array(
@@ -24,19 +26,53 @@ class AssessDao{
         '1'=>'commission','2'=>'job','3'=>'score','4'=>'target'
     );
 
+    static  function get_insert_sql($tbl,$arrFields){
+        $ctn = 0;
+        foreach($arrFields as $k=>$val){
+            if($ctn == 0){
+                $ss1 = "`".$k."`";
+                $ss2 = "'".($val)."'";
+            }
+            else{
+                $ss1.= ", `".$k."`";
+                $ss2.= ", '".($val)."'";
+            }
+            $ctn++;
+        }
+
+        $sql = "INSERT INTO $tbl ($ss1) VALUES ($ss2)";
+        return $sql;
+    }
+
+    static  function get_update_sql($tbl,$arrFields,$where=false){
+        $ctn = 0;
+        foreach($arrFields as $k=>$val){
+            if($ctn==0){
+                $ss = "`".$k."`='".($val)."' ";
+            }else{
+                $ss.=  ",`".$k."`='".($val)."' ";
+            }
+            $ctn++;
+        }
+        if($where) $sql = "UPDATE $tbl SET $ss WHERE $where";
+        else $sql = "UPDATE $tbl SET $ss";
+        return $sql;
+    }
+
+
     //根据base_id获取考核相关信息
     public function getAssessRecordInfo($base_id){
         $record_info = array();
         //获取基础表相关信息
         $base_sql = "select * from sa_assess_base where base_id={$base_id} ";
-        $base_info = $this->GetOne($base_sql);
+        $base_info = $this->db->GetRow($base_sql);
         if($base_info){
             $record_info['base_info'] = $base_info;
         }
 
         //获取属性类型表相关信息
         $attr_sql = "select * from sa_assess_attr where  base_id={$base_id}";
-        $attr_info = $this->GetAll($attr_sql);
+        $attr_info = $this->db->GetAll($attr_sql);
         if($attr_info){
             $record_info['attr_info'] = $attr_info;
         }
@@ -64,12 +100,30 @@ class AssessDao{
                     unset($baseRecord[$key]);
                 }
             }
+            $baseRecord['base_name'] = iconv('UTF-8','GBK',$baseRecord['base_name']);
             if(isset($baseRecord['base_id'])){
-                $sql = get_update_sql($tbl,$baseRecord);
+                $base_sql = "select * from sa_assess_base where base_id={$baseRecord['base_id']} ";
+                $findRecord = $this->db->GetRow($base_sql);
+                if($findRecord['assess_attr_type']!=$baseRecord['assess_attr_type']){
+                    $this->updateAttrTypeChangeEvent($baseRecord['base_id']);//判断考核类型改变事件
+                }
+
+                foreach($findRecord as $k=>$v){
+                    if(isset($baseRecord[$k])){
+                        $findRecord[$k] = $baseRecord[$k];
+                    }
+                }
+
+                $baseRecord['update_time'] = date("Y-m-d H:i:s");
+
+                 $where = " base_id={$findRecord['base_id']}";
+                $sql = self::get_update_sql($tbl,$findRecord,$where);
+                echo $sql;exit;
                 $this->db->Execute($sql);
-                $base_id = $baseRecord['base_id'];
+                $base_id = $findRecord['base_id'];
             }else{
-                $sql = get_insert_sql($tbl,$baseRecord);
+                $baseRecord['create_time'] = date("Y-m-d H:i:s");
+                $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);
                 $base_id = $this->db->Insert_ID();
             }
@@ -79,12 +133,20 @@ class AssessDao{
         }
     }
 
+    public function updateAttrTypeChangeEvent($base_id){
+        $del_attr_sql = "delete from sa_assess_attr where base_id = {$base_id}";
+        $this->db->Execute($del_attr_sql);
+        $del_item_sql = "delete from sa_assess_user_item  where base_id = {$base_id}";
+        $this->db->Execute($del_item_sql);
+    }
+
     //设置考核分类属性表信息
-    public function setAssessAttrRecord($attrRecord){
+    public function setAssessAttrRecord($attrRecords){
         $attrRetRecord = array();
-        if($attrRecord){
+        if($attrRecords){
             $tbl = "`".DB_PREFIX."assess_attr`";
-            foreach($attrRecord as $key=>$data){
+
+            foreach($attrRecords as $key=>$data){
                 $findRecordSql = "select * from {$tbl} where base_id = {$data['base_id']} and  attr_type = {$data['attr_type']}";
                 $tableSafeAttr = array(
                     'attr_id','base_id','weight','attr_type','itemData','cash'
@@ -94,22 +156,32 @@ class AssessDao{
                         unset($data[$k]);
                     }
 
-                    if($key=='itemData' && is_array($attr['itemData'])){
+                    if($k=='itemData' && is_array($data['itemData'])){
+                        foreach($data['itemData'] as $i=>$tt){
+                            foreach($tt as $attr=>$v){
+                                if(mb_detect_encoding($v,'UTF-8,GBK')=='UTF-8'){
+                                    $data['itemData'][$i][$attr] = iconv('UTF-8','GBK',$v);
+                                }
+                            }
+                        }
                         $data['itemData'] = serialize($data['itemData']);
                     }
                 }
+
                 if($findRecord = $this->db->GetRow($findRecordSql)){
                     foreach($findRecord as $k=>$v){
                         if(isset($data[$k])){
                             $findRecord[$k] = $data[$k];
                         }
                     }
-                    $sql = get_update_sql($tbl,$findRecord);
+                    $where = " attr_id={$findRecord['attr_id']}";
+                    $sql =  self::get_update_sql($tbl,$findRecord,$where);
                     $this->db->Execute($sql);
                     $attrRetRecord[] = $findRecord;
                 }else{
-                    $sql = get_insert_sql($tbl,$data);
+                    $sql = self::get_insert_sql($tbl,$data);
                     $this->db->Execute($sql);
+                    $data['attr_id'] = $this->db->Insert_ID();
                     $attrRetRecord[] = $data;
                 }
             }
@@ -127,6 +199,8 @@ class AssessDao{
                     $tmpArr['uid'] = $uid;
                     $tmpArr['attr_id'] = $attrData['attr_id'];
                     $tmpArr['itemData'] = $attrData['itemData'];
+                    $tmpArr['base_id'] = $attrData['base_id'];
+                    $tmpArr['item_weight'] = $attrData['weight'];
                     $findRecordSql = "select * from {$tbl} where uid = $uid and  attr_id = {$attrData['attr_id']}";
                     if($findRecord = $this->db->GetRow($findRecordSql)){
                         foreach($findRecord as $k=>$v){
@@ -134,10 +208,11 @@ class AssessDao{
                                 $findRecord[$k] = $tmpArr[$k];
                             }
                         }
-                        $sql = get_update_sql($tbl,$findRecord);
+                        $where = " item_id = {$findRecord['item_id']}";
+                        $sql = self::get_update_sql($tbl,$findRecord,$where);
                         $this->db->Execute($sql);
                     }else{
-                        $sql = get_insert_sql($tbl,$tmpArr);
+                        $sql = self::get_insert_sql($tbl,$tmpArr);
                         $this->db->Execute($sql);
                     }
                 }

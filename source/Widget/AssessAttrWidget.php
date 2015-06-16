@@ -16,11 +16,20 @@ class AssessAttrWidget{
         '2'=>'score',
         '3'=>'target'
     );
-    public function renderAttr($renderData,$attrType=false){
+    public function renderAttr($renderDataList,$attrType=false){
         $index = $attrType;
         if(array_key_exists($index,self::$renderPathMaps)){
             $prefixPathArr = explode(',',self::$renderPathMaps[$index]);
             foreach($prefixPathArr as $prefix){
+                $renderData = array();
+                foreach($renderDataList as $key=>$d){
+                    if(AssessDao::$AttrRecordTypeMaps[$d['attr_type']]==$prefix){
+                        $renderData = $d;
+                    }
+                    unset($renderDataList[$key]);
+                    break;
+                }
+
                 if($renderPath = $this->getRenderPath($prefix)){
                     $this->tpl->set_tpl($renderPath);
                     $this->tpl->set_data(array('renderData'=>$renderData));
