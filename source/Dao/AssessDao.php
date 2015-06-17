@@ -19,6 +19,12 @@ class AssessDao extends BaseDao{
         '1'=>'commission','2'=>'job','3'=>'score','4'=>'target'
     );
 
+    static $HrAssessBaseStatus =  array(
+        '0'=>'待发布',
+        '1'=>'已发布',
+        '2'=>'考核中',
+        '3'=>'考核完'
+    );
 
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写
@@ -229,5 +235,55 @@ class AssessDao extends BaseDao{
             }
 
         }
+    }
+
+    /**
+     *  output :
+     *   $searchResult
+            1.sqlWhere    搜索条件的SQL拼接字符串
+           2.pageConditionUrl  搜索拼接的条件URL
+     */
+    public function getHrSearchHandlerList($tableName){
+        $searchResult = array();
+        $sqlWhere = '';
+        $pageConditionUrl = '';
+        if(isset($_REQUEST['base_name']) && $_REQUEST['base_name']){
+            $sqlWhere.=" AND $tableName.base_name like '%".$_REQUEST['base_name']."%'";
+            $pageConditionUrl.="&base_name=".$_REQUEST['base_name'];
+        }
+
+        if(isset($_REQUEST['bus_area_parent']) && $_REQUEST['bus_area_parent']){
+            $sqlWhere.=" AND $tableName.bus_area_parent={$_REQUEST['bus_area_parent']} ";
+            $pageConditionUrl.="&bus_area_parent=".$_REQUEST['bus_area_parent'];
+        }
+
+        if(isset($_REQUEST['bus_area_child']) && $_REQUEST['bus_area_child']){
+            $sqlWhere.=" AND $tableName.bus_area_child={$_REQUEST['bus_area_child']} ";
+            $pageConditionUrl.="&bus_area_child=".$_REQUEST['bus_area_child'];
+        }
+
+        $_REQUEST['base_status'] = (!isset($_REQUEST['base_status']))?'0':$_REQUEST['base_status']; //状态初始默认为0  待发布状态
+        if($_REQUEST['base_status']!==''){
+            $sqlWhere.=" AND $tableName.base_status={$_REQUEST['base_status']} ";
+            $pageConditionUrl.="&base_status=".$_REQUEST['base_status'];
+        }
+
+        $_REQUEST['byme_status'] = (!isset($_REQUEST['byme_status']))?1:$_REQUEST['byme_status']; //状态初始默认为1 由我发起
+        if($_REQUEST['byme_status']==1){
+            $uid = getUserId();
+            if($uid){
+                $sqlWhere.=" AND $tableName.uid=$uid";
+            }
+            $pageConditionUrl.="&byme_status=".$_REQUEST['base_status'];
+        }
+
+        if(isset($_REQUEST['assess_period_type']) && $_REQUEST['assess_period_type']){
+            $sqlWhere.=" AND $tableName.assess_period_type={$_REQUEST['assess_period_type']} ";
+            $pageConditionUrl.="&assess_period_type=".$_REQUEST['assess_period_type'];
+        }
+        $page = isset($_GET['pn']) ? (int)$_GET['pn'] : 1;
+        $searchResult['sqlWhere'] = $sqlWhere;
+        $searchResult['pageConditionUrl'] = $pageConditionUrl."&pn=".$page;
+        return $searchResult;
     }
 }

@@ -267,4 +267,8 @@ function tbl_check_auth($m,$a,$act,$tbl,$inajax=0,$id=0,$authfield="deal_userid"
 
     return true;
 }
+
+function getUserId(){
+    return (isset($_SESSION[DB_PREFIX.'uid']))?$_SESSION[DB_PREFIX.'uid']:'';
+}
 ?>

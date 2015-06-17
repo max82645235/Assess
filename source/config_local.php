@@ -44,8 +44,8 @@ $cfg['POWER'] = array(
     ),
     'assessment' => array(
         'name' => "考核管理",
-        'detail' => array('list'=>'考核管理','launchAssess'=>'发起考核'),
-        'list' => array('edit' => '编辑'),
+        'detail' => array('launchList'=>'考核管理','launchAssess'=>'发起考核'),
+        'launchList' => array('edit' => '编辑'),
     ),
     'myassessment' => array(
         'name' => "我的考核",
