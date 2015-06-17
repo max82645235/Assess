@@ -16,6 +16,7 @@ require_once BATH_PATH.'source/Dao/AssessDao.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchList':$_REQUEST['act'];
 
 if($_REQUEST['act']=='launchList'){
+
     $assessDao = new AssessDao();
     $table = 'sa_assess_base';
     $searchResult = $assessDao->getHrSearchHandlerList($table);
@@ -37,6 +38,7 @@ if($_REQUEST['act']=='launchList'){
         'pageConditionUrl'=>$searchResult['pageConditionUrl'],
         'cfg'=>$cfg
     ));
+
     $tpl->render();
     die();
 }

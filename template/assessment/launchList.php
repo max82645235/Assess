@@ -28,7 +28,7 @@
         <p class="icon1">考核管理 >管理列表</p>
     </div>
     <div class="pad25">
-        <div class="brdbt zykc">
+        <div class="brdbt zykc" style="height: 50px;">
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
                 <input type="hidden" name="m" value="<?=getgpc('m')?>">
                 <input type="hidden" name="a" value="<?=getgpc('a')?>">
@@ -75,11 +75,13 @@
                         <?php }?>
                     </select>
                 </div>
-                <div class="sechk">
-                    &nbsp;&nbsp;&nbsp;考核名称：
+                <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
+                    考核名称：
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
                 </div>
-                <input type="submit" value="搜索" class="btn48" />
+                    <input type="submit" value="搜索" class="btn48"  style="float: left;margin-top: 5px;">
+
+
             </form>
             <?php if(true){?>
                 <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">发起考核</a>

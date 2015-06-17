@@ -128,6 +128,7 @@ class AssessDao extends BaseDao{
                 $base_id = $findRecord['base_id'];
             }else{
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
+                $baseRecord['uid'] = getUserId();
                 $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);
                 $base_id = $this->db->Insert_ID();
@@ -237,6 +238,22 @@ class AssessDao extends BaseDao{
         }
     }
 
+    public function setAssessUserRelation($uidArr,$base_id){
+        if($uidArr && $base_id){
+            $tbl =  "`".DB_PREFIX."assess_user_relation`";
+            foreach($uidArr as $uid){
+                $tmpArr = array();
+                $tmpArr['uid'] = $uid;
+                $tmpArr['base_id'] = $base_id;
+                $findRecordSql = "select * from {$tbl} where uid = {$uid} and  base_id = {$base_id}";
+                if(!$findRecord = $this->db->GetRow($findRecordSql)){
+                    $tmpArr['user_assess_status'] = self::AssessCreate;
+                    $sql = self::get_insert_sql($tbl,$tmpArr);
+                    $this->db->Execute($sql);
+                }
+            }
+        }
+    }
     /**
      *  output :
      *   $searchResult

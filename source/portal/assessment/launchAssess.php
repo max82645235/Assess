@@ -41,6 +41,7 @@ if($_REQUEST['act']=='launchAssess'){
                         $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                         if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
+                            $assessDao->setAssessUserRelation($uids,$base_id);
                         }
                     }
                 }
