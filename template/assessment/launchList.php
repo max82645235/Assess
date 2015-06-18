@@ -16,10 +16,59 @@
             $("#bus_area_parent").change(function(){
                 AssessInstance.triggerBusSelect();
             });
+
+            $("#copy_assess_btn").click(function(){
+                AssessInstance.tableBtnHandler($('#table_style'),
+                    true,
+                    function(selectedItem){
+                        $.ajax({
+                            type:'get',
+                            url:'/salary/index.php',
+                            data:{m:'assessment',a:'launchList',act:'cloneAssess',copyItemList:selectedItem},
+                            dataType:'json',
+                            success:function(ret){
+                                if(ret.status=='success'){
+                                    alert('考核复制成功');
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }
+                );
+            });
+
+            $("#publish_assess_btn").click(function(){
+                AssessInstance.tableBtnHandler($('#table_style'),
+                    function(jInput){
+                        var status = jInput.parent().find('.table_item_status').val();
+                        if(status==0){
+                            return true;
+                        }else{
+                            alert('请确保选中项都为待发布状态！');
+                            return false;
+                        }
+                    },
+                    function(selectedItem){
+                        $.ajax({
+                            type:'get',
+                            url:'/salary/index.php',
+                            data:{m:'assessment',a:'launchList',act:'publishAssess',selectedItemList:selectedItem},
+                            dataType:'json',
+                            success:function(ret){
+                                if(ret.status=='success'){
+                                    alert('考核发布成功');
+                                   // location.reload();
+                                }
+                            }
+                        });
+                     }
+                );
+            });
         });
     </script>
     <style>
-
+            .jbtab tr th{color: #3186c8;font-weight:600;}
+            .jbtab tr td{color: #3186c8;}
     </style>
 </head>
 <body>
@@ -36,13 +85,14 @@
                     业务部门：
                     <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
                         <option value="">请选择</option>
-                        <?php foreach($cfg['tixi'] as $k=>$v){?>
-                            <option value="<?=$k?>" <?php if(isset($_REQUEST['bus_area_parent']) && $_REQUEST['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v['title']?></option>
+                        <?php foreach($bus_parent_list as $k=>$v){?>
+                            <option value="<?=$k?>" <?php if(isset($_REQUEST['bus_area_parent']) && $_REQUEST['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v?></option>
                         <?php }?>
                     </select>
                     <input type="hidden" name="bus_area_parent_hidden" id="bus_area_parent_hidden" value="<?=isset($_REQUEST['bus_area_parent'])?$_REQUEST['bus_area_parent']:'';?>">
                 </div>
                 <div class="jssel" style="z-index:49">
+                    &nbsp;&nbsp;
                     <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
@@ -88,21 +138,34 @@
             <?php }?>
         </div>
 
-        <div class="mrtb10">
-            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
-                <tr>
-                    <th width="50"> <input type="checkbox" id="top_check_input"></th>
-                    <th class="left">绩效考核名称</th>
-                    <th width="100" class="left">考核频率</th>
-                    <th width="200" class="left">考核周期</th>
-                    <th width="100" class="left">状态</th>
-                    <th width="100">发布日期</th>
-                    <th width="128">操作</th>
+        <div class="mrtb10" >
+            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
+                <tr >
+                    <th width="50" style="text-align: center;" >
+                        <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
+                    </th>
+                    <th class="left" style="text-align: center;">绩效考核名称</th>
+                    <th width="100" style="text-align: center;">考核频率</th>
+                    <th width="200" style="text-align: center;">考核周期</th>
+                    <th width="100" style="text-align: center;">状态</th>
+                    <th width="100" style="text-align: center;">发布日期</th>
+                    <th width="128" style="text-align: center;">操作</th>
                 </tr>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
-                            <td> <input type="checkbox" class="table_item_checkbox" tag="<?=$data['base_id']?>"></td>
+                            <td>
+                                <?php
+                                        //克隆 || 发布 至少有一个权限类验证通过时，checkbox选项才能开启
+                                        $canEdit = true;
+                                        $isMy =  $data['uid']==$uid;
+                                        $canEdit = $authList['authClone']->setIsMy($isMy)->validIsAuth();
+                                        $canEdit = $canEdit && $authList['authPublish']->setIsMy($isMy)->validIsAuth();
+                                ?>
+                                    <input type="checkbox" class="table_item_checkbox" tag="<?=$data['base_id']?>"
+                                           <?php if(!$canEdit){?>disabled="disabled" <?php }?>>
+                                    <Input type="hidden" class="table_item_status" value="<?=$data['base_status']?>">
+                            </td>
                             <td class="left"><?=$data['base_name']?></td>
                             <td ><?=AssessDao::$AssessPeriodTypeMaps[$data['assess_period_type']]?></td>
                             <td>
@@ -123,11 +186,15 @@
                 <?=$page_nav?>
             </p>
             <div>
-                <input type="button" name="" value="考核停止" class="btn139">
-                <input type="button" name="" value="启动考核" class="btn139">
-                <input type="button" name="" value="考核复制" class="btn139">
-                <input type="button" name="" value="考核发布" class="btn139">
+                <?php if($authList['authClone']->getBtnAuth()){?>
+                     <input type="button" name="" value="考核复制" class="btn139" id="copy_assess_btn" style="cursor:pointer;">
+                <?php }?>&nbsp;&nbsp;
+
+                <?php if($authList['authPublish']->getBtnAuth()){?>
+                     <input type="button" name="" value="考核发布" class="btn139" id="publish_assess_btn" style="cursor:pointer;">
+                <?php }?>
             </div>
+
         </div>
     </div>
 </div>

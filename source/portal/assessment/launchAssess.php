@@ -56,21 +56,15 @@ if($_REQUEST['act']=='launchAssess'){
         }
 
 
-        $attrTypeMaps = array(
-            '1'=>'量化指标类',
-            '2'=>'工作任务类',
-            '3'=>'打分类',
-            '4'=>'提成类'
-        );
-
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
 
         $tpl = new NewTpl('assessment/launchAssess.php',array(
             'record_info'=>$record_info,
-            'attrTypeMaps'=>$attrTypeMaps,
+            'attrTypeMaps'=>AssessDao::$attrTypeMaps,
             'assessAttrWidget'=>$assessAttrWidget,
-            'cfg'=>$cfg
+            'cfg'=>$cfg,
+            'conditionUrl'=>$assessDao->getConditionParamUrl()
         ));
 
         $tpl->render();

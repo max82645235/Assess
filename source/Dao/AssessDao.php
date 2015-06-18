@@ -15,6 +15,13 @@ class AssessDao extends BaseDao{
         '12'=>'年度'
     );
 
+    static  $attrTypeMaps = array(
+    '1'=>'量化指标类',
+    '2'=>'工作任务类',
+    '3'=>'打分类',
+    '4'=>'提成类'
+    );
+
     static $AttrRecordTypeMaps = array(
         '1'=>'commission','2'=>'job','3'=>'score','4'=>'target'
     );
@@ -25,6 +32,7 @@ class AssessDao extends BaseDao{
         '2'=>'考核中',
         '3'=>'考核完'
     );
+
 
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写
@@ -106,7 +114,10 @@ class AssessDao extends BaseDao{
                     unset($baseRecord[$key]);
                 }
             }
-            $baseRecord['base_name'] = iconv('UTF-8','GBK',$baseRecord['base_name']);
+
+            if(mb_detect_encoding($baseRecord['base_name'],'GBK,UTF-8')=='UTF-8'){
+                $baseRecord['base_name'] = iconv('UTF-8','GBK',$baseRecord['base_name']);
+            }
             if(isset($baseRecord['base_id']) && $baseRecord['base_id']){
                 $base_sql = "select * from sa_assess_base where base_id={$baseRecord['base_id']} ";
                 $findRecord = $this->db->GetRow($base_sql);
@@ -222,16 +233,6 @@ class AssessDao extends BaseDao{
                         $this->db->Execute($sql);
                     }
                     //end ---assess_user_item表更新
-
-
-                    //assess_user_relation表更新 ----start
-                    $tbl = "`".DB_PREFIX."assess_user_relation`";
-                    $relationTmp = array();
-                    $relationTmp['uid'] = $uid;
-                    $relationTmp['base_id'] = $attrData['base_id'];
-                    $relationTmp['user_assess_status'] = self::AssessCreate;
-                    //end --- assess_user_relation表更新
-
                 }
             }
 
@@ -260,47 +261,99 @@ class AssessDao extends BaseDao{
             1.sqlWhere    搜索条件的SQL拼接字符串
            2.pageConditionUrl  搜索拼接的条件URL
      */
-    public function getHrSearchHandlerList($tableName){
+    public function getHrSearchHandlerList($tableName,$conditionParams){
         $searchResult = array();
         $sqlWhere = '';
         $pageConditionUrl = '';
-        if(isset($_REQUEST['base_name']) && $_REQUEST['base_name']){
-            $sqlWhere.=" AND $tableName.base_name like '%".$_REQUEST['base_name']."%'";
-            $pageConditionUrl.="&base_name=".$_REQUEST['base_name'];
+        if(isset($conditionParams['base_name']) && $conditionParams['base_name']){
+            $sqlWhere.=" AND $tableName.base_name like '%".$conditionParams['base_name']."%'";
+            $pageConditionUrl.="&base_name=".$conditionParams['base_name'];
         }
 
-        if(isset($_REQUEST['bus_area_parent']) && $_REQUEST['bus_area_parent']){
-            $sqlWhere.=" AND $tableName.bus_area_parent={$_REQUEST['bus_area_parent']} ";
-            $pageConditionUrl.="&bus_area_parent=".$_REQUEST['bus_area_parent'];
+        if(isset($conditionParams['bus_area_parent']) && $conditionParams['bus_area_parent']){
+            $sqlWhere.=" AND $tableName.bus_area_parent={$conditionParams['bus_area_parent']} ";
+            $pageConditionUrl.="&bus_area_parent=".$conditionParams['bus_area_parent'];
         }
 
-        if(isset($_REQUEST['bus_area_child']) && $_REQUEST['bus_area_child']){
-            $sqlWhere.=" AND $tableName.bus_area_child={$_REQUEST['bus_area_child']} ";
-            $pageConditionUrl.="&bus_area_child=".$_REQUEST['bus_area_child'];
+        if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
+            $sqlWhere.=" AND $tableName.bus_area_child={$conditionParams['bus_area_child']} ";
+            $pageConditionUrl.="&bus_area_child=".$conditionParams['bus_area_child'];
         }
 
-        $_REQUEST['base_status'] = (!isset($_REQUEST['base_status']))?'0':$_REQUEST['base_status']; //状态初始默认为0  待发布状态
-        if($_REQUEST['base_status']!==''){
-            $sqlWhere.=" AND $tableName.base_status={$_REQUEST['base_status']} ";
-            $pageConditionUrl.="&base_status=".$_REQUEST['base_status'];
+        if(isset($conditionParams['base_status'])  && $conditionParams['base_status']!==''){
+            $sqlWhere.=" AND $tableName.base_status={$conditionParams['base_status']} ";
+            $pageConditionUrl.="&base_status=".$conditionParams['base_status'];
         }
 
-        $_REQUEST['byme_status'] = (!isset($_REQUEST['byme_status']))?1:$_REQUEST['byme_status']; //状态初始默认为1 由我发起
-        if($_REQUEST['byme_status']==1){
+        if(isset($conditionParams['byme_status']) && $conditionParams['byme_status']==1){
             $uid = getUserId();
-            if($uid){
-                $sqlWhere.=" AND $tableName.uid=$uid";
-            }
-            $pageConditionUrl.="&byme_status=".$_REQUEST['base_status'];
+            $sqlWhere.=" AND $tableName.uid='$uid'";
+            $pageConditionUrl.="&byme_status=".$conditionParams['base_status'];
         }
 
-        if(isset($_REQUEST['assess_period_type']) && $_REQUEST['assess_period_type']){
-            $sqlWhere.=" AND $tableName.assess_period_type={$_REQUEST['assess_period_type']} ";
-            $pageConditionUrl.="&assess_period_type=".$_REQUEST['assess_period_type'];
+        if(isset($conditionParams['assess_period_type']) && $conditionParams['assess_period_type']){
+            $sqlWhere.=" AND $tableName.assess_period_type={$conditionParams['assess_period_type']} ";
+            $pageConditionUrl.="&assess_period_type=".$conditionParams['assess_period_type'];
         }
-        $page = isset($_GET['pn']) ? (int)$_GET['pn'] : 1;
+        $page = isset($conditionParams['pn']) ? (int)$conditionParams['pn'] : 1;
         $searchResult['sqlWhere'] = $sqlWhere;
         $searchResult['pageConditionUrl'] = $pageConditionUrl."&pn=".$page;
         return $searchResult;
+    }
+
+    //拼接获取搜索查询条件url
+    public function getConditionParamUrl(){
+        $pageUrl = '';
+        foreach($_GET as $key=>$v){
+            if(!in_array($key,array('a','m'))){
+                $pageUrl .= "{$key}={$v}&";
+            }
+        }
+        return substr($pageUrl,0,-1);
+    }
+
+    //设置发布状态
+    public function setAssessPublishStatus($baseId,$uid){
+        $tbl = "`".DB_PREFIX."assess_base`";
+        $findRecordSql = "select * from {$tbl} where base_id = {$baseId} and uid={$uid}";
+        if($findRecord = $this->db->GetRow($findRecordSql)){
+            $findRecord['base_status'] = 1;//已发布
+            $where = " base_id={$findRecord['base_id']}";
+            $sql = self::get_update_sql($tbl,$findRecord,$where);
+            $this->db->Execute($sql);
+            return ;
+        }
+    }
+
+    //克隆考核数据
+    public function copyAssessRecord($baseId,$uid){
+        $tbl = "`".DB_PREFIX."assess_base`";
+        $findRecordSql = "select * from {$tbl} where base_id = {$baseId} and uid={$uid}";
+        if($findBaseRecord = $this->db->GetRow($findRecordSql)){
+            //克隆数据-start
+
+            //克隆数据-end
+        }
+    }
+
+    public function getBusParentDropList(){
+        global $cfg;
+            $dropList = array();
+            $userBusId = getUserBusId();//部门id
+            $isRoot = getIsRootGroup();
+            foreach($cfg['tixi'] as $k=>$v){
+                if($isRoot ||  $userBusId==$k){
+                    $dropList[$k] = $v['title'];
+                }
+        }
+        return $dropList;
+    }
+
+    //追加用户一级部门Sql附加条件
+    static  function addBusParentAuthValidSql($table,$table_attr = 'bus_area_parent'){
+        if(!getIsRootGroup()){
+            $userBusId = getUserBusId();//部门id
+            return "AND ".$table.".".$table_attr="$userBusId ";
+        }
     }
 }

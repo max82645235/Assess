@@ -283,6 +283,19 @@ function tbl_check_auth($m,$a,$act,$tbl,$inajax=0,$id=0,$authfield="deal_userid"
 }
 
 function getUserId(){
+    if(@LOCAL_EV){
+        return 1;
+    }
     return (isset($_SESSION[DB_PREFIX.'user_id']))?$_SESSION[DB_PREFIX.'user_id']:'';
+}
+
+function getIsRootGroup(){
+    return true;
+}
+
+//获取用户的业务部门id
+ function getUserBusId(){
+    $busId = '';
+    return $busId;
 }
 ?>
