@@ -21,9 +21,9 @@ if($_REQUEST['act']=='launchList'){
     $table = 'sa_assess_base';
     $_REQUEST['base_status'] = (!isset($_REQUEST['base_status']))?'0':$_REQUEST['base_status']; //状态初始默认为0  待发布状态
     $_REQUEST['byme_status'] = (!isset($_REQUEST['byme_status']))?'1':$_REQUEST['byme_status']; //状态初始默认为1 由我发起
-    $searchResult = $assessDao->getHrSearchHandlerList($table,$_REQUEST);
+    $searchResult = $assessDao->getBaseSearchHandlerList($table,$_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$searchResult['pageConditionUrl'];
-    $where = $searchResult['sqlWhere'].$assessDao->addBusParentAuthValidSql($table);
+    $where = $searchResult['sqlWhere'];
     //获取分页page_nav
     $sql = "select count(*) from  $table where 1=1 ".$where;
     $count = $db->GetOne($sql);

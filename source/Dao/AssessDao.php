@@ -46,7 +46,7 @@ class AssessDao extends BaseDao{
     const AssessPreSuccess = 3;//领导初审通过
     const AssessRealLeadView = 4;//待领导终审|员工已填写完实际
     const AssessRealSuccess = 5;//领导终审通过
-    static  function get_insert_sql($tbl,$arrFields){
+    static function get_insert_sql($tbl,$arrFields){
         $ctn = 0;
         foreach($arrFields as $k=>$val){
             if($ctn == 0){
@@ -269,7 +269,7 @@ class AssessDao extends BaseDao{
             1.sqlWhere    搜索条件的SQL拼接字符串
            2.pageConditionUrl  搜索拼接的条件URL
      */
-    public function getHrSearchHandlerList($tableName,$conditionParams){
+    public function getBaseSearchHandlerList($tableName,$conditionParams){
         $searchResult = array();
         $sqlWhere = '';
         $pageConditionUrl = '';
@@ -279,12 +279,20 @@ class AssessDao extends BaseDao{
         }
 
         if(isset($conditionParams['bus_area_parent']) && $conditionParams['bus_area_parent']){
-            $sqlWhere.=" AND $tableName.bus_area_parent={$conditionParams['bus_area_parent']} ";
+            if($this->validBusAuth($conditionParams['bus_area_parent'])){
+                $sqlWhere.=" AND $tableName.bus_area_parent={$conditionParams['bus_area_parent']} ";
+            }else{
+                $sqlWhere.=" AND 1=0 ";
+            }
             $pageConditionUrl.="&bus_area_parent=".$conditionParams['bus_area_parent'];
         }
 
         if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
-            $sqlWhere.=" AND $tableName.bus_area_child={$conditionParams['bus_area_child']} ";
+            if(!$conditionParams['bus_area_parent'] || $this->validBusAuth($conditionParams['bus_area_parent'],$conditionParams['bus_area_child'])){
+                $sqlWhere.=" AND $tableName.bus_area_child={$conditionParams['bus_area_child']} ";
+            }else{
+                $sqlWhere.=" AND 1=0 ";
+            }
             $pageConditionUrl.="&bus_area_child=".$conditionParams['bus_area_child'];
         }
 
@@ -319,6 +327,8 @@ class AssessDao extends BaseDao{
         }
         return substr($pageUrl,0,-1);
     }
+
+
 
     //设置发布状态
     public function setAssessPublishStatus($baseId,Auth $auth){
@@ -388,22 +398,42 @@ class AssessDao extends BaseDao{
 
     public function getBusParentDropList(){
         global $cfg;
-            $dropList = array();
-            $userBusId = getUserBusId();//部门id
-            $isRoot = getIsRootGroup();
-            foreach($cfg['tixi'] as $k=>$v){
-                if($isRoot ||  $userBusId==$k){
-                    $dropList[$k] = $v['title'];
-                }
+        $dropList = array();
+        $isRoot = getIsRootGroup();
+        foreach($cfg['tixi'] as $k=>$v){
+            if($isRoot ||  $this->validBusAuth($k)){
+                $dropList[$k] = $v['title'];
+            }
         }
         return $dropList;
     }
 
-    //追加用户一级部门Sql附加条件
-    static  function addBusParentAuthValidSql($table,$table_attr = 'bus_area_parent'){
-        if(!getIsRootGroup()){
-            $userBusId = getUserBusId();//部门id
-            return "AND ".$table.".".$table_attr="$userBusId ";
+    /**
+     *  验证部门权限
+     *  输入： int  $parentId  一级部门Id (必填)
+     *        int  $childId  二级部门Id (选填)
+     *  输出 ：bool $authStatus  验证权限状态
+     * */
+    static function validBusAuth($parentId,$childId=''){
+        global $p_userinfo;
+        $authStatus = false;
+        if(getIsRootGroup()){
+            return true;
         }
+        if($p_userinfo['tixi_auth']){
+            if(isset($p_userinfo['tixi_auth'][$parentId]) && count($p_userinfo['tixi_auth'][$parentId])>0){
+                $authStatus = true;
+                if($childId){
+                    $authStatus = false;
+                    foreach($p_userinfo['tixi_auth'][$parentId] as $k=>$cId){
+                        if($childId==$cId){
+                            $authStatus = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return $authStatus;
     }
 }

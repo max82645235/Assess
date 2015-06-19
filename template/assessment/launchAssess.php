@@ -17,7 +17,7 @@
     <script>
         var AssessInstance =  new Assess();
         $(function(){
-            AssessInstance.triggerBusSelect(); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(false); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
@@ -53,7 +53,7 @@
 
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect();
+                AssessInstance.triggerBusSelect(false);
             });
         });
     </script>

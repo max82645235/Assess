@@ -44,7 +44,7 @@ if($_REQUEST['act']=='launchAssess'){
                             $assessDao->setAssessUserRelation($uids,$base_id);
                         }
                     }
-                    echo json_encode(array('status'=>'success'));
+                    echo json_encode(array('status'=>''));
                 }
             }
             die();
@@ -76,13 +76,17 @@ if($_REQUEST['act']=='launchAssess'){
 
 //部门二级分类
 if($_REQUEST['act']=='ajaxBusClassify'){
-    if(isset($_GET['bus_area_parent']) && isset($cfg['tixi'])){
-        $bus_area_parent = $_GET['bus_area_parent'];
+    if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
+        $bus_area_parent = $_REQUEST['bus_area_parent'];
+        $validAuth = $_REQUEST['validAuth'];
         $retData = array();
+        $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
-                $retData['data'][] = $tmp;
+                if(!$validAuth || $assessDao->validBusAuth($bus_area_parent,$k)){
+                    $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
+                    $retData['data'][] = $tmp;
+                }
             }
             $retData['status'] = 'success';
         }

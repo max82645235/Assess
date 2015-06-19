@@ -1,11 +1,13 @@
 var Assess = function(){};
 Assess.prototype = {
-    triggerBusSelect:function(){
+    triggerBusSelect:function(validAuth){
         var bus_area_parent =  $("#bus_area_parent").val();
         $.ajax({
             type:'get',
             url:'/salary/index.php',
-            data:{m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent},
+            data:{
+                m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
+            },
             dataType:'json',
             success:function(ret){
                 if(ret.status=='success'){

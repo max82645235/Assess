@@ -11,10 +11,10 @@
     <script type="text/javascript">
         var AssessInstance =  new Assess();
         $(function(){
-            AssessInstance.triggerBusSelect(); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(true); //刚进页面时触发一次部门二级联动ajax查询
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect();
+                AssessInstance.triggerBusSelect(true);
             });
 
             $("#copy_assess_btn").click(function(){
