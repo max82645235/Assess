@@ -94,12 +94,11 @@ if($_REQUEST['act']=='publishAssess'){
     if(!$auth->getBtnAuth()){
         return false;
     }
-    $userId = getUserId();
 
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
         $baseId = intval($_REQUEST['base_id']);
-        if($assessDao->setAssessPublishStatus($baseId,$userId)){
+        if($assessDao->setAssessPublishStatus($baseId)){
             $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl('base_id');
             alertMsg('发布成功',$jumpUrl);
             die();
@@ -113,7 +112,7 @@ if($_REQUEST['act']=='publishAssess'){
         $baseIdList = $_REQUEST['selectedItemList'];
         try{
             foreach($baseIdList as $baseId){
-                $assessDao->setAssessPublishStatus($baseId,$uid);
+                $assessDao->setAssessPublishStatus($baseId);
             }
             $retData['status'] = 'success';
         }catch (Exception $e){

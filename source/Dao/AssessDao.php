@@ -321,9 +321,9 @@ class AssessDao extends BaseDao{
     }
 
     //设置发布状态
-    public function setAssessPublishStatus($baseId,$userId){
+    public function setAssessPublishStatus($baseId){
         $tbl = "`".DB_PREFIX."assess_base`";
-        $findRecordSql = "select * from {$tbl} where base_id = {$baseId} and userId={$userId}";
+        $findRecordSql = "select * from {$tbl} where base_id = {$baseId}";
         if($findRecord = $this->db->GetRow($findRecordSql)){
             $findRecord['base_status'] = 1;//已发布
             $where = " base_id={$findRecord['base_id']}";
@@ -353,7 +353,7 @@ class AssessDao extends BaseDao{
                 $uids = substr($uids,0,-1);
             }
             if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
-                $findAttrRecordSql = " select * from sa_assess_attr where base_id={$base_id} ";
+                $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
                 $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
                 if($findAttrRecords){
                     foreach($findAttrRecords as $k=>$record){
@@ -374,7 +374,7 @@ class AssessDao extends BaseDao{
 
     //获取base_id相关人
     public function getRelatedUserRecord($base_id){
-        $sql = "select * from sa_assess_user_relation where base_id={$$base_id}";
+        $sql = "select * from sa_assess_user_relation where base_id={$base_id}";
         $findRecords = $this->db->GetAll($sql);
         return $findRecords;
     }

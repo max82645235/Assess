@@ -295,7 +295,7 @@ function getIsRootGroup(){
 
 //获取用户的业务部门id
  function getUserBusId(){
-    $busId = '';
+    $busId = '1';
     return $busId;
 }
 
