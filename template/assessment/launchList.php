@@ -158,7 +158,7 @@
                                 <?php
                                         //克隆 || 发布 至少有一个权限类验证通过时，checkbox选项才能开启
                                         $canEdit = true;
-                                        $isMy =  $data['uid']==$uid;
+                                        $isMy =  $data['userId']==$userId;
                                         $canEdit = $authList['authClone']->setIsMy($isMy)->validIsAuth();
                                         $canEdit = $canEdit && $authList['authPublish']->setIsMy($isMy)->validIsAuth();
                                 ?>
@@ -175,7 +175,17 @@
                             <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td>
-                                <a href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">编辑</a>
+                                <?php if($authList['authLaunch']->setIsMy($isMy)->validIsAuth()){?>
+                                        <a href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">编辑</a>
+                                <?php }?>
+
+                                <?php if($authList['authClone']->setIsMy($isMy)->validIsAuth()){?>
+                                        <a href="?m=assessment&a=launchList&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">克隆</a>
+                                <?php }?>
+
+                                <?php if($authList['authPublish']->setIsMy($isMy)->validIsAuth()){?>
+                                        <a href="?m=assessment&a=launchList&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">发布</a>
+                                <?php }?>
                             </td>
                         </tr>
                     <?php }?>

@@ -298,4 +298,13 @@ function getIsRootGroup(){
     $busId = '';
     return $busId;
 }
+
+function alertMsg($msg,$url=''){
+    $script = "<script>alert('{$msg}');";
+    if($url){
+        $script.="location.href='{$url}';";
+    }
+    $script.="</script>";
+    return $script;
+}
 ?>

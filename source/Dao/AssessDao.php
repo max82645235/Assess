@@ -34,6 +34,12 @@ class AssessDao extends BaseDao{
     );
 
 
+    const HrAssessWait = 0;
+    const HrAssessPublish = 1;
+    const HrAssessChecking = 2;
+    const HrAssessOver = 3;
+
+
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写
     const AssessPreLeadVIew = 2;//待领导初审|员工已填写完成预期
@@ -101,11 +107,10 @@ class AssessDao extends BaseDao{
 
     //设置考核基础表信息
     public function setAssessBaseRecord($baseRecord){
+        global $p_gid;
         try{
             $tableSafeAttr = array(
-                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','lead_plan_end_date','lead_plan_start_date',
-                'lead_sub_end_date','lead_sub_start_date','staff_plan_end_date','staff_plan_start_date','staff_sub_end_date','staff_sub_start_date',
-                'uid','assess_attr_type','assess_period_type','base_end_date'
+                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','lead_plan_end_date','lead_plan_start_date','lead_sub_end_date','lead_sub_start_date','staff_plan_end_date','staff_plan_start_date','staff_sub_end_date','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId'
             );
             $tbl = "`".DB_PREFIX."assess_base`";
             $baseRecord['base_end_date'] = self::getAssessBaseEndDate($baseRecord['assess_period_type'],$baseRecord['base_start_date']);
@@ -114,7 +119,7 @@ class AssessDao extends BaseDao{
                     unset($baseRecord[$key]);
                 }
             }
-
+            $baseRecord['base_status'] = self::HrAssessWait;
             if(mb_detect_encoding($baseRecord['base_name'],'GBK,UTF-8')=='UTF-8'){
                 $baseRecord['base_name'] = iconv('UTF-8','GBK',$baseRecord['base_name']);
             }
@@ -139,7 +144,8 @@ class AssessDao extends BaseDao{
                 $base_id = $findRecord['base_id'];
             }else{
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
-                $baseRecord['uid'] = getUserId();
+                $baseRecord['uid'] = $p_gid;
+                $baseRecord['userId'] = getUserId();
                 $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);
                 $base_id = $this->db->Insert_ID();
@@ -176,7 +182,9 @@ class AssessDao extends BaseDao{
                     if($k=='itemData' && is_array($data['itemData'])){
                         foreach($data['itemData'] as $i=>$tt){
                             foreach($tt as $attr=>$v){
-                                $data['itemData'][$i][$attr] = iconv('UTF-8','GBK',$v);
+                                if(mb_detect_encoding($v,'UTF-8,GBK')=='UTF-8'){
+                                    $data['itemData'][$i][$attr] = iconv('UTF-8','GBK',$v);
+                                }
                             }
                         }
                         $data['itemData'] = serialize($data['itemData']);
@@ -207,18 +215,18 @@ class AssessDao extends BaseDao{
     //设置考核人员item表信息
     public function setAssessUserItemRecord($uidArr,$attrResult){
         if($uidArr && $attrResult){
-            foreach($uidArr as $uid){
+            foreach($uidArr as $userId){
                 $tmpArr = array();
                 foreach($attrResult as $k=>$attrData){
 
                     //assess_user_item表更新 start---
                     $tbl = "`".DB_PREFIX."assess_user_item`";
-                    $tmpArr['uid'] = $uid;
+                    $tmpArr['userId'] = $userId;
                     $tmpArr['attr_id'] = $attrData['attr_id'];
                     $tmpArr['itemData'] = $attrData['itemData'];
                     $tmpArr['base_id'] = $attrData['base_id'];
                     $tmpArr['item_weight'] = $attrData['weight'];
-                    $findRecordSql = "select * from {$tbl} where uid = $uid and  attr_id = {$attrData['attr_id']}";
+                    $findRecordSql = "select * from {$tbl} where userId = $userId and  attr_id = {$attrData['attr_id']}";
                     if($findRecord = $this->db->GetRow($findRecordSql)){
                         foreach($findRecord as $k=>$v){
                             if(isset($tmpArr[$k])){
@@ -242,11 +250,11 @@ class AssessDao extends BaseDao{
     public function setAssessUserRelation($uidArr,$base_id){
         if($uidArr && $base_id){
             $tbl =  "`".DB_PREFIX."assess_user_relation`";
-            foreach($uidArr as $uid){
+            foreach($uidArr as $userId){
                 $tmpArr = array();
-                $tmpArr['uid'] = $uid;
+                $tmpArr['userId'] = $userId;
                 $tmpArr['base_id'] = $base_id;
-                $findRecordSql = "select * from {$tbl} where uid = {$uid} and  base_id = {$base_id}";
+                $findRecordSql = "select * from {$tbl} where userId = {$userId} and  base_id = {$base_id}";
                 if(!$findRecord = $this->db->GetRow($findRecordSql)){
                     $tmpArr['user_assess_status'] = self::AssessCreate;
                     $sql = self::get_insert_sql($tbl,$tmpArr);
@@ -286,8 +294,8 @@ class AssessDao extends BaseDao{
         }
 
         if(isset($conditionParams['byme_status']) && $conditionParams['byme_status']==1){
-            $uid = getUserId();
-            $sqlWhere.=" AND $tableName.uid='$uid'";
+            $userId = getUserId();
+            $sqlWhere.=" AND $tableName.userId='$userId'";
             $pageConditionUrl.="&byme_status=".$conditionParams['base_status'];
         }
 
@@ -302,10 +310,10 @@ class AssessDao extends BaseDao{
     }
 
     //拼接获取搜索查询条件url
-    public function getConditionParamUrl(){
+    public function getConditionParamUrl($filterParam = array()){
         $pageUrl = '';
         foreach($_GET as $key=>$v){
-            if(!in_array($key,array('a','m'))){
+            if(!$filterParam ||!in_array($key,$filterParam)){
                 $pageUrl .= "{$key}={$v}&";
             }
         }
@@ -313,27 +321,62 @@ class AssessDao extends BaseDao{
     }
 
     //设置发布状态
-    public function setAssessPublishStatus($baseId,$uid){
+    public function setAssessPublishStatus($baseId,$userId){
         $tbl = "`".DB_PREFIX."assess_base`";
-        $findRecordSql = "select * from {$tbl} where base_id = {$baseId} and uid={$uid}";
+        $findRecordSql = "select * from {$tbl} where base_id = {$baseId} and userId={$userId}";
         if($findRecord = $this->db->GetRow($findRecordSql)){
             $findRecord['base_status'] = 1;//已发布
             $where = " base_id={$findRecord['base_id']}";
             $sql = self::get_update_sql($tbl,$findRecord,$where);
             $this->db->Execute($sql);
-            return ;
+            return true;
         }
     }
 
     //克隆考核数据
-    public function copyAssessRecord($baseId,$uid){
-        $tbl = "`".DB_PREFIX."assess_base`";
-        $findRecordSql = "select * from {$tbl} where base_id = {$baseId} and uid={$uid}";
+    public function copyAssessRecord($baseId){
+        $findRecordSql = "select * from sa_assess_base where base_id = {$baseId}";
         if($findBaseRecord = $this->db->GetRow($findRecordSql)){
             //克隆数据-start
-
+            $unsetBaseAttr = array('base_id','base_status','uid','userId','create_time','update_time','publish_date');
+            foreach($findBaseRecord as $k=>$v){
+                if(in_array($k,$unsetBaseAttr)){
+                    unset($findBaseRecord[$k]);
+                }
+            }
+            $relationRecords = $this->getRelatedUserRecord($baseId);
+            $uids = '';
+            if($relationRecords){
+                foreach($relationRecords as $record){
+                    $uids.=$record['userId'].",";
+                }
+                $uids = substr($uids,0,-1);
+            }
+            if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
+                $findAttrRecordSql = " select * from sa_assess_attr where base_id={$base_id} ";
+                $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
+                if($findAttrRecords){
+                    foreach($findAttrRecords as $k=>$record){
+                        $findAttrRecords[$k]['base_id'] = $base_id;
+                        unset($findAttrRecords[$k]['attr_id']);
+                    }
+                    if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
+                        if($findBaseRecord['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+                            $this->setAssessUserItemRecord($uids,$attrResult);
+                            $this->setAssessUserRelation($uids,$base_id);
+                        }
+                    }
+                }
+            }
             //克隆数据-end
         }
+    }
+
+    //获取base_id相关人
+    public function getRelatedUserRecord($base_id){
+        $sql = "select * from sa_assess_user_relation where base_id={$$base_id}";
+        $findRecords = $this->db->GetAll($sql);
+        return $findRecords;
     }
 
     public function getBusParentDropList(){

@@ -64,7 +64,7 @@ if($_REQUEST['act']=='launchAssess'){
             'attrTypeMaps'=>AssessDao::$attrTypeMaps,
             'assessAttrWidget'=>$assessAttrWidget,
             'cfg'=>$cfg,
-            'conditionUrl'=>$assessDao->getConditionParamUrl()
+            'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m'))
         ));
 
         $tpl->render();

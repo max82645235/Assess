@@ -23,6 +23,7 @@ class Auth{
     //判断是否有改条记录的操作权限
     public function validIsAuth(){
         if(getIsRootGroup() || ( $this->getUserGroupAuth() && $this->getBtnAuth())){
+            $this->setIsMy(false);
             return true;
         }
     }

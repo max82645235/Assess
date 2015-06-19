@@ -32,13 +32,15 @@ if($_REQUEST['act']=='launchList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $sql = " select base_id,base_name,assess_period_type,base_start_date,base_end_date,base_status,publish_date,uid  from  {$table} where 1=1 {$where}  order  by base_id desc limit {$offset},{$limit}";
+    $sql = " select base_id,base_name,assess_period_type,base_start_date,base_end_date,base_status,publish_date,userId  from  {$table} where 1=1 {$where}  order  by base_id desc limit {$offset},{$limit}";
     $tableData = $db->GetAll($sql);
 
     //建立权限验证类
+    $authLaunch = new Auth($m,'launchAssess','launchAssess');
     $authClone = new Auth($m,$a,'cloneAssess');
     $authPublish = new Auth($m,$a,'publishAssess');
     $authList = array(
+        'authLaunch'=>$authLaunch,
         'authClone'=>$authClone,
         'authPublish'=>$authPublish
     );
@@ -48,7 +50,7 @@ if($_REQUEST['act']=='launchList'){
         'page_nav'=>$page_nav,
         'pageConditionUrl'=>$searchResult['pageConditionUrl'],
         'bus_parent_list'=>$assessDao->getBusParentDropList(),
-        'uid'=>getUserId(),
+        'userId'=>getUserId(),
         'authList'=>$authList
     ));
     $tpl->render();
@@ -58,6 +60,10 @@ if($_REQUEST['act']=='launchList'){
 //克隆考核
 if($_REQUEST['act']=='cloneAssess'){
     $assessDao = new AssessDao();
+    $auth = new Auth($m,$a,'cloneAssess');
+    if(!$auth->getBtnAuth()){
+        return false;
+    }
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
 
@@ -68,10 +74,9 @@ if($_REQUEST['act']=='cloneAssess'){
         $baseIdList = array();
         $retData = array();
         $baseIdList = $_REQUEST['copyItemList'];
-        $uid = getUserId();
         try{
             foreach($baseIdList as $baseId){
-                $assessDao->copyAssessRecord($baseId,$uid);
+                $assessDao->copyAssessRecord($baseId);
             }
             $retData['status'] = 'success';
         }catch (Exception $e){
@@ -85,9 +90,20 @@ if($_REQUEST['act']=='cloneAssess'){
 //发布考核
 if($_REQUEST['act']=='publishAssess'){
     $assessDao = new AssessDao();
+    $auth = new Auth($m,$a,'publishAssess');
+    if(!$auth->getBtnAuth()){
+        return false;
+    }
+    $userId = getUserId();
+
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
-
+        $baseId = intval($_REQUEST['base_id']);
+        if($assessDao->setAssessPublishStatus($baseId,$userId)){
+            $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl('base_id');
+            alertMsg('发布成功',$jumpUrl);
+            die();
+        }
     }
 
     //ajax批量方式
@@ -95,7 +111,6 @@ if($_REQUEST['act']=='publishAssess'){
         $baseIdList = array();
         $retData = array();
         $baseIdList = $_REQUEST['selectedItemList'];
-        $uid = getUserId();
         try{
             foreach($baseIdList as $baseId){
                 $assessDao->setAssessPublishStatus($baseId,$uid);
