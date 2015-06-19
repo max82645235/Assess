@@ -62,11 +62,18 @@ if($_REQUEST['act']=='cloneAssess'){
     $assessDao = new AssessDao();
     $auth = new Auth($m,$a,'cloneAssess');
     if(!$auth->getBtnAuth()){
+
         return false;
     }
+
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
 
+        $baseId = intval($_REQUEST['base_id']);
+        $assessDao->copyAssessRecord($baseId);
+        $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl(array('base_id','act'));
+        alertMsg('克隆成功',$jumpUrl);
+        die();
     }
 
     //ajax批量方式
@@ -99,7 +106,7 @@ if($_REQUEST['act']=='publishAssess'){
     if(isset($_REQUEST['base_id'])){
         $baseId = intval($_REQUEST['base_id']);
         if($assessDao->setAssessPublishStatus($baseId)){
-            $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl('base_id');
+            $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl(array('base_id','act'));
             alertMsg('发布成功',$jumpUrl);
             die();
         }

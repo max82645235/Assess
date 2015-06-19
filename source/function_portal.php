@@ -305,6 +305,6 @@ function alertMsg($msg,$url=''){
         $script.="location.href='{$url}';";
     }
     $script.="</script>";
-    return $script;
+    echo  $script;
 }
 ?>

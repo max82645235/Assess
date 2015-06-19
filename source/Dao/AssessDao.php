@@ -120,9 +120,7 @@ class AssessDao extends BaseDao{
                 }
             }
             $baseRecord['base_status'] = self::HrAssessWait;
-            if(mb_detect_encoding($baseRecord['base_name'],'GBK,UTF-8')=='UTF-8'){
-                $baseRecord['base_name'] = iconv('UTF-8','GBK',$baseRecord['base_name']);
-            }
+            $baseRecord['base_name'] = iconv('UTF-8','GBK//IGNORE',$baseRecord['base_name']);
             if(isset($baseRecord['base_id']) && $baseRecord['base_id']){
                 $base_sql = "select * from sa_assess_base where base_id={$baseRecord['base_id']} ";
                 $findRecord = $this->db->GetRow($base_sql);
@@ -182,9 +180,7 @@ class AssessDao extends BaseDao{
                     if($k=='itemData' && is_array($data['itemData'])){
                         foreach($data['itemData'] as $i=>$tt){
                             foreach($tt as $attr=>$v){
-                                if(mb_detect_encoding($v,'UTF-8,GBK')=='UTF-8'){
-                                    $data['itemData'][$i][$attr] = iconv('UTF-8','GBK',$v);
-                                }
+                                $data['itemData'][$i][$attr] = iconv('UTF-8','GBK//IGNORE',$v);
                             }
                         }
                         $data['itemData'] = serialize($data['itemData']);
@@ -296,7 +292,7 @@ class AssessDao extends BaseDao{
         if(isset($conditionParams['byme_status']) && $conditionParams['byme_status']==1){
             $userId = getUserId();
             $sqlWhere.=" AND $tableName.userId='$userId'";
-            $pageConditionUrl.="&byme_status=".$conditionParams['base_status'];
+            $pageConditionUrl.="&byme_status=".$conditionParams['byme_status'];
         }
 
         if(isset($conditionParams['assess_period_type']) && $conditionParams['assess_period_type']){

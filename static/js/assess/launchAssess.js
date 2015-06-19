@@ -67,9 +67,11 @@ Assess.prototype = {
             type:'post',
             url:'/salary/index.php',
             data:data,
-            contentType:'application/x-www-form-urlencoded; charset=GBK',
+            dataType:'json',
             success:function(retData){
-                alert('保存成功！')
+                if(retData.status=='success'){
+                    alert('保存成功！');
+                }
             }
         });
     },

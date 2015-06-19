@@ -176,15 +176,15 @@
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td>
                                 <?php if($authList['authLaunch']->setIsMy($isMy)->validIsAuth()){?>
-                                        <a href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">编辑</a>
+                                        <a href="?m=assessment&a=launchAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">编辑</a>
                                 <?php }?>
 
                                 <?php if($authList['authClone']->setIsMy($isMy)->validIsAuth()){?>
-                                        <a href="?m=assessment&a=launchList&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">克隆</a>
+                                        <a href="?m=assessment&a=launchList&act=cloneAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">克隆</a>
                                 <?php }?>
 
                                 <?php if($authList['authPublish']->setIsMy($isMy)->validIsAuth()){?>
-                                        <a href="?m=assessment&a=launchList&<?=$pageConditionUrl?>&base_id=<?=$data['base_id']?>" class="bjwrt">发布</a>
+                                        <a href="?m=assessment&a=launchList&act=publishAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">发布</a>
                                 <?php }?>
                             </td>
                         </tr>

@@ -44,6 +44,7 @@ if($_REQUEST['act']=='launchAssess'){
                             $assessDao->setAssessUserRelation($uids,$base_id);
                         }
                     }
+                    echo json_encode(array('status'=>'success'));
                 }
             }
             die();
