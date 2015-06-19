@@ -183,7 +183,7 @@
                                         <a href="?m=assessment&a=launchList&act=cloneAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">¿ËÂ¡</a>
                                 <?php }?>
 
-                                <?php if($authList['authPublish']->setIsMy($isMy)->validIsAuth()){?>
+                                <?php if($authList['authPublish']->setIsMy($isMy)->validIsAuth() && $data['base_status']==AssessDao::HrAssessWait){?>
                                         <a href="?m=assessment&a=launchList&act=publishAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">·¢²¼</a>
                                 <?php }?>
                             </td>

@@ -61,16 +61,10 @@ if($_REQUEST['act']=='launchList'){
 if($_REQUEST['act']=='cloneAssess'){
     $assessDao = new AssessDao();
     $auth = new Auth($m,$a,'cloneAssess');
-    if(!$auth->getBtnAuth()){
-
-        return false;
-    }
-
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
-
         $baseId = intval($_REQUEST['base_id']);
-        $assessDao->copyAssessRecord($baseId);
+        $assessDao->copyAssessRecord($baseId,$auth);
         $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl(array('base_id','act'));
         alertMsg('克隆成功',$jumpUrl);
         die();
@@ -83,7 +77,7 @@ if($_REQUEST['act']=='cloneAssess'){
         $baseIdList = $_REQUEST['copyItemList'];
         try{
             foreach($baseIdList as $baseId){
-                $assessDao->copyAssessRecord($baseId);
+                $assessDao->copyAssessRecord($baseId,$auth);
             }
             $retData['status'] = 'success';
         }catch (Exception $e){
@@ -98,14 +92,10 @@ if($_REQUEST['act']=='cloneAssess'){
 if($_REQUEST['act']=='publishAssess'){
     $assessDao = new AssessDao();
     $auth = new Auth($m,$a,'publishAssess');
-    if(!$auth->getBtnAuth()){
-        return false;
-    }
-
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
         $baseId = intval($_REQUEST['base_id']);
-        if($assessDao->setAssessPublishStatus($baseId)){
+        if($assessDao->setAssessPublishStatus($baseId,$auth)){
             $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl(array('base_id','act'));
             alertMsg('发布成功',$jumpUrl);
             die();
@@ -119,7 +109,7 @@ if($_REQUEST['act']=='publishAssess'){
         $baseIdList = $_REQUEST['selectedItemList'];
         try{
             foreach($baseIdList as $baseId){
-                $assessDao->setAssessPublishStatus($baseId);
+                $assessDao->setAssessPublishStatus($baseId,$auth);
             }
             $retData['status'] = 'success';
         }catch (Exception $e){

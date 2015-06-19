@@ -120,7 +120,9 @@ class AssessDao extends BaseDao{
                 }
             }
             $baseRecord['base_status'] = self::HrAssessWait;
-            $baseRecord['base_name'] = iconv('UTF-8','GBK//IGNORE',$baseRecord['base_name']);
+            if(mb_detect_encoding($baseRecord['base_name'])=='UTF-8'){
+                $baseRecord['base_name'] = iconv('UTF-8','GBK//IGNORE',$baseRecord['base_name']);
+            }
             if(isset($baseRecord['base_id']) && $baseRecord['base_id']){
                 $base_sql = "select * from sa_assess_base where base_id={$baseRecord['base_id']} ";
                 $findRecord = $this->db->GetRow($base_sql);
@@ -180,7 +182,9 @@ class AssessDao extends BaseDao{
                     if($k=='itemData' && is_array($data['itemData'])){
                         foreach($data['itemData'] as $i=>$tt){
                             foreach($tt as $attr=>$v){
-                                $data['itemData'][$i][$attr] = iconv('UTF-8','GBK//IGNORE',$v);
+                                if(mb_detect_encoding($v)=='UTF-8'){
+                                    $data['itemData'][$i][$attr] = iconv('UTF-8','GBK//IGNORE',$v);
+                                }
                             }
                         }
                         $data['itemData'] = serialize($data['itemData']);
@@ -317,54 +321,61 @@ class AssessDao extends BaseDao{
     }
 
     //设置发布状态
-    public function setAssessPublishStatus($baseId){
+    public function setAssessPublishStatus($baseId,Auth $auth){
         $tbl = "`".DB_PREFIX."assess_base`";
         $findRecordSql = "select * from {$tbl} where base_id = {$baseId}";
         if($findRecord = $this->db->GetRow($findRecordSql)){
-            $findRecord['base_status'] = 1;//已发布
-            $where = " base_id={$findRecord['base_id']}";
-            $sql = self::get_update_sql($tbl,$findRecord,$where);
-            $this->db->Execute($sql);
-            return true;
+            $isMy = $findRecord['userId'] == getUserId();
+            if($auth->setIsMy($isMy)->validIsAuth()){
+                $findRecord['base_status'] = 1;//已发布
+                $where = " base_id={$findRecord['base_id']}";
+                $sql = self::get_update_sql($tbl,$findRecord,$where);
+                $this->db->Execute($sql);
+                return true;
+            }
         }
     }
 
     //克隆考核数据
-    public function copyAssessRecord($baseId){
+    public function copyAssessRecord($baseId,Auth $auth){
         $findRecordSql = "select * from sa_assess_base where base_id = {$baseId}";
         if($findBaseRecord = $this->db->GetRow($findRecordSql)){
-            //克隆数据-start
-            $unsetBaseAttr = array('base_id','base_status','uid','userId','create_time','update_time','publish_date');
-            foreach($findBaseRecord as $k=>$v){
-                if(in_array($k,$unsetBaseAttr)){
-                    unset($findBaseRecord[$k]);
-                }
-            }
-            $relationRecords = $this->getRelatedUserRecord($baseId);
-            $uids = '';
-            if($relationRecords){
-                foreach($relationRecords as $record){
-                    $uids.=$record['userId'].",";
-                }
-                $uids = substr($uids,0,-1);
-            }
-            if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
-                $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
-                $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
-                if($findAttrRecords){
-                    foreach($findAttrRecords as $k=>$record){
-                        $findAttrRecords[$k]['base_id'] = $base_id;
-                        unset($findAttrRecords[$k]['attr_id']);
+            $isMy = $findBaseRecord['userId'] == getUserId();
+            if($auth->setIsMy($isMy)->validIsAuth()){
+                //克隆数据-start
+                $unsetBaseAttr = array('base_id','base_status','uid','userId','create_time','update_time','publish_date');
+                foreach($findBaseRecord as $k=>$v){
+                    if(in_array($k,$unsetBaseAttr)){
+                        unset($findBaseRecord[$k]);
                     }
-                    if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
-                        if($findBaseRecord['lead_direct_set_status']==0){//没有勾选直接由领导设置时
-                            $this->setAssessUserItemRecord($uids,$attrResult);
-                            $this->setAssessUserRelation($uids,$base_id);
+                }
+                $relationRecords = $this->getRelatedUserRecord($baseId);
+                $uids = '';
+                if($relationRecords){
+                    foreach($relationRecords as $record){
+                        $uids.=$record['userId'].",";
+                    }
+                    $uids = substr($uids,0,-1);
+                }
+                if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
+                    $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
+                    $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
+                    if($findAttrRecords){
+                        foreach($findAttrRecords as $k=>$record){
+                            $findAttrRecords[$k]['base_id'] = $base_id;
+                            unset($findAttrRecords[$k]['attr_id']);
+                        }
+                        if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
+                            if($findBaseRecord['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+                                $this->setAssessUserItemRecord($uids,$attrResult);
+                                $this->setAssessUserRelation($uids,$base_id);
+                            }
                         }
                     }
                 }
+                //克隆数据-end
             }
-            //克隆数据-end
+
         }
     }
 
