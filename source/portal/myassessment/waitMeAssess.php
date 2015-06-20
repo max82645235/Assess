@@ -44,9 +44,11 @@ if($_REQUEST['act']=='waitMeList'){
 //考核员工列表
 if($_REQUEST['act']=='myStaffList'){
     $base_id = $_REQUEST['base_id'];
+    $assessDao = new AssessDao();
+    $assessBaseRecord = $assessDao->getAssessBaseRecord($base_id);
     $assessFlowDao = new AssessFlowDao();
-    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];
-    $getStaffSql = $assessFlowDao->getStaffListForLeaderSql($_REQUEST);
+    $resultList = $assessFlowDao->getStaffListForLeaderSql($_REQUEST);
+    $getStaffSql = $resultList['staffListSql'];
     $countSql = " count(a.*)";
     $countSql = str_replace('[*]',$countSql,$getStaffSql);
     $count = $db->GetOne($countSql);
@@ -57,12 +59,14 @@ if($_REQUEST['act']=='myStaffList'){
     //获取表格查询结果
     $findSql = " a.*,b.user_assess_status";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
+    //echo $findSql."<br/>";
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
         'tableData'=>$tableData,
         'page_nav'=>$page_nav,
-        'pageConditionUrl'=>$searchResult['pageConditionUrl'],
+        'pageConditionUrl'=>$resultList['pageConditionUrl'],
         'bus_parent_list'=>$assessDao->getBusParentDropList(),
+        'assessBaseRecord'=>$assessBaseRecord
     ));
     $tpl->render();
     die();

@@ -79,13 +79,18 @@ class AssessDao extends BaseDao{
         return $sql;
     }
 
+    public function getAssessBaseRecord($base_id){
+        //获取基础表相关信息
+        $base_sql = "select * from sa_assess_base where base_id={$base_id} ";
+        $base_info = $this->db->GetRow($base_sql);
+        return $base_info;
+    }
 
     //根据base_id获取考核相关信息
     public function getAssessRecordInfo($base_id){
         $record_info = array();
         //获取基础表相关信息
-        $base_sql = "select * from sa_assess_base where base_id={$base_id} ";
-        $base_info = $this->db->GetRow($base_sql);
+        $base_info = $this->getAssessBaseRecord($base_id);
         if($base_info){
             $record_info['base_info'] = $base_info;
         }

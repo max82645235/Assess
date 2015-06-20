@@ -12,7 +12,7 @@ class AssessFlowDao extends BaseDao{
 
     static $UserAssessStatusByLeader = array(
         '0'=>'待我创建',
-        '1'=>'待下属填写计划',
+        '1'=>'待被考核人填写计划',
         '2'=>'待我初审',
         '3'=>"考核中",
         '4'=>'待下属汇报',
@@ -22,10 +22,10 @@ class AssessFlowDao extends BaseDao{
 
     static $UserAssessStatusByStaff = array(
         '1'=>"待我制定计划",
-        '2'=>"待领导初审",
+        '2'=>"待考核人初审",
         '3'=>'考核中',
         '4'=>'待我汇报',
-        '5'=>"待领导终审",
+        '5'=>"待考核人终审",
         '6'=>'终审完成'
     );
 
@@ -71,8 +71,8 @@ class AssessFlowDao extends BaseDao{
         $curUserId = getUserBusId();
         $addStatusSql = "and a.status=$status ";
         $getRelationBaseIdSql = "select c.base_id,c.base_status from sa_user_relation as a
-                                    left join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId $addStatusSql
-                                    left join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
+                                 inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId $addStatusSql
+                                 inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
         //echo $getRelationBaseIdSql."</br>";
         $result = $this->db->getAll($getRelationBaseIdSql);
         if($result){
@@ -89,16 +89,33 @@ class AssessFlowDao extends BaseDao{
     //获取某一考核下领导的下属员工
     public function getStaffListForLeaderSql($conditionParams = array()){
         $base_Id = $conditionParams['base_id'];
-        $userAssessStatus = $conditionParams['userAssessStatus'];
-        $userName = $conditionParams['userName'];
         $curUserId = getUserBusId();
         $addSql = "";
-        $addSql.= "and b.status=$userAssessStatus ";//附加用户填写状态条件
-        $addSql.= ($userName)?" and a like'%{$userName}%'":""; //附加用户名模糊查询条件
-        $staffListSql = "select [*] from sa_user as a
-                left join sa_assess_user_relation as b on a.userId=b.userId and b.base_id={$base_Id} $addSql
-                left join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId ";
-        return $staffListSql;
+        $pageConditionUrl = '';
+        $resultList = array();
+        if(isset($conditionParams['user_assess_status']) && $conditionParams['user_assess_status']!==''){
+            $addSql.= "and b.user_assess_status={$conditionParams['user_assess_status']}";//附加用户填写状态条件
+            $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
+        }
+        if(isset($conditionParams['bus_area_parent']) && $conditionParams['bus_area_parent']){
+            $addSql.=" and a.tixi={$conditionParams['bus_area_parent']}";
+            $pageConditionUrl.="&bus_area_parent={$conditionParams['bus_area_parent']}";
+        }
+
+        if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
+            $addSql.=" and a.comp_dept={$conditionParams['bus_area_parent']}";
+            $pageConditionUrl.="&bus_area_child={$conditionParams['bus_area_child']}";
+        }
+
+        if(isset($conditionParams['username']) && $conditionParams['username']){
+            $addSql.= "and a.username like'%{$conditionParams['username']}%'"; //附加用户名模糊查询条件
+            $pageConditionUrl.="&username={$conditionParams['username']}";
+        }
+        $resultList['staffListSql'] = "select [*] from sa_user as a
+                inner join sa_assess_user_relation as b on a.userId=b.userId and b.base_id={$base_Id} $addSql
+                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId ";
+        $resultList['pageConditionUrl'] = $pageConditionUrl;
+        return $resultList;
 
     }
 }
