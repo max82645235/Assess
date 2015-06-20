@@ -33,6 +33,12 @@ class AssessDao extends BaseDao{
         '3'=>'考核完'
     );
 
+    static $LeaderAssessBaseStatus = array(
+        '1'=>'待我审核',
+        '2'=>'考核中',
+        '3'=>'考核完'
+    );
+
 
     const HrAssessWait = 0;
     const HrAssessPublish = 1;
@@ -40,12 +46,6 @@ class AssessDao extends BaseDao{
     const HrAssessOver = 3;
 
 
-    const AssessCreate= 0;//待领导创建
-    const AssessPreStaffWrite = 1;//待员工填写
-    const AssessPreLeadVIew = 2;//待领导初审|员工已填写完成预期
-    const AssessPreSuccess = 3;//领导初审通过
-    const AssessRealLeadView = 4;//待领导终审|员工已填写完实际
-    const AssessRealSuccess = 5;//领导终审通过
     static function get_insert_sql($tbl,$arrFields){
         $ctn = 0;
         foreach($arrFields as $k=>$val){
@@ -256,7 +256,7 @@ class AssessDao extends BaseDao{
                 $tmpArr['base_id'] = $base_id;
                 $findRecordSql = "select * from {$tbl} where userId = {$userId} and  base_id = {$base_id}";
                 if(!$findRecord = $this->db->GetRow($findRecordSql)){
-                    $tmpArr['user_assess_status'] = self::AssessCreate;
+                    $tmpArr['user_assess_status'] = 0;
                     $sql = self::get_insert_sql($tbl,$tmpArr);
                     $this->db->Execute($sql);
                 }
@@ -338,6 +338,7 @@ class AssessDao extends BaseDao{
             $isMy = $findRecord['userId'] == getUserId();
             if($auth->setIsMy($isMy)->validIsAuth()){
                 $findRecord['base_status'] = 1;//已发布
+                $findRecord['publish_date'] = date("Y-m-d");
                 $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
