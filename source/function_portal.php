@@ -64,6 +64,20 @@ function curl_get_contents($url){
     return $content; 
 }
 
+// 获取量化指标分类列表
+function get_indicator_type_list(){
+    global $db;
+
+    $arr_indicator_types = array();
+    $sql = "SELECT `typeid`, `type` FROM `".DB_PREFIX."indicator_type` WHERE `status`=1 ORDER BY `typeid`";
+    $rs = $db->Execute($sql);
+    while($r = $rs->FetchRow()){
+        $arr_indicator_types[$r['typeid']] = $r['type'];
+    }
+
+    return $arr_indicator_types;
+}
+
 // 获取角色列表
 function get_group_list(){
     global $db,$p_gid;
@@ -266,5 +280,31 @@ function tbl_check_auth($m,$a,$act,$tbl,$inajax=0,$id=0,$authfield="deal_userid"
     }
 
     return true;
+}
+
+function getUserId(){
+    if(@LOCAL_EV){
+        return 1;
+    }
+    return (isset($_SESSION[DB_PREFIX.'user_id']))?$_SESSION[DB_PREFIX.'user_id']:'';
+}
+
+function getIsRootGroup(){
+    return true;
+}
+
+//获取用户的业务部门id
+ function getUserBusId(){
+    $busId = '1';
+    return $busId;
+}
+
+function alertMsg($msg,$url=''){
+    $script = "<script>alert('{$msg}');";
+    if($url){
+        $script.="location.href='{$url}';";
+    }
+    $script.="</script>";
+    echo  $script;
 }
 ?>

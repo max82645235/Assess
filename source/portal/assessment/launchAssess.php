@@ -41,8 +41,10 @@ if($_REQUEST['act']=='launchAssess'){
                         $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                         if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
+                            $assessDao->setAssessUserRelation($uids,$base_id);
                         }
                     }
+                    echo json_encode(array('status'=>''));
                 }
             }
             die();
@@ -55,21 +57,15 @@ if($_REQUEST['act']=='launchAssess'){
         }
 
 
-        $attrTypeMaps = array(
-            '1'=>'量化指标类',
-            '2'=>'工作任务类',
-            '3'=>'打分类',
-            '4'=>'提成类'
-        );
-
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
 
         $tpl = new NewTpl('assessment/launchAssess.php',array(
             'record_info'=>$record_info,
-            'attrTypeMaps'=>$attrTypeMaps,
+            'attrTypeMaps'=>AssessDao::$attrTypeMaps,
             'assessAttrWidget'=>$assessAttrWidget,
-            'cfg'=>$cfg
+            'cfg'=>$cfg,
+            'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m'))
         ));
 
         $tpl->render();
@@ -80,13 +76,17 @@ if($_REQUEST['act']=='launchAssess'){
 
 //部门二级分类
 if($_REQUEST['act']=='ajaxBusClassify'){
-    if(isset($_GET['bus_area_parent']) && isset($cfg['tixi'])){
-        $bus_area_parent = $_GET['bus_area_parent'];
+    if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
+        $bus_area_parent = $_REQUEST['bus_area_parent'];
+        $validAuth = $_REQUEST['validAuth'];
         $retData = array();
+        $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
-                $retData['data'][] = $tmp;
+                if(!$validAuth || $assessDao->validBusAuth($bus_area_parent,$k)){
+                    $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
+                    $retData['data'][] = $tmp;
+                }
             }
             $retData['status'] = 'success';
         }

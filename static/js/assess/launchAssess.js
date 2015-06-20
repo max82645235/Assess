@@ -1,11 +1,13 @@
 var Assess = function(){};
 Assess.prototype = {
-    triggerBusSelect:function(){
+    triggerBusSelect:function(validAuth){
         var bus_area_parent =  $("#bus_area_parent").val();
         $.ajax({
             type:'get',
             url:'/salary/index.php',
-            data:{m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent},
+            data:{
+                m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
+            },
             dataType:'json',
             success:function(ret){
                 if(ret.status=='success'){
@@ -67,9 +69,11 @@ Assess.prototype = {
             type:'post',
             url:'/salary/index.php',
             data:data,
-            contentType:'application/x-www-form-urlencoded; charset=GBK',
+            dataType:'json',
             success:function(retData){
-                alert('保存成功！')
+                if(retData.status=='success'){
+                    alert('保存成功！');
+                }
             }
         });
     },
@@ -289,6 +293,38 @@ Assess.prototype = {
             });
         }else{
             ajax_cache.replaceChildSelect(jSelectDom,ajax_cache[indicator_parent])
+        }
+    },
+    tableTopChecked:function(dom){
+        var checked = $(dom).prop("checked");
+        $(dom).parents('table ').find('tbody tr:gt(0)').each(function(){
+            if(!$(this).find('td:eq(0) input').is(":disabled")){
+                $(this).find('td:eq(0) input').prop('checked',checked);
+            }
+        });
+    },
+    tableBtnHandler:function(jTableElement,filterItem,callback){
+        var selectedItem = [];
+        var callBackStatus = true;
+        jTableElement.find('tr:gt(0)').each(function(){
+            var input = $(this).find('td:eq(0) input');
+            if(input.prop("checked")==true){
+                var itemId = input.attr('tag');
+                if( typeof filterItem == 'function'){
+                    if(!filterItem(input)){
+                        callBackStatus = false;
+                        return false;
+                    }
+                }
+                selectedItem.push(itemId);
+            }
+        });
+        if(callBackStatus){
+            if(selectedItem.length>0){
+                callback(selectedItem);
+            }else{
+                alert('请先勾选操作项');
+            }
         }
     }
 };

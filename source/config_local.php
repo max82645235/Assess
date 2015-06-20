@@ -44,12 +44,12 @@ $cfg['POWER'] = array(
     ),
     'assessment' => array(
         'name' => "¿¼ºË¹ÜÀí",
-        'detail' => array('list'=>'¿¼ºË¹ÜÀí','launchAssess'=>'·¢Æğ¿¼ºË'),
-        'list' => array('edit' => '±à¼­'),
+        'detail' => array('launchList'=>'¿¼ºË¹ÜÀí','launchAssess'=>'·¢Æğ¿¼ºË'),
+        'launchList' => array('edit' => '±à¼­'),
     ),
     'myassessment' => array(
         'name' => "ÎÒµÄ¿¼ºË",
-        'detail' => array('byme' => '´ıÎÒ¿¼ºË','my' => 'ÎÒµÄ¿¼ºË'),
+        'detail' => array('waitMeAssess' => '´ıÎÒ¿¼ºË','myAssess' => 'ÎÒµÄ¿¼ºË'),
         'addmem' => array('edit' => '±à¼­'),
     ),
     'report' => array(
