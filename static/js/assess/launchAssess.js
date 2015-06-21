@@ -238,6 +238,7 @@ Assess.prototype = {
             case '2':
                 itemDom.find("input[name=job_name]").val('');
                 itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=qz]").val('');
                 break;
 
             case '3':

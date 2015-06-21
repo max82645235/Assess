@@ -109,12 +109,8 @@
                     <?php
                         $btnArr = array(
                             '0'=>'创建',
-                            //'1'=>"查看",
                             '2'=>'初审',
-                            //'3'=>'查看',
-                            //'4'=>'查看',
                             '5'=>'终审',
-                            //'6'=>'查看'
                         );
                     ?>
                     <?php if($tableData){?>
@@ -130,7 +126,7 @@
                                     <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
                                     <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                         <span >
-                                             <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
+                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
 
                                     <?php }?>

@@ -48,4 +48,14 @@ class AssessAttrWidget{
             return $renderPath;
         }
     }
+
+    public function renderTableBaseInfo($base_id){
+        require_once BATH_PATH.'source/Dao/AssessDao.php';
+        $assessDao = new AssessDao();
+        $baseInfo = $assessDao->getTableBaseInfo($base_id);
+        $renderPath = BATH_PATH."template/assessment/widget/baseInfoTableWidget.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('baseInfo'=>$baseInfo));
+        $this->tpl->render();
+    }
 }

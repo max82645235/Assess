@@ -57,7 +57,7 @@ if($_REQUEST['act']=='myStaffList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.*,b.user_assess_status";
+    $findSql = " a.*,b.user_assess_status,b.base_id";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
     //echo $findSql."<br/>";
     $tableData = $db->GetAll($findSql);
@@ -72,12 +72,34 @@ if($_REQUEST['act']=='myStaffList'){
     die();
 }
 
+//查看流程
+if($_REQUEST['act']=='viewFlow'){
+
+
+}
+
+if($_REQUEST['act']=='leaderSetFlow'){
+    $userId = $_REQUEST['userId'];
+    $base_id = $_REQUEST['base_id'];
+    $assessFlowDao = new AssessFlowDao();
+    if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
+
+    }else{
+        $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
+        $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+    }
+    $tpl = new NewTpl('waitMeAssess/leaderSetFlow.php',array(
+        'record_info'=>$record_info,
+        'assessAttrWidget'=>$assessAttrWidget
+    ));
+
+    $tpl->render();
+    die();
+}
+
 //员工自设
 if($_REQUEST['act']=='staffDiySet'){
 
 }
 
-//查看流程
-if($_REQUEST['act']=='viewFlow'){
-
-}

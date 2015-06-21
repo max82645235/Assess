@@ -442,4 +442,32 @@ class AssessDao extends BaseDao{
         }
         return $authStatus;
     }
+
+    public function getTableBaseInfo($base_id){
+        $baseRecord = $this->getAssessBaseRecord($base_id);
+        if($baseRecord){
+            $baseRecord = $baseRecord+$this->getSelectBusName($baseRecord['bus_area_parent'],$baseRecord['bus_area_child']);
+        }
+        return $baseRecord;
+    }
+
+    public function getSelectBusName($parentId,$childId=''){
+        global $cfg;
+        $selectBusList = array();
+        foreach($cfg['tixi'] as $k=>$v){
+            if($parentId == $k){
+                $selectBusList['bus_area_parent_name'] = $v['title'];
+                if($childId){
+                    foreach($v['deptlist'] as $i=>$d){
+                        if($childId==$i){
+                            $selectBusList['bus_area_child_name'] = $d;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        return $selectBusList;
+    }
 }

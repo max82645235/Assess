@@ -118,4 +118,23 @@ class AssessFlowDao extends BaseDao{
         return $resultList;
 
     }
+
+    public function getUserAssessRecord($baseId,$userId){
+        $resultRecord = array();
+        //获取考核人状态信息
+        $userAssessRelationSql = "select a.*,b.username from sa_assess_user_relation as a
+                                    inner join sa_user as b on a.userId=b.userId
+                                     where a.userId={$userId} and a.base_id = {$baseId}";
+        //echo $userAssessRelationSql."<br/>";
+        if($relationRecord = $this->db->GetRow($userAssessRelationSql)){
+            //获取考核人填写具体信息
+            $userAssessItemSql = "select a.*,b.attr_type,b.cash from sa_assess_user_item as a
+                                    left join sa_assess_attr as b on a.attr_Id =b.attr_Id  where a.base_id={$baseId} and a.userId={$userId}";
+            //echo $userAssessItemSql."<br/>";
+            $userAssessItem = $this->db->GetAll($userAssessItemSql);
+            $resultRecord['relation'] = $relationRecord;
+            $resultRecord['item'] = $userAssessItem;
+        }
+        return $resultRecord;
+    }
 }
