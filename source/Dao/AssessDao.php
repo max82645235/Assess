@@ -46,38 +46,6 @@ class AssessDao extends BaseDao{
     const HrAssessOver = 3;
 
 
-    static function get_insert_sql($tbl,$arrFields){
-        $ctn = 0;
-        foreach($arrFields as $k=>$val){
-            if($ctn == 0){
-                $ss1 = "`".$k."`";
-                $ss2 = "'".($val)."'";
-            }
-            else{
-                $ss1.= ", `".$k."`";
-                $ss2.= ", '".($val)."'";
-            }
-            $ctn++;
-        }
-
-        $sql = "INSERT INTO $tbl ($ss1) VALUES ($ss2)";
-        return $sql;
-    }
-
-    static  function get_update_sql($tbl,$arrFields,$where=false){
-        $ctn = 0;
-        foreach($arrFields as $k=>$val){
-            if($ctn==0){
-                $ss = "`".$k."`='".($val)."' ";
-            }else{
-                $ss.=  ",`".$k."`='".($val)."' ";
-            }
-            $ctn++;
-        }
-        if($where) $sql = "UPDATE $tbl SET $ss WHERE $where";
-        else $sql = "UPDATE $tbl SET $ss";
-        return $sql;
-    }
 
     public function getAssessBaseRecord($base_id){
         //获取基础表相关信息
@@ -223,15 +191,15 @@ class AssessDao extends BaseDao{
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 foreach($attrResult as $k=>$attrData){
-
                     //assess_user_item表更新 start---
                     $tbl = "`".DB_PREFIX."assess_user_item`";
                     $tmpArr['userId'] = $userId;
-                    $tmpArr['attr_id'] = $attrData['attr_id'];
+                    $tmpArr['attr_type'] = $attrData['attr_type'];
                     $tmpArr['itemData'] = $attrData['itemData'];
                     $tmpArr['base_id'] = $attrData['base_id'];
                     $tmpArr['item_weight'] = $attrData['weight'];
-                    $findRecordSql = "select * from {$tbl} where userId = $userId and  attr_id = {$attrData['attr_id']}";
+                    $tmpArr['cash'] = $attrData['cash'];
+                    $findRecordSql = "select * from {$tbl} where userId = $userId and  base_id={$attrData['base_id']}  and  attr_type = {$attrData['attr_type']}";
                     if($findRecord = $this->db->GetRow($findRecordSql)){
                         foreach($findRecord as $k=>$v){
                             if(isset($tmpArr[$k])){
@@ -252,13 +220,38 @@ class AssessDao extends BaseDao{
         }
     }
 
+    public function getUserRelationRecord($userId,$base_Id){
+        $base_sql = "select * from sa_assess_user_relation where base_id={$base_Id} and userId={$userId} ";
+        $base_info = $this->db->GetRow($base_sql);
+        return $base_info;
+    }
+
+    //触发用户考核类型更新，删除user_item表旧的考核类型数据
+    public function triggerUserNewAttrTypeUpdate($userRelationRecord=false,$delStatus=false){
+
+        $tbl = "`".DB_PREFIX."assess_user_relation`";
+        $where = " rid={$userRelationRecord['rid']}";
+        $sql = self::get_update_sql($tbl,$userRelationRecord,$where);
+        $this->db->Execute($sql);
+
+        if($delStatus){
+            $del_attr_sql = "delete from sa_assess_user_item where base_id = {$userRelationRecord['base_id']} and userId={$userRelationRecord['userId']}";
+            $this->db->Execute($del_attr_sql);
+        }
+
+
+    }
+
+
     public function setAssessUserRelation($uidArr,$base_id){
         if($uidArr && $base_id){
             $tbl =  "`".DB_PREFIX."assess_user_relation`";
+            $baseRecord = $this->getAssessBaseRecord($base_id);
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 $tmpArr['userId'] = $userId;
                 $tmpArr['base_id'] = $base_id;
+                $tmpArr['assess_attr_type'] = $baseRecord['assess_attr_type'];
                 $findRecordSql = "select * from {$tbl} where userId = {$userId} and  base_id = {$base_id}";
                 if(!$findRecord = $this->db->GetRow($findRecordSql)){
                     $tmpArr['user_assess_status'] = 0;

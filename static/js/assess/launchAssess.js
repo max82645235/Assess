@@ -327,5 +327,11 @@ Assess.prototype = {
                 alert('请先勾选操作项');
             }
         }
+    },
+    jump:function(url,mis){
+        var j = function(url){
+           location.href = url;
+        }
+        setTimeout(j,mis,url);
     }
 };

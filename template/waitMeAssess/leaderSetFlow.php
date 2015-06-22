@@ -8,6 +8,10 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
+
     <script>
         var AssessInstance =  new Assess();
         $(function(){
@@ -26,12 +30,6 @@
                 AssessInstance.selectAttrType();
             });
 
-            //表单提交sub
-            $("#sub_form").submit(function(e){
-                AssessInstance.formSubHandle();
-
-                e.preventDefault();
-            });
 
             //追加属性节点
             $(".sm_target").click(function(){
@@ -39,7 +37,59 @@
                 AssessInstance.addItem($(this),type);
             });
 
+            $('#saveBtn').click(function(){
+                var formData = {
+                    m:'myassessment',
+                    a:'waitMeAssess',
+                    act:'leaderSetFlow',
+                    status:'save'
+                };
+                formData.attrData = AssessInstance.getAttrData();
+                formData.base_id = $("#hidden_base_id").val();
+                formData.userId = $("#hidden_user_id").val();
+                $.ajax({
+                    type:'post',
+                    url:'/salary/index.php',
+                    data:formData,
+                    dataType:'json',
+                    success:function(retData){
+                        if(retData.status=='success'){
+                            art.dialog.tips('保存成功！');
+
+                        }
+                    }
+                });
+            });
+
+            $("#nextBtn").click(function(){
+                var formData = {
+                    m:'myassessment',
+                    a:'waitMeAssess',
+                    act:'leaderSetFlow',
+                    status:'next'
+                };
+                formData.attrData = AssessInstance.getAttrData();
+                formData.base_id = $("#hidden_base_id").val();
+                formData.userId = $("#hidden_user_id").val();
+                art.dialog.confirm('您确定进入下一步？',function(){
+                    $.ajax({
+                        type:'post',
+                        url:'/salary/index.php',
+                        data:formData,
+                        dataType:'json',
+                        success:function(retData){
+                            if(retData.status=='success'){
+                             art.dialog({lock:true});
+                             art.dialog.tips('保存成功',2);
+                             var url = "<?=P_SYSPATH."index.php?m=myassessment&a=waitMeAssess&act=myStaffList&".$conditionUrl?>";
+                             AssessInstance.jump(url,2000);
+                            }
+                        }
+                    });
+                });
+            });
         });
+
     </script>
     <style>
         .jbtab tr th{color: #3186c8;font-weight:600;}
@@ -70,13 +120,24 @@
         <p class="icon1">待我考核 > <?=AssessFlowDao::$UserAssessStatusByLeader[$record_info['relation']['user_assess_status']]?></p>
     </div>
     <fieldset>
-        <legend>考核人名称：<span style="color:#8DDB75;"><?=$record_info['relation']['username']?></span></legend>
+        <legend>考核人姓名：<span style="color:#8DDB75;"><?=$record_info['relation']['username']?></span></legend>
         <div class="kctjcon">
             <p class="tjtip">考核基本信息</p>
             <form action="" method="post" id="sub_form" class="clearfix" >
+                <input type="hidden" id="hidden_user_id" value="<?=$record_info['relation']['userId']?>"/>
+                <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
                 <div class="baseinfo">
+                    <table cellpadding="0" cellspacing="0" width="100%">
                     <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'])?>
-
+                        <tr>
+                            <td align="right">考核类型选择：&nbsp;</td>
+                            <td id="attr_type_checkboxes_td">
+                                <input type="checkbox" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
+                                <input type="checkbox" name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
+                                <input type="checkbox" name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="pad25">
                     <div class="attr_content">
@@ -91,7 +152,8 @@
                     </div>
                 </div>
                 <div class="kctjbot">
-                    <input type="submit" class="bluebtn" value="确定" />
+                    <input type="button" class="bluebtn" value="保存" id="saveBtn" />
+                    <input type="button" class="bluebtn" value="下一步" id="nextBtn" />
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
                 </div>
             </form>

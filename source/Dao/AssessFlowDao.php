@@ -21,13 +21,15 @@ class AssessFlowDao extends BaseDao{
     );
 
     static $UserAssessStatusByStaff = array(
-        '1'=>"待我制定计划",
+        '0'=>'待考核人创建',
+        '1'=>"待我填写计划",
         '2'=>"待考核人初审",
         '3'=>'考核中',
         '4'=>'待我汇报',
         '5'=>"待考核人终审",
         '6'=>'终审完成'
     );
+
 
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写
@@ -128,13 +130,39 @@ class AssessFlowDao extends BaseDao{
         //echo $userAssessRelationSql."<br/>";
         if($relationRecord = $this->db->GetRow($userAssessRelationSql)){
             //获取考核人填写具体信息
-            $userAssessItemSql = "select a.*,b.attr_type,b.cash from sa_assess_user_item as a
-                                    left join sa_assess_attr as b on a.attr_Id =b.attr_Id  where a.base_id={$baseId} and a.userId={$userId}";
+            $userAssessItemSql = "select a.*,a.item_weight as weight from sa_assess_user_item as a where a.base_id={$baseId} and a.userId={$userId}";
             //echo $userAssessItemSql."<br/>";
             $userAssessItem = $this->db->GetAll($userAssessItemSql);
             $resultRecord['relation'] = $relationRecord;
             $resultRecord['item'] = $userAssessItem;
         }
         return $resultRecord;
+    }
+
+    //获取用户考核列表页
+    public function getMyAssessSearchHandlerListSql($userId,$conditionParams = array()){
+        $sql = "select [*] from sa_assess_user_relation as a
+                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId}";
+        $pageConditionUrl = '';
+        $resultList = array();
+        if(isset($conditionParams['assess_period_type']) && $conditionParams['assess_period_type']){
+            $sql.=" and b.assess_period_type={$conditionParams['assess_period_type']}";
+            $pageConditionUrl.="&assess_period_type={$conditionParams['assess_period_type']}";
+        }
+
+        if(isset($conditionParams['base_status']) && $conditionParams['base_status']){
+            $sql.=" and b.base_status={$conditionParams['base_status']}";
+            $pageConditionUrl.="&base_status={$conditionParams['base_status']}";
+        }
+
+        if(isset($conditionParams['base_name']) && $conditionParams['base_name']){
+            $sql.=" and b.base_name like '%{$conditionParams['base_name']}%'";
+            $pageConditionUrl.="&base_name={$conditionParams['base_name']}";
+        }
+        $resultList = array(
+            'sql' => $sql,
+            'pageConditionUrl'=>$pageConditionUrl
+        );
+        return $resultList;
     }
 }

@@ -48,6 +48,7 @@ if($_REQUEST['act']=='myStaffList'){
     $assessBaseRecord = $assessDao->getAssessBaseRecord($base_id);
     $assessFlowDao = new AssessFlowDao();
     $resultList = $assessFlowDao->getStaffListForLeaderSql($_REQUEST);
+    $pageurl = '?m='.$m.'&a='.$a.$resultList['pageConditionUrl'];
     $getStaffSql = $resultList['staffListSql'];
     $countSql = " count(a.*)";
     $countSql = str_replace('[*]',$countSql,$getStaffSql);
@@ -81,9 +82,53 @@ if($_REQUEST['act']=='viewFlow'){
 if($_REQUEST['act']=='leaderSetFlow'){
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
+    $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
-    if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
+    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
+        $attrRecord = array();
+        $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
+        foreach($_REQUEST['attrData']['fromData']['handlerData'] as $key=>$data){
+            $tmp = array();
+            $tmp['base_id'] = $base_id;
+            $tmp['weight'] = (isset($data['weight']))?$data['weight']:'';
+            $tmp['userId'] = $userId;
+            $tmp['attr_type'] = $attrRecordType[$key];
+            $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
+            if(is_array($data['table_data'])){
+                foreach($data['table_data'] as $i=>$tt){
+                    foreach($tt as $attr=>$v){
+                        if(mb_detect_encoding($v)=='UTF-8'){
+                            $data['table_data'][$i][$attr] = iconv('UTF-8','GBK//IGNORE',$v);
+                        }
+                    }
+                }
+                $data['table_data'] = serialize($data['table_data']);
+            }
+            $tmp['itemData'] = $data['table_data'];
+            $attrRecord[] = $tmp;
+        }
+        $uids = array($userId);
+        try{
+            $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
+            //考核类型更改
+            $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
+            $nextStatus = $_REQUEST['status']=='next';
+            if($delStatus || $nextStatus){
+                $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
+                if($nextStatus){
+                    $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+                }
+                $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+            }
 
+            $assessDao->setAssessUserItemRecord($uids,$attrRecord);
+            $assessDao->setAssessUserRelation($uids,$base_id);
+
+        }catch (Exception $e){
+            throw new Exception('500');
+        }
+        echo json_encode(array('status'=>'success'));
+        die();
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
@@ -91,7 +136,8 @@ if($_REQUEST['act']=='leaderSetFlow'){
     }
     $tpl = new NewTpl('waitMeAssess/leaderSetFlow.php',array(
         'record_info'=>$record_info,
-        'assessAttrWidget'=>$assessAttrWidget
+        'assessAttrWidget'=>$assessAttrWidget,
+        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act','userId'))
     ));
 
     $tpl->render();
