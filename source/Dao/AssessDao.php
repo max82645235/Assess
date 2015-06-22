@@ -436,8 +436,11 @@ class AssessDao extends BaseDao{
         return $authStatus;
     }
 
-    public function getTableBaseInfo($base_id){
-        $baseRecord = $this->getAssessBaseRecord($base_id);
+    public function getTableBaseInfo($base_id,$userId){
+        $sql = "select a.user_assess_status,b.* from sa_assess_user_relation a
+                inner join sa_assess_base  b on a.base_id=b.base_id
+                where a.base_id={$base_id} and a.userId={$userId}";
+        $baseRecord = $this->db->GetRow($sql);
         if($baseRecord){
             $baseRecord = $baseRecord+$this->getSelectBusName($baseRecord['bus_area_parent'],$baseRecord['bus_area_child']);
         }

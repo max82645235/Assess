@@ -73,11 +73,6 @@ if($_REQUEST['act']=='myStaffList'){
     die();
 }
 
-//查看流程
-if($_REQUEST['act']=='viewFlow'){
-
-
-}
 
 if($_REQUEST['act']=='leaderSetFlow'){
     $userId = $_REQUEST['userId'];
@@ -149,3 +144,8 @@ if($_REQUEST['act']=='staffDiySet'){
 
 }
 
+//查看流程
+if($_REQUEST['act']=='viewFlow'){
+
+
+}

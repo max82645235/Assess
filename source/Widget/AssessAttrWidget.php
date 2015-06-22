@@ -49,10 +49,10 @@ class AssessAttrWidget{
         }
     }
 
-    public function renderTableBaseInfo($base_id){
+    public function renderTableBaseInfo($base_id,$userId){
         require_once BATH_PATH.'source/Dao/AssessDao.php';
         $assessDao = new AssessDao();
-        $baseInfo = $assessDao->getTableBaseInfo($base_id);
+        $baseInfo = $assessDao->getTableBaseInfo($base_id,$userId);
         $renderPath = BATH_PATH."template/assessment/widget/baseInfoTableWidget.php";
         $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('baseInfo'=>$baseInfo));

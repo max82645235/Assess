@@ -150,9 +150,9 @@ class AssessFlowDao extends BaseDao{
             $pageConditionUrl.="&assess_period_type={$conditionParams['assess_period_type']}";
         }
 
-        if(isset($conditionParams['base_status']) && $conditionParams['base_status']){
-            $sql.=" and b.base_status={$conditionParams['base_status']}";
-            $pageConditionUrl.="&base_status={$conditionParams['base_status']}";
+        if(isset($conditionParams['user_assess_status']) && $conditionParams['user_assess_status']!==''){
+            $sql.=" and a.user_assess_status={$conditionParams['user_assess_status']}";
+            $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
         }
 
         if(isset($conditionParams['base_name']) && $conditionParams['base_name']){

@@ -128,7 +128,7 @@
                 <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
                 <div class="baseinfo">
                     <table cellpadding="0" cellspacing="0" width="100%">
-                    <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'])?>
+                    <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
                         <tr>
                             <td align="right">øº∫À¿‡–Õ—°‘Ò£∫&nbsp;</td>
                             <td id="attr_type_checkboxes_td">
