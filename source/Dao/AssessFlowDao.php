@@ -110,7 +110,7 @@ class AssessFlowDao extends BaseDao{
         }
 
         if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
-            $addSql.=" and a.comp_dept={$conditionParams['bus_area_parent']}";
+            $addSql.=" and a.comp_dept={$conditionParams['bus_area_child']}";
             $pageConditionUrl.="&bus_area_child={$conditionParams['bus_area_child']}";
         }
 
