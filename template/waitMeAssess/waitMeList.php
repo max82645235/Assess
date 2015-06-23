@@ -121,7 +121,6 @@
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核周期</th>
-                    <th width="100" style="text-align: center;">状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
                     <th width="250" style="text-align: center;">操作</th>
                 </tr>
@@ -138,7 +137,6 @@
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
-                            <td><?=AssessDao::$LeaderAssessBaseStatus[$data['base_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>

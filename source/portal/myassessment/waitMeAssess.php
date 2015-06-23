@@ -104,18 +104,26 @@ if($_REQUEST['act']=='leaderSetFlow'){
         try{
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
             //考核类型更改
-            $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
-            $nextStatus = $_REQUEST['status']=='next';
-            if($delStatus || $nextStatus){
-                $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
-                if($nextStatus){
+            if($userRelationRecord){
+                $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
+                $changeStatus = true;
+                if($_REQUEST['status']=='next'){
                     $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
-                }
-                $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
-            }
+                }elseif($_REQUEST['status']=='back'){
+                    $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
+                }elseif($_REQUEST['status']=='start'){
+                    $userRelationRecord['user_assess_status'] = 3;
+                }else{$changeStatus=false;}
 
+                if($delStatus || $changeStatus){
+                    $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+                }
+
+            }else{
+                $assessDao->setAssessUserRelation($uids,$base_id);
+            }
             $assessDao->setAssessUserItemRecord($uids,$attrRecord);
-            $assessDao->setAssessUserRelation($uids,$base_id);
+
 
         }catch (Exception $e){
             throw new Exception('500');

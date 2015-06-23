@@ -77,10 +77,9 @@ class AssessFlowDao extends BaseDao{
         if(isset($params['user_assess_status']) && $params['user_assess_status']!==''){
             $addStatusSql.=" and b.user_assess_status={$params['user_assess_status']}";
         }
-        $getRelationBaseIdSql = "select b.base_id,b.base_status from sa_user_relation as a
+        $getRelationBaseIdSql = "select c.base_id,c.base_status from sa_user_relation as a
                                  inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId  $addStatusSql
                                  inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
-        //echo $getRelationBaseIdSql."</br>";
         $result = $this->db->getAll($getRelationBaseIdSql);
         if($result){
             foreach($result as $data){
@@ -90,6 +89,7 @@ class AssessFlowDao extends BaseDao{
                 }
             }
         }
+
         return $baseIdList;
     }
 

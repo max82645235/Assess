@@ -60,7 +60,7 @@
                 formData.attrData = AssessInstance.getAttrData();
                 formData.base_id = $("#hidden_base_id").val();
                 formData.userId = $("#hidden_user_id").val();
-                art.dialog.confirm('您确定进入下一步？',function(){
+                art.dialog.confirm('您确定提交考核审核申请么？',function(){
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -142,7 +142,9 @@
                 </div>
                 <div class="kctjbot">
                     <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                    <input type="button" class="bluebtn" value="下一步" id="nextBtn" />
+                    <?php if(in_array($record_info['relation']['user_assess_status'],array(1,3))){?>
+                        <input type="button" class="bluebtn" value="提交审核" id="nextBtn" />
+                    <?php }?>
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
                 </div>
             </form>

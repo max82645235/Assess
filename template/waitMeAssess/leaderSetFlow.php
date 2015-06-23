@@ -61,17 +61,23 @@
                 });
             });
 
-            $("#nextBtn").click(function(){
+            $("#nextBtn,#startBtn,#backBtn").click(function(){
+                var status = $(this).attr('tag');
                 var formData = {
                     m:'myassessment',
                     a:'waitMeAssess',
                     act:'leaderSetFlow',
-                    status:'next'
+                    status:status
+                };
+                var confirmMsg = {
+                    next:'您确定发布此考核么?',
+                    start:'您确定直接开始此考核么?',
+                    back:'您确定驳回此考核审批申请么?'
                 };
                 formData.attrData = AssessInstance.getAttrData();
                 formData.base_id = $("#hidden_base_id").val();
                 formData.userId = $("#hidden_user_id").val();
-                art.dialog.confirm('您确定进入下一步？',function(){
+                art.dialog.confirm(confirmMsg[status],function(){
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -152,8 +158,16 @@
                     </div>
                 </div>
                 <div class="kctjbot">
-                    <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                    <input type="button" class="bluebtn" value="下一步" id="nextBtn" />
+                    <input type="button" class="bluebtn" value="保存" id="saveBtn" tag="save" />
+                    <?php if($record_info['relation']['user_assess_status']==0){?>
+                      <input type="button" class="bluebtn" value="发布" id="nextBtn" tag="next" />
+                      <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
+                    <?php }?>
+
+                    <?php if(in_array($record_info['relation']['user_assess_status'],array(2,4))){?>
+                        <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
+                        <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
+                    <?php }?>
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
                 </div>
             </form>
