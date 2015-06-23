@@ -19,6 +19,16 @@
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
 
+            //点击考核类型checkbox
+            $("#attr_type_checkboxes_td input").click(function(){
+                var v = $(this).val();
+                $("#attr_type_checkboxes_td input").each(function(){
+                    if($(this).val()!=v){
+                        $(this).attr("checked",false);
+                    }
+                });
+                AssessInstance.selectAttrType();
+            });
 
             //追加属性节点
             $(".sm_target").click(function(){
@@ -121,9 +131,9 @@
                         <tr>
                             <td align="right">考核类型选择：&nbsp;</td>
                             <td id="attr_type_checkboxes_td">
-                                <input type="checkbox" disabled="disabled" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
-                                <input type="checkbox" disabled="disabled"  name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
-                                <input type="checkbox" disabled="disabled" name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?>  name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
                             </td>
                         </tr>
                     </table>
@@ -142,7 +152,7 @@
                 </div>
                 <div class="kctjbot">
                     <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                    <?php if(in_array($record_info['relation']['user_assess_status'],array(1,3))){?>
+                    <?php if(in_array($record_info['relation']['user_assess_status'],array(1,4))){?>
                         <input type="button" class="bluebtn" value="提交审核" id="nextBtn" />
                     <?php }?>
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>

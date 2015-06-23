@@ -20,32 +20,33 @@ if($_REQUEST['act']=='launchAssess'){
     $assessDao = new AssessDao();
     if(checkUserAuthority()){
         //ajax表单提交
+
         if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
-            if(isset($_REQUEST['subFormData']['baseData']) && isset($_REQUEST['subFormData']['attrData'])){
+            if(isset($_REQUEST['subFormData']['baseData'])){
                 //assess_base主表保存
                 if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
-                    $attrRecord = array();
-                    $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
-                    foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
-                        $tmp = array();
-                        $tmp['base_id'] = $base_id;
-                        $tmp['attr_type'] = $attrRecordType[$key];
-                        $tmp['weight'] = (isset($data['weight']))?$data['weight']:'';
-                        $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
-                        $tmp['itemData'] = $data['table_data'];
-                        $attrRecord[$key] = $tmp;
-                    }
+                    $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
+                    $assessDao->setAssessUserRelation($uids,$base_id);
+                    if(isset($_REQUEST['subFormData']['attrData'])){
+                        $attrRecord = array();
+                        $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
+                        foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
+                            $tmp = array();
+                            $tmp['base_id'] = $base_id;
+                            $tmp['attr_type'] = $attrRecordType[$key];
+                            $tmp['weight'] = (isset($data['weight']))?$data['weight']:'';
+                            $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
+                            $tmp['itemData'] = $data['table_data'];
+                            $attrRecord[$key] = $tmp;
+                        }
 
-                    //assess_attr表保存
-                    if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
-                        $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
-                        if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
-
-                            $assessDao->setAssessUserItemRecord($uids,$attrResult);
-                            $assessDao->setAssessUserRelation($uids,$base_id);
+                        //assess_attr表保存
+                        if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
+                            if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+                                $assessDao->setAssessUserItemRecord($uids,$attrResult);
+                            }
                         }
                     }
-
                     echo json_encode(array('status'=>'success'));
                 }
             }

@@ -77,7 +77,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
     $base_id = $_REQUEST['base_id'];
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
-    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
+    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next','back','start'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
         foreach($_REQUEST['attrData']['fromData']['handlerData'] as $key=>$data){
@@ -106,6 +106,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
             //考核类型更改
             if($userRelationRecord){
                 $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
+                $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
                 $changeStatus = true;
                 if($_REQUEST['status']=='next'){
                     $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;

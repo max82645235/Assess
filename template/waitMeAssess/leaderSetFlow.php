@@ -164,7 +164,7 @@
                       <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
                     <?php }?>
 
-                    <?php if(in_array($record_info['relation']['user_assess_status'],array(2,4))){?>
+                    <?php if(in_array($record_info['relation']['user_assess_status'],array(2,5))){?>
                         <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
                         <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
                     <?php }?>
