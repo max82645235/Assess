@@ -64,7 +64,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导打分：</span>
-                                            <input type="text" value="<?=$itemData['selfScore']?>" name="leadScore"  class="width40 j-notnull" />
+                                            <input type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull" />
                                         </div>
                                     </td>
                                 <?php }?>

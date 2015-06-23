@@ -18,7 +18,7 @@
                     <?php if($itemData){?>
                         <?php foreach($itemDataList as $itemData){?>
                             <tr>
-                                <td width="75%">
+                                <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>考核项： </span>
                                         <input type="text" value="<?=$itemData['score_name']?>" name="score_name" class="width160 j-notnull" />
@@ -42,7 +42,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导打分：</span>
-                                            <input type="text" value="<?=$itemData['selfScore']?>" name="leadScore"  class="width40 j-notnull" />
+                                            <input type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -57,7 +57,7 @@
                 <?php }?>
                 <?php if(!isset($itemDataList) || empty($itemDataList)){?>
                     <tr>
-                        <td width="75%">
+                        <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>考核项： </span>
                                 <input type="text" value="" name="score_name" class="width160 j-notnull" />
