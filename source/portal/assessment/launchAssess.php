@@ -16,7 +16,7 @@ require_once BATH_PATH.'source/Dao/AssessDao.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
 if($_REQUEST['act']=='launchAssess'){
     $base_id = getgpc('base_id'); //考核表主键
-    $user_id = '';//当前用户身份Id
+    $user_id = getUserId();//当前用户身份Id
     $assessDao = new AssessDao();
     if(checkUserAuthority()){
         //ajax表单提交
@@ -40,11 +40,13 @@ if($_REQUEST['act']=='launchAssess'){
                     if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
                         $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                         if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
                             $assessDao->setAssessUserRelation($uids,$base_id);
                         }
                     }
-                    echo json_encode(array('status'=>''));
+
+                    echo json_encode(array('status'=>'success'));
                 }
             }
             die();

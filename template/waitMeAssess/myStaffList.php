@@ -110,7 +110,7 @@
                         $btnArr = array(
                             '0'=>'创建',
                             '2'=>'初审',
-                            '5'=>'终审',
+                            '4'=>'终审',
                         );
                     ?>
                     <?php if($tableData){?>
@@ -123,7 +123,7 @@
                                 <td class="left"><?=$data['deptlist']?></td>
                                 <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
                                 <td class="left">
-                                    <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
+                                    <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
                                     <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                         <span >
                                              <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>

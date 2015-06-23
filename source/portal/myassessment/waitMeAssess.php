@@ -15,7 +15,7 @@ if($_REQUEST['act']=='waitMeList'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $assessFlowDao->setAssessDao($assessDao);
-    $_REQUEST['base_status'] = (!isset($_REQUEST['base_status']))?'1':$_REQUEST['base_status']; //状态初始默认为0  待发布状态
+    $_REQUEST['base_status'] = 1; // 已发布状态
     $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];
     $searchResult = $assessFlowDao->waitMeSearchHandlerList($_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$searchResult['pageConditionUrl'];
@@ -29,7 +29,7 @@ if($_REQUEST['act']=='waitMeList'){
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
     $sql = " select base_id,base_name,assess_period_type,base_start_date,base_end_date,base_status,publish_date,userId  from  sa_assess_base where 1=1 {$where}  order  by base_id desc limit {$offset},{$limit}";
-    //echo $sql;
+   // echo $sql;
     $tableData = $db->GetAll($sql);
     $tpl = new NewTpl('waitMeAssess/waitMeList.php',array(
         'tableData'=>$tableData,
@@ -60,7 +60,6 @@ if($_REQUEST['act']=='myStaffList'){
     //获取表格查询结果
     $findSql = " a.*,b.user_assess_status,b.base_id";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
-    //echo $findSql."<br/>";
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
         'tableData'=>$tableData,
@@ -146,6 +145,12 @@ if($_REQUEST['act']=='staffDiySet'){
 
 //查看流程
 if($_REQUEST['act']=='viewFlow'){
-
-
+    $userId = $_REQUEST['userId'];
+    $base_id = $_REQUEST['base_id'];
+    $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+    $tpl = new NewTpl('waitMeAssess/viewFlow.php',array(
+        'record_info'=>$record_info,
+        'assessAttrWidget'=>$assessAttrWidget
+    ));
 }

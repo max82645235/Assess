@@ -49,7 +49,7 @@
         <p class="icon1">待我考核 >考核列表</p>
     </div>
     <div class="pad25">
-        <div class="brdbt zykc" style="height: 30px;">
+        <div class="brdbt zykc" style="height: 50px;">
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
                 <input type="hidden" name="m" value="myassessment">
                 <input type="hidden" name="a" value="waitMeAssess">
@@ -99,12 +99,13 @@
                         <?php }?>
                     </select>
                 </div>
-                <div  class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;考核名称：
-                    <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
 
+                <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
+                    考核名称：
+                    <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
                 </div>
-                <div  class="jssel" style="z-index:98;margin-left: 20px;margin-bottom: 5px;">
+
+                <div  class="jssel" style="z-index:98;margin-left: 20px;margin-top: 5px;">
                     <input type="submit" value="搜索" class="btn48"  >
                 </div>
 
@@ -113,7 +114,7 @@
 
         <div class="mrtb10" >
             <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
-                <tr >
+                <tr>
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
@@ -140,7 +141,6 @@
                             <td><?=AssessDao::$LeaderAssessBaseStatus[$data['base_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td>
-                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>
                                 <a href="?m=myassessment&a=waitMeAssess&act=staffDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">员工自行设置</a>
                             </td>

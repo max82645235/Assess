@@ -26,7 +26,7 @@
                             <tr>
                                 <td width="26%">
                                     <em class="c-yel">*</em>
-                                    <select name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
+                                    <select onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator_parent">
                                         <?php if($indicatorList){?>
                                             <?php foreach($indicatorList as $k=>$data){?>
                                                 <option value="<?=$data['id']?>"
@@ -65,7 +65,7 @@
                     <tr>
                         <td width="26%">
                             <em class="c-yel">*</em>
-                            <select name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))>
+                            <select name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
                                 <?php if($indicatorList){?>
                                     <?php foreach($indicatorList as $k=>$data){?>
                                         <option value="<?=$data['id']?>"><?=$data['name']?></option>

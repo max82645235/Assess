@@ -45,15 +45,15 @@ class AssessFlowDao extends BaseDao{
 
     public function waitMeSearchHandlerList($searchParam){
         $searchResult = array();
-        $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
-        $hrSearchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
+        $searchParam = $this->filterConditionParam($searchParam,array('byme_status','base_status'));
+        $searchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
         //附加领导对应的员工的baseIdList
         if($baseIdList = $this->getBaseIdsForLeader($searchParam['status'])){
-            $hrSearchResult['sqlWhere'].= " AND sa_assess_base.base_id in (".implode(',',$baseIdList).")";
+            $searchResult['sqlWhere'].= " AND sa_assess_base.base_id in (".implode(',',$baseIdList).")";
         }else{
-            $hrSearchResult['sqlWhere'].= ' AND 1=0 ';
+            $searchResult['sqlWhere'].= ' AND 1=0 ';
         }
-        return $hrSearchResult;
+        return $searchResult;
     }
 
 
@@ -70,7 +70,7 @@ class AssessFlowDao extends BaseDao{
     //获取领导相关的baseIds
     public function getBaseIdsForLeader($status){
         $baseIdList = array();
-        $curUserId = getUserBusId();
+        $curUserId = getUserId();
         $addStatusSql = "and a.status=$status ";
         $getRelationBaseIdSql = "select c.base_id,c.base_status from sa_user_relation as a
                                  inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId $addStatusSql
@@ -91,7 +91,7 @@ class AssessFlowDao extends BaseDao{
     //获取某一考核下领导的下属员工
     public function getStaffListForLeaderSql($conditionParams = array()){
         $base_Id = $conditionParams['base_id'];
-        $curUserId = getUserBusId();
+        $curUserId = getUserId();
         $addSql = "";
         $pageConditionUrl = '';
         $resultList = array();

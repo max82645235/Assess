@@ -29,8 +29,8 @@ class AssessDao extends BaseDao{
     static $HrAssessBaseStatus =  array(
         '0'=>'待发布',
         '1'=>'已发布',
-        '2'=>'考核中',
-        '3'=>'考核完'
+        //'2'=>'考核中',
+        //'3'=>'考核完'
     );
 
     static $LeaderAssessBaseStatus = array(
@@ -208,9 +208,12 @@ class AssessDao extends BaseDao{
                         }
                         $where = " item_id = {$findRecord['item_id']}";
                         $sql = self::get_update_sql($tbl,$findRecord,$where);
+                       // echo $sql."</br>";
                         $this->db->Execute($sql);
                     }else{
+
                         $sql = self::get_insert_sql($tbl,$tmpArr);
+                      //  echo $sql."</br>";
                         $this->db->Execute($sql);
                     }
                     //end ---assess_user_item表更新
@@ -238,8 +241,6 @@ class AssessDao extends BaseDao{
             $del_attr_sql = "delete from sa_assess_user_item where base_id = {$userRelationRecord['base_id']} and userId={$userRelationRecord['userId']}";
             $this->db->Execute($del_attr_sql);
         }
-
-
     }
 
 
@@ -440,6 +441,7 @@ class AssessDao extends BaseDao{
         $sql = "select a.user_assess_status,b.* from sa_assess_user_relation a
                 inner join sa_assess_base  b on a.base_id=b.base_id
                 where a.base_id={$base_id} and a.userId={$userId}";
+        //echo $sql."<br/>";
         $baseRecord = $this->db->GetRow($sql);
         if($baseRecord){
             $baseRecord = $baseRecord+$this->getSelectBusName($baseRecord['bus_area_parent'],$baseRecord['bus_area_child']);

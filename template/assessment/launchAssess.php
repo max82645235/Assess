@@ -123,7 +123,7 @@ EOF;
                     <td align="right" valign="top"><em class="c-yel">*</em> 被考核人：&nbsp;</td>
                     <td>
                         <input type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
-                        <input type="hidden" name="uids" id="uids" value="1,2" />
+                        <input type="hidden" name="uids" id="uids" value="1,2,876,877" />
                         <input type="button" class="btn48 adduser" value="添加" />
                         <input type="button" class="btn74 getuserlist" style="margin:0;" value="选择用户" />
                     </td>

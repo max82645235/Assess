@@ -7,79 +7,6 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
-    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
-
-    <script>
-        var AssessInstance =  new Assess();
-        $(function(){
-            $(".commission_indicator_parent").each(function(){
-                AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
-            });
-
-
-            //追加属性节点
-            $(".sm_target").click(function(){
-                var type = $(this).parent('').attr('flag');
-                AssessInstance.addItem($(this),type);
-            });
-
-            $('#saveBtn').click(function(){
-                var formData = {
-                    m:'myassessment',
-                    a:'myAssess',
-                    act:'myAssessFlow',
-                    status:'save'
-                };
-                formData.attrData = AssessInstance.getAttrData();
-                formData.base_id = $("#hidden_base_id").val();
-                formData.userId = $("#hidden_user_id").val();
-                $.ajax({
-                    type:'post',
-                    url:'/salary/index.php',
-                    data:formData,
-                    dataType:'json',
-                    success:function(retData){
-                        if(retData.status=='success'){
-                            art.dialog.tips('保存成功！');
-
-                        }
-                    }
-                });
-            });
-
-            $("#nextBtn").click(function(){
-                var formData = {
-                    m:'myassessment',
-                    a:'myAssess',
-                    act:'myAssessFlow',
-                    status:'next'
-                };
-                formData.attrData = AssessInstance.getAttrData();
-                formData.base_id = $("#hidden_base_id").val();
-                formData.userId = $("#hidden_user_id").val();
-                art.dialog.confirm('您确定进入下一步？',function(){
-                    $.ajax({
-                        type:'post',
-                        url:'/salary/index.php',
-                        data:formData,
-                        dataType:'json',
-                        success:function(retData){
-                            if(retData.status=='success'){
-                                art.dialog({lock:true});
-                                art.dialog.tips('保存成功',2);
-                                var url = "<?=P_SYSPATH."index.php?m=myassessment&a=myAssess&act=myAssessList&".$conditionUrl?>";
-                                AssessInstance.jump(url,2000);
-                            }
-                        }
-                    });
-                });
-            });
-        });
-
-    </script>
     <style>
         .jbtab tr th{color: #3186c8;font-weight:600;}
         .jbtab tr td{color: #3186c8;}
@@ -106,7 +33,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">我的考核 > <?=AssessFlowDao::$UserAssessStatusByLeader[$record_info['relation']['user_assess_status']]?></p>
+        <p class="icon1">待我考核 > 查看考核</p>
     </div>
     <fieldset>
         <legend>考核人姓名：<span style="color:#8DDB75;"><?=$record_info['relation']['username']?></span></legend>
@@ -141,8 +68,6 @@
                     </div>
                 </div>
                 <div class="kctjbot">
-                    <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                    <input type="button" class="bluebtn" value="下一步" id="nextBtn" />
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
                 </div>
             </form>
