@@ -139,15 +139,21 @@
                     </table>
                 </div>
                 <div class="pad25">
+                    <?php
+                        $scoreList = array();
+                        if($record_info['relation']['user_assess_status']==4){
+                            $scoreList['selfScore'] = true;
+                        }
+                    ?>
                     <div class="attr_content">
                         <!--任务/指标类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],1)?>
+                        <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList)?>
 
                         <!--打分类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],2)?>
+                        <?=$assessAttrWidget->renderAttr($record_info['item'],2,$scoreList)?>
 
                         <!--提成类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],3)?>
+                        <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList)?>
                     </div>
                 </div>
                 <div class="kctjbot">

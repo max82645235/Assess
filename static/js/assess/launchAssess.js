@@ -159,6 +159,8 @@ Assess.prototype = {
                     tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
                     tmp.qz = $(this).find("input[name=qz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     c_data['table_data'].push(tmp);
                 });
 
@@ -171,6 +173,8 @@ Assess.prototype = {
                     tmp.job_name = $(this).find("input[name=job_name]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
                     tmp.qz = $(this).find("input[name=qz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     j_data['table_data'].push(tmp);
                 });
                 return {commission:c_data,job:j_data};
@@ -184,6 +188,8 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.score_name = $(this).find("input[name=score_name]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     s_data['table_data'].push(tmp);
                 });
                 return {score:s_data};
@@ -198,6 +204,8 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.score_name = $(this).find("input[name=score_name]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};

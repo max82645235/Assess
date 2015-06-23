@@ -30,6 +30,22 @@
                                         <input type="text" value="<?=$itemData['zbyz']?>" name="zbyz"  class="width40 j-notnull"/>
                                     </div>
                                 </td>
+                                <?php if(isset($scoreList['selfScore'])){?>
+                                    <td width="15%" class="sm_xsmbadd_td2">
+                                        <div class="smfl">
+                                            <span><em class="c-yel">*</em> 自评分：</span>
+                                            <input type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull" />
+                                        </div>
+                                    </td>
+                                <?php }?>
+                                <?php if(isset($scoreList['leadScore'])){?>
+                                    <td width="15%" class="sm_xsmbadd_td2">
+                                        <div class="smfl">
+                                            <span><em class="c-yel">*</em> 领导打分：</span>
+                                            <input type="text" value="<?=$itemData['selfScore']?>" name="leadScore"  class="width40 j-notnull" />
+                                        </div>
+                                    </td>
+                                <?php }?>
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="del_td" onclick="Assess.prototype.delItemDom(this,4)">
                                         <input type="button" class="btn67" value="删除">
@@ -53,6 +69,22 @@
                                 <input type="text" value="" name="zbyz"  class="width40 j-notnull"/>
                             </div>
                         </td>
+                        <?php if(isset($scoreList['selfScore'])){?>
+                            <td width="15%" class="sm_xsmbadd_td2">
+                                <div class="smfl">
+                                    <span><em class="c-yel">*</em> 自评分：</span>
+                                    <input type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull" />
+                                </div>
+                            </td>
+                        <?php }?>
+                        <?php if(isset($scoreList['leadScore'])){?>
+                            <td width="15%" class="sm_xsmbadd_td2">
+                                <div class="smfl">
+                                    <span><em class="c-yel">*</em> 领导打分：</span>
+                                    <input type="text" value="<?=$itemData['selfScore']?>" name="leadScore"  class="width40 j-notnull" />
+                                </div>
+                            </td>
+                        <?php }?>
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="del_td" onclick="Assess.prototype.delItemDom(this,4)">
                                 <input type="button" class="btn67" value="删除">

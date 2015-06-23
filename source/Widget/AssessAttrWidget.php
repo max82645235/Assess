@@ -16,7 +16,7 @@ class AssessAttrWidget{
         '2'=>'score',
         '3'=>'target'
     );
-    public function renderAttr($renderDataList,$attrType=false){
+    public function renderAttr($renderDataList,$attrType=false,$scoreList = array()){
         $index = $attrType;
         if(array_key_exists($index,self::$renderPathMaps)){
             $prefixPathArr = explode(',',self::$renderPathMaps[$index]);
@@ -34,7 +34,7 @@ class AssessAttrWidget{
 
                 if($renderPath = $this->getRenderPath($prefix)){
                     $this->tpl->set_tpl($renderPath);
-                    $this->tpl->set_data(array('renderData'=>$renderData));
+                    $this->tpl->set_data(array('renderData'=>$renderData,'scoreList'=>$scoreList));
                     $this->tpl->render();
                 }
             }
