@@ -15,8 +15,7 @@ if($_REQUEST['act']=='waitMeList'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $assessFlowDao->setAssessDao($assessDao);
-    $_REQUEST['base_status'] = 1; // 已发布状态
-    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];
+    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];//下属状态
     $searchResult = $assessFlowDao->waitMeSearchHandlerList($_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$searchResult['pageConditionUrl'];
     $where = $searchResult['sqlWhere'];

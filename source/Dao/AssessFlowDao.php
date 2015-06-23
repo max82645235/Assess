@@ -45,10 +45,11 @@ class AssessFlowDao extends BaseDao{
 
     public function waitMeSearchHandlerList($searchParam){
         $searchResult = array();
-        $searchParam = $this->filterConditionParam($searchParam,array('byme_status','base_status'));
+        $searchParam['base_status'] = 1; // 已发布状态
+        $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
         $searchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
         //附加领导对应的员工的baseIdList
-        if($baseIdList = $this->getBaseIdsForLeader($searchParam['status'])){
+        if($baseIdList = $this->getBaseIdsForLeader($searchParam)){
             $searchResult['sqlWhere'].= " AND sa_assess_base.base_id in (".implode(',',$baseIdList).")";
         }else{
             $searchResult['sqlWhere'].= ' AND 1=0 ';
@@ -68,12 +69,16 @@ class AssessFlowDao extends BaseDao{
     }
 
     //获取领导相关的baseIds
-    public function getBaseIdsForLeader($status){
+    public function getBaseIdsForLeader($params){
+        $status = $params['status'];
         $baseIdList = array();
         $curUserId = getUserId();
-        $addStatusSql = "and a.status=$status ";
-        $getRelationBaseIdSql = "select c.base_id,c.base_status from sa_user_relation as a
-                                 inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId $addStatusSql
+        $addStatusSql = "and a.status=$status ";//隶属领导状态
+        if(isset($params['user_assess_status']) && $params['user_assess_status']!==''){
+            $addStatusSql.=" and b.user_assess_status={$params['user_assess_status']}";
+        }
+        $getRelationBaseIdSql = "select b.base_id,b.base_status from sa_user_relation as a
+                                 inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId  $addStatusSql
                                  inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
         //echo $getRelationBaseIdSql."</br>";
         $result = $this->db->getAll($getRelationBaseIdSql);

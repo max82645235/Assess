@@ -70,11 +70,11 @@
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
                 <div class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;¿¼ºË×´Ì¬£º
-                    <select name="base_status">
-                        <option value=""    <?php if(isset($_REQUEST['base_status']) && $_REQUEST['base_status']===''){?> selected="selected"<?php }?>>ÇëÑ¡Ôñ</option>
-                        <?php foreach(AssessDao::$LeaderAssessBaseStatus as $k=>$val){?>
-                            <option value="<?=$k?>"  <?php if(isset($_REQUEST['base_status']) && $_REQUEST['base_status']!=='' && $_REQUEST['base_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
+                    &nbsp;&nbsp;&nbsp;Á÷³Ì×´Ì¬£º
+                    <select name="user_assess_status" style="width: 150px;">
+                        <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>ÇëÑ¡Ôñ</option>
+                        <?php foreach(AssessFlowDao::$UserAssessStatusByLeader as $k=>$val){?>
+                            <option value="<?=$k?>"  <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']!=='' && $_REQUEST['user_assess_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
                         <?php }?>
                     </select>
                 </div>

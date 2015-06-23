@@ -141,6 +141,14 @@ EOF;
                         </select>
                     </td>
                 </tr>
+
+                <tr>
+                    <td align="right"><em class="c-yel">*</em> 按月生成：&nbsp;</td>
+                    <td>
+                        <input type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
+                    </td>
+                </tr>
+
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核开始时间：&nbsp;</td>
                     <td class="jsline">
@@ -185,6 +193,7 @@ EOF;
                         <input type="checkbox" name="lead_direct_set_status"  value="1" id="lead_direct_set_status" <?php if(isset($record_info['base_info']['lead_direct_set_status']) && $record_info['base_info']['lead_direct_set_status']==1){?>checked="checked" <?php }?>>
                     </td>
                 </tr>
+
                 <tr>
                     <td align="right">考核类型选择：&nbsp;</td>
                     <td id="attr_type_checkboxes_td">

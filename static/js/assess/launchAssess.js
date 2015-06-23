@@ -27,6 +27,10 @@ Assess.prototype = {
         return ($("#lead_direct_set_status").is(":checked"))?1:0;
     },
 
+    getCreateOnMonthValue:function(){
+        return ($("#create_on_month_status").is(":checked"))?1:0;
+    },
+
     getAttrTypeCheckedValue:function(){
         return $("#attr_type_checkboxes_td input:checked").val();
     },
@@ -96,7 +100,7 @@ Assess.prototype = {
                 'staff_sub_start_date',
                 'staff_sub_end_date',
                 'lead_sub_start_date',
-                'lead_sub_end_date'
+                'lead_sub_end_date',
             ],
             baseSubDataList:{}
         };
@@ -109,7 +113,7 @@ Assess.prototype = {
             }
             baseIdData['assess_attr_type'] = this.parentPro.getAttrTypeCheckedValue();
             baseIdData['lead_direct_set_status'] = this.parentPro.getLeadDirectSetValue();
-
+            baseIdData['create_on_month_stauts'] = this.parentPro.getCreateOnMonthValue();
             this.baseSubDataList = baseIdData;
         };
 
