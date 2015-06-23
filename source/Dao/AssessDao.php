@@ -33,6 +33,12 @@ class AssessDao extends BaseDao{
         '3'=>'考核完'
     );
 
+    static $LeaderAssessBaseStatus = array(
+        '1'=>'待我审核',
+        '2'=>'考核中',
+        '3'=>'考核完'
+    );
+
 
     const HrAssessWait = 0;
     const HrAssessPublish = 1;
@@ -40,52 +46,19 @@ class AssessDao extends BaseDao{
     const HrAssessOver = 3;
 
 
-    const AssessCreate= 0;//待领导创建
-    const AssessPreStaffWrite = 1;//待员工填写
-    const AssessPreLeadVIew = 2;//待领导初审|员工已填写完成预期
-    const AssessPreSuccess = 3;//领导初审通过
-    const AssessRealLeadView = 4;//待领导终审|员工已填写完实际
-    const AssessRealSuccess = 5;//领导终审通过
-    static function get_insert_sql($tbl,$arrFields){
-        $ctn = 0;
-        foreach($arrFields as $k=>$val){
-            if($ctn == 0){
-                $ss1 = "`".$k."`";
-                $ss2 = "'".($val)."'";
-            }
-            else{
-                $ss1.= ", `".$k."`";
-                $ss2.= ", '".($val)."'";
-            }
-            $ctn++;
-        }
 
-        $sql = "INSERT INTO $tbl ($ss1) VALUES ($ss2)";
-        return $sql;
+    public function getAssessBaseRecord($base_id){
+        //获取基础表相关信息
+        $base_sql = "select * from sa_assess_base where base_id={$base_id} ";
+        $base_info = $this->db->GetRow($base_sql);
+        return $base_info;
     }
-
-    static  function get_update_sql($tbl,$arrFields,$where=false){
-        $ctn = 0;
-        foreach($arrFields as $k=>$val){
-            if($ctn==0){
-                $ss = "`".$k."`='".($val)."' ";
-            }else{
-                $ss.=  ",`".$k."`='".($val)."' ";
-            }
-            $ctn++;
-        }
-        if($where) $sql = "UPDATE $tbl SET $ss WHERE $where";
-        else $sql = "UPDATE $tbl SET $ss";
-        return $sql;
-    }
-
 
     //根据base_id获取考核相关信息
     public function getAssessRecordInfo($base_id){
         $record_info = array();
         //获取基础表相关信息
-        $base_sql = "select * from sa_assess_base where base_id={$base_id} ";
-        $base_info = $this->db->GetRow($base_sql);
+        $base_info = $this->getAssessBaseRecord($base_id);
         if($base_info){
             $record_info['base_info'] = $base_info;
         }
@@ -218,15 +191,15 @@ class AssessDao extends BaseDao{
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 foreach($attrResult as $k=>$attrData){
-
                     //assess_user_item表更新 start---
                     $tbl = "`".DB_PREFIX."assess_user_item`";
                     $tmpArr['userId'] = $userId;
-                    $tmpArr['attr_id'] = $attrData['attr_id'];
+                    $tmpArr['attr_type'] = $attrData['attr_type'];
                     $tmpArr['itemData'] = $attrData['itemData'];
                     $tmpArr['base_id'] = $attrData['base_id'];
                     $tmpArr['item_weight'] = $attrData['weight'];
-                    $findRecordSql = "select * from {$tbl} where userId = $userId and  attr_id = {$attrData['attr_id']}";
+                    $tmpArr['cash'] = $attrData['cash'];
+                    $findRecordSql = "select * from {$tbl} where userId = $userId and  base_id={$attrData['base_id']}  and  attr_type = {$attrData['attr_type']}";
                     if($findRecord = $this->db->GetRow($findRecordSql)){
                         foreach($findRecord as $k=>$v){
                             if(isset($tmpArr[$k])){
@@ -247,16 +220,41 @@ class AssessDao extends BaseDao{
         }
     }
 
+    public function getUserRelationRecord($userId,$base_Id){
+        $base_sql = "select * from sa_assess_user_relation where base_id={$base_Id} and userId={$userId} ";
+        $base_info = $this->db->GetRow($base_sql);
+        return $base_info;
+    }
+
+    //触发用户考核类型更新，删除user_item表旧的考核类型数据
+    public function triggerUserNewAttrTypeUpdate($userRelationRecord=false,$delStatus=false){
+
+        $tbl = "`".DB_PREFIX."assess_user_relation`";
+        $where = " rid={$userRelationRecord['rid']}";
+        $sql = self::get_update_sql($tbl,$userRelationRecord,$where);
+        $this->db->Execute($sql);
+
+        if($delStatus){
+            $del_attr_sql = "delete from sa_assess_user_item where base_id = {$userRelationRecord['base_id']} and userId={$userRelationRecord['userId']}";
+            $this->db->Execute($del_attr_sql);
+        }
+
+
+    }
+
+
     public function setAssessUserRelation($uidArr,$base_id){
         if($uidArr && $base_id){
             $tbl =  "`".DB_PREFIX."assess_user_relation`";
+            $baseRecord = $this->getAssessBaseRecord($base_id);
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 $tmpArr['userId'] = $userId;
                 $tmpArr['base_id'] = $base_id;
+                $tmpArr['assess_attr_type'] = $baseRecord['assess_attr_type'];
                 $findRecordSql = "select * from {$tbl} where userId = {$userId} and  base_id = {$base_id}";
                 if(!$findRecord = $this->db->GetRow($findRecordSql)){
-                    $tmpArr['user_assess_status'] = self::AssessCreate;
+                    $tmpArr['user_assess_status'] = 0;
                     $sql = self::get_insert_sql($tbl,$tmpArr);
                     $this->db->Execute($sql);
                 }
@@ -338,6 +336,7 @@ class AssessDao extends BaseDao{
             $isMy = $findRecord['userId'] == getUserId();
             if($auth->setIsMy($isMy)->validIsAuth()){
                 $findRecord['base_status'] = 1;//已发布
+                $findRecord['publish_date'] = date("Y-m-d");
                 $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
@@ -435,5 +434,36 @@ class AssessDao extends BaseDao{
             }
         }
         return $authStatus;
+    }
+
+    public function getTableBaseInfo($base_id,$userId){
+        $sql = "select a.user_assess_status,b.* from sa_assess_user_relation a
+                inner join sa_assess_base  b on a.base_id=b.base_id
+                where a.base_id={$base_id} and a.userId={$userId}";
+        $baseRecord = $this->db->GetRow($sql);
+        if($baseRecord){
+            $baseRecord = $baseRecord+$this->getSelectBusName($baseRecord['bus_area_parent'],$baseRecord['bus_area_child']);
+        }
+        return $baseRecord;
+    }
+
+    public function getSelectBusName($parentId,$childId=''){
+        global $cfg;
+        $selectBusList = array();
+        foreach($cfg['tixi'] as $k=>$v){
+            if($parentId == $k){
+                $selectBusList['bus_area_parent_name'] = $v['title'];
+                if($childId){
+                    foreach($v['deptlist'] as $i=>$d){
+                        if($childId==$i){
+                            $selectBusList['bus_area_child_name'] = $d;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        return $selectBusList;
     }
 }
