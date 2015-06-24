@@ -202,10 +202,8 @@ Assess.prototype = {
                 t_data.cash = $(".attr_form_3[flag=4] input[name=attr3_cash]").val();
                 t_table.find("tr").each(function(k,v){
                     var tmp = {};
-                    tmp.score_name = $(this).find("input[name=score_name]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
+                    tmp.tc_name = $(this).find("input[name=tc_name]").val();
+                    tmp.finishCash = $(this).find("input[name=finishCash]").val();
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};
@@ -259,8 +257,8 @@ Assess.prototype = {
                 break;
 
             case '4':
-                itemDom.find("input[name=score_name]").val('');
-                itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=tc_name]").val('');
+                itemDom.find("input[name=finishCash]").val('');
                 break;
         }
         return itemDom;

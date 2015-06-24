@@ -24,12 +24,6 @@
                                         <input type="text" value="<?=$itemData['score_name']?>" name="score_name" class="width160 j-notnull" />
                                     </div>
                                 </td>
-                                <td width="17%" class="sm_xsmbadd_td1">
-                                    <div class="smfl">
-                                        <span><em class="c-yel">*</em> 指标阈值：</span>
-                                        <input type="text" value="<?=$itemData['zbyz']?>" name="zbyz"  class="width40 j-notnull"/>
-                                    </div>
-                                </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
@@ -61,12 +55,6 @@
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>考核项： </span>
                                 <input type="text" value="" name="score_name" class="width160 j-notnull" />
-                            </div>
-                        </td>
-                        <td width="17%" class="sm_xsmbadd_td1">
-                            <div class="smfl">
-                                <span><em class="c-yel">*</em> 指标阈值：</span>
-                                <input type="text" value="" name="zbyz"  class="width40 j-notnull"/>
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>

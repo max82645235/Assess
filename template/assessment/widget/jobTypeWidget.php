@@ -6,7 +6,7 @@
     <div class="kctjcon">
         <div class="sm_div mlr30" style="padding:10px;">
             基本设置：<br /><br />
-            整体权重：<input type="text" value="<?=@$renderData['weight']?>" name="attr2_weight"  class="width80 j-notnull" />
+            整体权重：<input type="text" value="<?=@$renderData['weight']?>" name="attr2_weight"  class="width80 j-notnull" />&nbsp;%
         </div>
     </div>
     <div class="kctjcon">
@@ -34,7 +34,7 @@
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />
+                                        <input type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -80,7 +80,7 @@
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 权重：</span>
-                                <input type="text" value="" name="qz"  class="width40 j-notnull" />
+                                <input type="text" value="" name="qz"  class="width40 j-notnull" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>

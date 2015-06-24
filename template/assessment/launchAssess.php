@@ -13,15 +13,22 @@
     <script src="<?=P_JSPATH?>calendar-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-setup-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-zh-new.js" type="text/javascript"></script>
-    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+
     <link href="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js" type="text/javascript"></script>
     <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
     <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
     <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
+    <link rel="stylesheet" media="screen" href="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery-ui.min.css">
+    <link rel="stylesheet" href="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.css">
+    <script src="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.js"></script>
+    <script src="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery.validate.js"></script>
+    <script src="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery-ui.min.js"></script>
+
+    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <script src="<?=P_SYSPATH?>static/js/assess/validateAssess.js" type="text/javascript"></script>
     <script>
         var AssessInstance =  new Assess();
-
         $(function(){
             AssessInstance.triggerBusSelect(false); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
@@ -46,8 +53,11 @@
 
             //表单提交sub
             $("#sub_form").submit(function(e){
-                AssessInstance.formSubHandle();
-                location.href = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
+                if($.myValidate.errorList.length==0){
+                    AssessInstance.formSubHandle();
+                    location.href = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
+                }
+                return false;
                 e.preventDefault();
             });
 
@@ -62,6 +72,7 @@
                 AssessInstance.triggerBusSelect(false);
             });
 
+            //考核人模糊搜索
             $("#username").autocomplete({
                 source: function( request, response ) {
                     var s = $("#username").val();
@@ -101,6 +112,7 @@
                 }
             });
 
+            //添加考核人
             $("#adduser").click(function(){
                 var userId = $("#username_userId").val();
                 var t = $("#username").val().split('_');
@@ -109,6 +121,7 @@
                 AssessInstance.adduser(userId,username);
             });
 
+            //考核人列表弹框添加
             $("#selectUserList").click(function(){
                 var pid = $("#bus_area_parent").val();
                 var cid = $("#bus_area_child").val();
@@ -161,7 +174,7 @@ EOF;
                 <tr>
                     <td width="188" align="right"><em class="c-yel">*</em> 考核名称：&nbsp;</td>
                     <td>
-                        <input type="text" name="title" id="base_name" value="<?=(isset($record_info['base_info']['base_name']))?$record_info['base_info']['base_name']:'';?>" class="width190" />
+                        <input type="text" name="base_name" id="base_name" value="<?=(isset($record_info['base_info']['base_name']))?$record_info['base_info']['base_name']:'';?>" class="width190" />
                     </td>
                 </tr>
                 <tr>
@@ -191,8 +204,8 @@ EOF;
                         <input type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
                         <input type="hidden" id="username_userId" value=""/>
                         <input type="hidden" name="uids" id="uids" value="" />
-                        <input type="button" class="btn48 adduser" value="添加" id="adduser"/>
-                        <input type="button" class="btn74 getuserlist"  id="selectUserList" style="margin:0;" value="选择用户" />
+                        <input type="button" class="btn48 adduser" value="添加" id="adduser" name="adduser"/>
+                        <input type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
                         <div class="shcon div_userlist" style="width: 500px;display: none;">
                             <div class="tjxm userlist">
 
@@ -215,7 +228,7 @@ EOF;
                 </tr>
 
                 <tr>
-                    <td align="right"><em class="c-yel">*</em> 按月生成：&nbsp;</td>
+                    <td align="right">按月生成：&nbsp;</td>
                     <td>
                         <input type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
                     </td>
@@ -260,7 +273,7 @@ EOF;
                     </td>
                 </tr>
                 <tr>
-                    <td align="right"><em class="c-yel">*</em> 由直接领导设置：&nbsp;</td>
+                    <td align="right"> 由直接领导设置：&nbsp;</td>
                     <td>
                         <input type="checkbox" name="lead_direct_set_status"  value="1" id="lead_direct_set_status" <?php if(isset($record_info['base_info']['lead_direct_set_status']) && $record_info['base_info']['lead_direct_set_status']==1){?>checked="checked" <?php }?>>
                     </td>
@@ -289,7 +302,7 @@ EOF;
 
             <div class="kctjbot">
                 <input type="submit" class="bluebtn" value="确定" />
-                <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
+                <input type="button" class="btn67" value="返回"  name="backBtn" onclick="history.go(-1);"/>
             </div>
         </form>
     </div>
