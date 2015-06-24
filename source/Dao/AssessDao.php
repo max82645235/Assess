@@ -468,4 +468,25 @@ class AssessDao extends BaseDao{
         }
         return $selectBusList;
     }
+
+    public function getAutoUserList($params){
+        $retList = array();
+        $username = utfToGbk($params['s']);
+        $tixi = $params['pid'];
+        $comp_dept = $params['cid'];
+        if($username){
+            $sql = "select userId,username,city,dept from sa_user where tixi={$tixi} and comp_dept={$comp_dept} and username like '%{$username}%'";
+            $userList = $this->db->GetAll($sql);
+            if($userList){
+                foreach($userList as $k=>$data){
+                    $retList[$k]['id'] = $data['userId'];
+                    $v = $data['city'].'_'."_".$data['dept']."_".$data['username'];
+                    $retList['label'] = $retList[$k]['value'] = iconv('GBK','UTF-8//IGNORE',$v);
+                }
+            }
+        }
+        return $retList;
+    }
+
+
 }

@@ -111,6 +111,28 @@ if($_REQUEST['act']=='ajaxIndicatorClassify'){
     }
 }
 
+if($_REQUEST['act']=='autoUserName'){
+    $assessDao = new AssessDao();
+    $userList = $assessDao->getAutoUserList($_REQUEST);
+    echo json_encode($userList);
+    die();
+}
 
+if($_REQUEST['act']=='selectUserList'){
+    $pid = $_REQUEST['pid'];
+    $cid = $_REQUEST['cid'];
+    $uids = explode(',',$_REQUEST['uids']);
+    $assessDao = new AssessDao();
+    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid}";
+    $userList = $assessDao->db->GetAll($sql);
+    $tpl = new NewTpl('assessment/selectUserList.php',array(
+        'userList'=>$userList,
+        'pid'=>$pid,
+        'cid'=>$cid,
+        'uids'=>$uids
+    ));
+    $tpl->render();
+    die();
+}
 
 

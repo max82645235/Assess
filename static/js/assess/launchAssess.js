@@ -345,5 +345,58 @@ Assess.prototype = {
            location.href = url;
         }
         setTimeout(j,mis,url);
+    },
+    adduser:function(userId,username){
+        var uids = $("#uids").val();
+        var uidArr = $("#uids").val().split(',');
+        var status = true;
+        for(var i=0;i<uidArr.length;i++){
+            if(uidArr[i]==userId){
+                status = false;
+            }
+        }
+        if(status){
+            if(uids==''){
+                uids =userId;
+            }else{
+                uids+=","+userId;
+            }
+            $("#uids").val(uids);
+            if($(".div_userlist").is(":hidden")){
+                $(".div_userlist").show();
+            }
+            var newSpan = "<span id=\"span_auto_"+userId+"\">"+username+"<a id=\""+userId+","+username+"\" href=\"javascript:void(0)\" class=\"close deluser\" onclick=\"Assess.prototype.delUserADom(this)\"></a></span>";
+            $(".div_userlist .userlist").append(newSpan);
+            $("#username").val('');
+        }
+    },
+    delUserADom:function(dom){
+        //获取删除的userId
+        var idArr = $(dom).parent().attr('id').split('_');
+        var index = idArr.length-1;
+        var userId = idArr[index];
+
+        //获取遍历除userId的uids
+        var uids = [];
+        var uidArr = $("#uids").val().split(',');
+        for(var i=0;i<uidArr.length;i++){
+            if(uidArr[i]!=userId){
+                uids.push(uidArr[i]);
+            }
+        }
+        $("#uids").val(uids.join(','));
+        $(dom).parent().remove();
+        if($(".div_userlist .userlist span").length==0){
+            $(".div_userlist").hide();
+        }
+    },
+    userListTrigger:function(uidArr,delUids){
+        for(var i=0;i<uidArr.length;i++){
+            this.adduser(uidArr[i]['userId'],uidArr[i]['username']);
+        }
+        console.log(delUids);
+        for(var i=0;i<delUids.length;i++){
+            $("#span_auto_"+delUids[i]).find("a").trigger('click');
+        }
     }
 };

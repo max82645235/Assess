@@ -14,8 +14,14 @@
     <script src="<?=P_JSPATH?>calendar-setup-new.js" type="text/javascript"></script>
     <script src="<?=P_JSPATH?>calendar-zh-new.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <link href="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
     <script>
         var AssessInstance =  new Assess();
+
         $(function(){
             AssessInstance.triggerBusSelect(false); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
@@ -54,6 +60,66 @@
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
                 AssessInstance.triggerBusSelect(false);
+            });
+
+            $("#username").autocomplete({
+                source: function( request, response ) {
+                    var s = $("#username").val();
+                    var pid = $("#bus_area_parent").val();
+                    var cid = $("#bus_area_child").val();
+
+                    if(pid==''|| cid==''){
+                        //alert('请先选择业务单元');
+                        $("#username").removeClass('ui-autocomplete-loading');
+                        return false;
+                    }
+
+                    $("#username").addClass('ui-autocomplete-loading');
+
+                    $.ajax({
+                        type:'get',
+                        url: '<?=P_SYSPATH."index.php?m=assessment&a=launchAssess&act=autoUserName"?>',
+                        dataType: "json",
+                        data:{
+                            s:s,
+                            pid:pid,
+                            cid:cid
+                        },
+                        success:  function( data ) {
+                            $("#username").removeClass('ui-autocomplete-loading');
+                            response($.map( data, function( item ) {
+                                var retList = {id:item.id,value:item.value,label:item.label};
+                                return retList;
+                            }));
+                        }
+                    });
+                },
+                minLength: 1,
+                select:  function( event, ui ) {
+                    $("#username").val(ui.item.value);
+                    $("#username_userId").val(ui.item.id);
+                }
+            });
+
+            $("#adduser").click(function(){
+                var userId = $("#username_userId").val();
+                var t = $("#username").val().split('_');
+                var index = t.length-1;
+                var username = t[index];
+                AssessInstance.adduser(userId,username);
+            });
+
+            $("#selectUserList").click(function(){
+                var pid = $("#bus_area_parent").val();
+                var cid = $("#bus_area_child").val();
+                var uids = $("#uids").val();
+
+                art.dialog.data('pid', pid);
+                art.dialog.data('cid', cid);
+                art.dialog.data('uids', uids);
+                var openUrl  = '<?=P_SYSPATH."index.php?m=assessment&a=launchAssess&act=selectUserList"?>';
+                openUrl+= "&pid="+pid+"&cid="+cid+"&uids="+uids;
+                art.dialog.open(openUrl,{height:'600px',width:'900px',lock: true});
             });
         });
     </script>
@@ -123,9 +189,15 @@ EOF;
                     <td align="right" valign="top"><em class="c-yel">*</em> 被考核人：&nbsp;</td>
                     <td>
                         <input type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
-                        <input type="hidden" name="uids" id="uids" value="1,2,876,877" />
-                        <input type="button" class="btn48 adduser" value="添加" />
-                        <input type="button" class="btn74 getuserlist" style="margin:0;" value="选择用户" />
+                        <input type="hidden" id="username_userId" value=""/>
+                        <input type="hidden" name="uids" id="uids" value="" />
+                        <input type="button" class="btn48 adduser" value="添加" id="adduser"/>
+                        <input type="button" class="btn74 getuserlist"  id="selectUserList" style="margin:0;" value="选择用户" />
+                        <div class="shcon div_userlist" style="width: 500px;display: none;">
+                            <div class="tjxm userlist">
+
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <tr>

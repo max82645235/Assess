@@ -307,4 +307,10 @@ function alertMsg($msg,$url=''){
     $script.="</script>";
     echo  $script;
 }
+
+function utfToGbk($str){
+    if(mb_detect_encoding($str)=='UTF-8'){
+        return iconv('UTF-8','GBK//IGNORE',$str);
+    }
+}
 ?>
