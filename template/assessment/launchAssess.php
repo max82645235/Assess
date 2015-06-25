@@ -24,7 +24,7 @@
     <script src="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.js"></script>
     <script src="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery.validate.js"></script>
     <script src="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery-ui.min.js"></script>
-
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.metadata.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/validateAssess.js" type="text/javascript"></script>
     <script>
@@ -80,8 +80,9 @@
                     var cid = $("#bus_area_child").val();
 
                     if(pid==''|| cid==''){
-                        //alert('请先选择业务单元');
                         $("#username").removeClass('ui-autocomplete-loading');
+                        $.myValidate.element('#bus_area_child');
+                        $("#username").val('');
                         return false;
                     }
 
@@ -119,10 +120,17 @@
                 var index = t.length-1;
                 var username = t[index];
                 AssessInstance.adduser(userId,username);
+                $.myValidate.element('#username');
             });
 
             //考核人列表弹框添加
-            $("#selectUserList").click(function(){
+            $("#selectUserList").click(function(e){
+                if($("#bus_area_child").val()==''){
+                    $.myValidate.element('#bus_area_child');
+                    e.preventDefault();
+                    return false;
+                }
+
                 var pid = $("#bus_area_parent").val();
                 var cid = $("#bus_area_child").val();
                 var uids = $("#uids").val();
@@ -132,7 +140,7 @@
                 art.dialog.data('uids', uids);
                 var openUrl  = '<?=P_SYSPATH."index.php?m=assessment&a=launchAssess&act=selectUserList"?>';
                 openUrl+= "&pid="+pid+"&cid="+cid+"&uids="+uids;
-                art.dialog.open(openUrl,{height:'600px',width:'900px',lock: true});
+                art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
             });
         });
     </script>

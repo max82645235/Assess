@@ -24,7 +24,6 @@
                     var cid = $("#bus_area_child").val();
 
                     if(pid==''|| cid==''){
-                        //alert('请先选择业务单元');
                         $("#username").removeClass('ui-autocomplete-loading');
                         return false;
                     }
@@ -60,6 +59,9 @@
                 }
             });
 
+            $("#clearBtn").click(function(){
+                $("#username").val('');
+            });
             $(".saveBtn").click(function(){
                var newUids = [];
                 var in_array = function(val,arr){
@@ -92,7 +94,6 @@
                         delDefaultUids.push(defaultUids[i]);
                     }
                 }
-                console.log(delDefaultUids);
                 var origin = artDialog.open.origin
                 origin.window.AssessInstance.userListTrigger(newUids,delDefaultUids);
                 art.dialog.close();
@@ -115,9 +116,9 @@
                 <input type="hidden" name="bus_area_parent" id="bus_area_parent" value="<?=$pid?>">
                 <input type="hidden" name="bus_area_child" id="bus_area_child" value="<?=$cid?>">
                 <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
-                    用户名称：<input type="text" value="" name="username" id="username" class="width135" placeholder="请输入考核人"  >
+                    考核人姓名：<input type="text" value="" name="username" id="username" class="width135" placeholder="请输入考核人"  >
                 </div>
-                <input type="submit" value="搜索" class="btn48"  style="float: left;margin-top: 5px;">
+                <input type="button" value="清空" class="btn48"  style="float: left;margin-top: 5px;" id="clearBtn">
                 <input type="button" value="保存" class="btn48 saveBtn"  style="float: left;margin-top: 5px;margin-left: 5px;">
             </form>
         </div>
@@ -127,7 +128,7 @@
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
-                    <th width="200" class="left" style="text-align: center;">考核人名称</th>
+                    <th width="200" class="left" style="text-align: center;">考核人姓名</th>
                     <th  style="text-align: center;">部门</th>
                 </tr>
                 <?php if($userList){?>

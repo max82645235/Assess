@@ -70,7 +70,7 @@
                                 <?php }?>
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="del_td" onclick="Assess.prototype.delItemDom(this,1)">
-                                        <input type="button" class="btn67" value="…æ≥˝">
+                                        <input type="button" class="btn67" name="del" value="…æ≥˝">
                                     </div>
                                 </td>
                             </tr>
@@ -96,13 +96,13 @@
                         <td width="15%" class="sm_xsmbadd_td1">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> ÷∏±Í„–÷µ£∫</span>
-                                <input type="text" value="" name="zbyz"  class="width40 j-notnull"/>
+                                <input type="text" value="" name="zbyz"  class="width40 j-notnull required"/>
                             </div>
                         </td>
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> »®÷ÿ£∫</span>
-                                <input type="text" value="" name="qz"  class="width40 j-notnull" />&nbsp;%
+                                <input type="text" value="" name="qz"  class="width40 j-notnull percent" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>
@@ -123,7 +123,7 @@
                         <?php }?>
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="del_td" onclick="Assess.prototype.delItemDom(this,1)">
-                                <input type="button" class="btn67" value="…æ≥˝">
+                                <input type="button" class="btn67" name="del" value="…æ≥˝">
                             </div>
                         </td>
                     </tr>

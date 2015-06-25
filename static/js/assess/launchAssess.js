@@ -172,7 +172,7 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.job_name = $(this).find("input[name=job_name]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.qz = $(this).find("input[name=qz]").val();
+                    tmp.qz = $(this).find("input[name=job_qz]").val();
                     tmp.selfScore = $(this).find("input[name=selfScore]").val();
                     tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     j_data['table_data'].push(tmp);
@@ -187,7 +187,6 @@ Assess.prototype = {
                 s_table.find("tr").each(function(k,v){
                     var tmp = {};
                     tmp.score_name = $(this).find("input[name=score_name]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
                     tmp.selfScore = $(this).find("input[name=selfScore]").val();
                     tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     s_data['table_data'].push(tmp);
@@ -392,7 +391,6 @@ Assess.prototype = {
         for(var i=0;i<uidArr.length;i++){
             this.adduser(uidArr[i]['userId'],uidArr[i]['username']);
         }
-        console.log(delUids);
         for(var i=0;i<delUids.length;i++){
             $("#span_auto_"+delUids[i]).find("a").trigger('click');
         }

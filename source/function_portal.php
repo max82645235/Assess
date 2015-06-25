@@ -310,7 +310,8 @@ function alertMsg($msg,$url=''){
 
 function utfToGbk($str){
     if(mb_detect_encoding($str)=='UTF-8'){
-        return iconv('UTF-8','GBK//IGNORE',$str);
+        $str =  iconv('UTF-8','GBK//IGNORE',$str);
     }
+    return $str;
 }
 ?>

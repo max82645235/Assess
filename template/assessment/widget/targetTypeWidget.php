@@ -35,7 +35,7 @@
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>Ã·≥…µ„£∫ </span>
-                                <input type="text" value="" name="tc_name" class="width160 j-notnull" />&nbsp;%
+                                <input type="text" value="" name="tc_name" class="width60 j-notnull" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>

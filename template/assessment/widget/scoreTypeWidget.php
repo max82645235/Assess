@@ -42,7 +42,7 @@
                                 <?php }?>
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="del_td" onclick="Assess.prototype.delItemDom(this,3)">
-                                        <input type="button" class="btn67" value="É¾³ý">
+                                        <input type="button" class="btn67"  name="del" value="É¾³ý">
                                     </div>
                                 </td>
                             </tr>
@@ -75,7 +75,7 @@
                         <?php }?>
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="del_td" onclick="Assess.prototype.delItemDom(this,3)">
-                                <input type="button" class="btn67" value="É¾³ý">
+                                <input type="button" class="btn67" name="del"  value="É¾³ý">
                             </div>
                         </td>
                     </tr>
