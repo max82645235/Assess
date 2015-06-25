@@ -25,14 +25,14 @@ $(function(){
         showErrors: function(map, list) {
             // there's probably a way to simplify this
             var focussed = document.activeElement;
-            if (focussed && $(focussed).is("input, textarea,select")) {
+            if (focussed && $(focussed).is("input, textarea")) {
                 $(this.currentForm).tooltip().tooltip("close", {
                     currentTarget: focussed
                 }, true);
             }
-            this.currentElements.removeAttr("title").removeClass("ui-state-highlight");
+            this.currentElements.removeAttr("title").removeClass("ui-state-error");
             $.each(list, function(index, error) {
-                $(error.element).attr("title", error.message).addClass("ui-state-highlight");
+                $(error.element).attr("title", error.message).addClass("ui-state-error");
             });
 
         }
@@ -44,13 +44,6 @@ $(function(){
         }
         return true;
     },'最少填写一个被考核人！');
-
-    $.validator.addMethod('busChildRequire',function(value, element, arg){
-        if($(element).val()==''){
-            return false;
-        }
-        return true;
-    },'二级分类必填！');
 
 
 
@@ -79,9 +72,6 @@ $(function(){
         rules:{
             base_name:{
                 required: true
-            },
-            bus_area_child:{
-                busChildRequire:true
             },
             username:{
                 userListRequire:true
@@ -122,9 +112,6 @@ $(function(){
             attr1_weight:{
                 required: true,
                 percent:true
-            },
-            indicator_child:{
-                busChildRequire:true
             },
             zbyz:{
                 required: true,

@@ -16,15 +16,15 @@
 
     <link href="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
-    <link rel="stylesheet" media="screen" href="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery-ui.min.css">
-    <link rel="stylesheet" href="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.css">
-    <script src="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.js"></script>
-    <script src="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery.validate.js"></script>
-    <script src="http://newscms.house365.com/newCMS/yii/js/jqueryValidator/dist/jquery-ui.min.js"></script>
-    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.metadata.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
+
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.css">
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.validate.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.min.js"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/validateAssess.js" type="text/javascript"></script>
     <script>
@@ -53,7 +53,7 @@
 
             //表单提交sub
             $("#sub_form").submit(function(e){
-                if($.myValidate.errorList.length==0){
+                if($.myValidate.errorList.length==0 && AssessInstance.submitSelectValid()){
                     AssessInstance.formSubHandle();
                     location.href = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
                 }
@@ -81,11 +81,11 @@
 
                     if(pid==''|| cid==''){
                         $("#username").removeClass('ui-autocomplete-loading');
-                        $.myValidate.element('#bus_area_child');
+                        $("#bus_area_child").addClass('redBorder');
                         $("#username").val('');
                         return false;
                     }
-
+                    $("#bus_area_child").removeClass('redBorder');
                     $("#username").addClass('ui-autocomplete-loading');
 
                     $.ajax({
@@ -126,8 +126,7 @@
             //考核人列表弹框添加
             $("#selectUserList").click(function(e){
                 if($("#bus_area_child").val()==''){
-                    $.myValidate.element('#bus_area_child');
-                    e.preventDefault();
+                    $("#bus_area_child").addClass('redBorder');
                     return false;
                 }
 
@@ -142,8 +141,15 @@
                 openUrl+= "&pid="+pid+"&cid="+cid+"&uids="+uids;
                 art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
             });
+
+            $("#bus_area_child,.commission_indicator_child").change(function(){
+                AssessInstance.selectChildValid(this);
+            });
         });
     </script>
+    <style>
+        .redBorder {border: 1px solid #cd0a0a}
+    </style>
 </head>
 <?php
 function dateHtml($data,$key){

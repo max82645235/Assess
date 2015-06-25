@@ -394,5 +394,23 @@ Assess.prototype = {
         for(var i=0;i<delUids.length;i++){
             $("#span_auto_"+delUids[i]).find("a").trigger('click');
         }
+    },
+    selectChildValid:function(select){
+        if($(select).val()=='' && $(select).is(":visible")){
+            $(select).addClass('redBorder');
+            return false;
+        }else{
+            $(select).removeClass('redBorder');
+            return true;
+        }
+    },
+    submitSelectValid:function(){
+        var status = true;
+        $("#bus_area_child,.commission_indicator_child").each(function(){
+            if(Assess.prototype.selectChildValid(this)==false){
+                status = false;
+            }
+        });
+        return status;
     }
 };
