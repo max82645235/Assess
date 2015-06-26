@@ -28,7 +28,7 @@
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> »®÷ÿ£∫</span>
-                                        <input type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />&nbsp;%
+                                        <input type="text" value="<?=$itemData['qz']?>" name="job_qz"  class="width40 j-notnull" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>

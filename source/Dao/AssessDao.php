@@ -346,6 +346,14 @@ class AssessDao extends BaseDao{
                     $data['user_assess_status']  = 3;
                     $sql = self::get_update_sql(" sa_assess_user_relation ",$data,$where);
                     $this->db->Execute($sql);
+                }else{
+                    //因为是领导直接设置，发布前校验下 sa_assess_user_item 表，需要删除Hr可能改变领导状态情况下残留的item数据
+                    $sql = "select count(*) from sa_assess_user_item where base_id={$baseId}";
+                    $tmpRecord = $this->db->GetOne($sql);
+                    if($tmpRecord>0){
+                        $delSql = "delete from sa_assess_user_item where base_id={$baseId}";
+                        $this->db->GetOne($delSql);
+                    }
                 }
                 return true;
             }

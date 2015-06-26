@@ -30,6 +30,7 @@
     <script>
         var AssessInstance =  new Assess();
         $(function(){
+            AssessInstance.initHide();
             AssessInstance.triggerBusSelect(false); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
@@ -220,12 +221,12 @@ EOF;
                         <input <?=$mValid->getDisableValid('uids');?>  type="hidden" name="uids" id="uids" value="" />
                         <input <?=$mValid->getDisableValid('adduser');?>  type="button" class="btn48 adduser" value="添加" id="adduser" name="adduser"/>
                         <input <?=$mValid->getDisableValid('selectUserList');?>  type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
-                        <div class="shcon div_userlist" style="width: 500px;display: none;">
+                        <div class="shcon div_userlist" style="width: 500px;<?php if(!$relationUsers){?>display: none;<?php }?>">
                             <div class="tjxm userlist">
                                 <?php if($relationUsers){?>
                                     <?php foreach($relationUsers as $k=>$user){?>
                                 <span id="span_auto_<?=$user['userId']?>">
-                                    张文斌<a id="<?=$user['userId']?>,<?=$user['username']?>" href="javascript:void(0)" class="close deluser" onclick="Assess.prototype.delUserADom(this)"></a>
+                                    <?=$user['username']?><a id="<?=$user['userId']?>,<?=$user['username']?>" href="javascript:void(0)" class="close deluser" onclick="Assess.prototype.delUserADom(this)"></a>
                                 </span>
                                         <?php }?>
                                 <?php }?>

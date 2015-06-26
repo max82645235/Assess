@@ -23,6 +23,13 @@ Assess.prototype = {
         });
     },
 
+    initHide:function(){
+        if(this.getLeadDirectSetValue()){
+            $("#attr_type_checkboxes_td").parents('tr').hide();
+            $(".attr_content").hide();
+        }
+    },
+
     getLeadDirectSetValue:function(){
         return ($("#lead_direct_set_status").is(":checked"))?1:0;
     },
@@ -51,11 +58,11 @@ Assess.prototype = {
     selectLeadSetStatus:function(){
         var lead_direct_set_status = this.getLeadDirectSetValue();
         if(lead_direct_set_status){
-            $(".attr_content").children("div").each(function(){
-                $(this).hide();
-            });
-            $("#attr_type_checkboxes_td").hide();
+            $("#attr_type_checkboxes_td").parents('tr').hide();
+            $(".attr_content").hide();
         }else{
+            $("#attr_type_checkboxes_td").parents('tr').show();
+            $(".attr_content").show();
             this.selectAttrType();
         }
     },
