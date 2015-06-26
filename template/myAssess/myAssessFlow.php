@@ -8,9 +8,9 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
 
     <script>
         var AssessInstance =  new Assess();
@@ -19,6 +19,16 @@
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
 
+            //点击考核类型checkbox
+            $("#attr_type_checkboxes_td input").click(function(){
+                var v = $(this).val();
+                $("#attr_type_checkboxes_td input").each(function(){
+                    if($(this).val()!=v){
+                        $(this).attr("checked",false);
+                    }
+                });
+                AssessInstance.selectAttrType();
+            });
 
             //追加属性节点
             $(".sm_target").click(function(){
@@ -60,7 +70,7 @@
                 formData.attrData = AssessInstance.getAttrData();
                 formData.base_id = $("#hidden_base_id").val();
                 formData.userId = $("#hidden_user_id").val();
-                art.dialog.confirm('您确定进入下一步？',function(){
+                art.dialog.confirm('您确定提交考核审核申请么？',function(){
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -117,32 +127,38 @@
                 <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
                 <div class="baseinfo">
                     <table cellpadding="0" cellspacing="0" width="100%">
-                        <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'])?>
+                        <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
                         <tr>
                             <td align="right">考核类型选择：&nbsp;</td>
                             <td id="attr_type_checkboxes_td">
-                                <input type="checkbox" disabled="disabled" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
-                                <input type="checkbox" disabled="disabled"  name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
-                                <input type="checkbox" disabled="disabled" name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>任务/指标类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?>  name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
                             </td>
                         </tr>
                     </table>
                 </div>
                 <div class="pad25">
+                    <?php
+                        $scoreList = array();
+                        if($record_info['relation']['user_assess_status']==5){
+                            $scoreList['selfScore'] = true;
+                        }
+                    ?>
                     <div class="attr_content">
                         <!--任务/指标类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],1)?>
+                        <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList)?>
 
                         <!--打分类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],2)?>
+                        <?=$assessAttrWidget->renderAttr($record_info['item'],2,$scoreList)?>
 
                         <!--提成类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],3)?>
+                        <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList)?>
                     </div>
                 </div>
                 <div class="kctjbot">
                     <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                    <input type="button" class="bluebtn" value="下一步" id="nextBtn" />
+                    <input type="button" class="bluebtn" value="提交审核" id="nextBtn" />
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
                 </div>
             </form>

@@ -17,43 +17,46 @@ class AssessFlowDao extends BaseDao{
         '3'=>"考核中",
         '4'=>'待下属汇报',
         '5'=>'待我终审',
-        '6'=>'终审完成'
+        '6'=>'终审完成',
+        '7'=>'考核结束'
     );
 
     static $UserAssessStatusByStaff = array(
         '0'=>'待考核人创建',
         '1'=>"待我填写计划",
         '2'=>"待考核人初审",
-        '3'=>'考核中',
+        '3'=>"考核中",
         '4'=>'待我汇报',
         '5'=>"待考核人终审",
-        '6'=>'终审完成'
+        '6'=>'终审完成',
+        '7'=>'考核结束'
     );
 
 
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写
     const AssessPreLeadVIew = 2;//待领导初审|员工已填写完成预期
-    const AssessPreSuccess = 3;//领导初审通过
+    const AssessChecking = 3;//考核中
     const AssessPreReport = 4;//待我汇报
     const AssessRealLeadView = 5;//待领导终审|员工已填写完实际
     const AssessRealSuccess = 6;//领导终审通过
-
+    const AssessRealOver = 7;//考核结束
     public function setAssessDao(AssessDao $assessDao){
         $this->assessDao = $assessDao;
     }
 
     public function waitMeSearchHandlerList($searchParam){
         $searchResult = array();
+        $searchParam['base_status'] = 1; // 已发布状态
         $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
-        $hrSearchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
+        $searchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
         //附加领导对应的员工的baseIdList
-        if($baseIdList = $this->getBaseIdsForLeader($searchParam['status'])){
-            $hrSearchResult['sqlWhere'].= " AND sa_assess_base.base_id in (".implode(',',$baseIdList).")";
+        if($baseIdList = $this->getBaseIdsForLeader($searchParam)){
+            $searchResult['sqlWhere'].= " AND sa_assess_base.base_id in (".implode(',',$baseIdList).")";
         }else{
-            $hrSearchResult['sqlWhere'].= ' AND 1=0 ';
+            $searchResult['sqlWhere'].= ' AND 1=0 ';
         }
-        return $hrSearchResult;
+        return $searchResult;
     }
 
 
@@ -68,14 +71,17 @@ class AssessFlowDao extends BaseDao{
     }
 
     //获取领导相关的baseIds
-    public function getBaseIdsForLeader($status){
+    public function getBaseIdsForLeader($params){
+        $status = $params['status'];
         $baseIdList = array();
-        $curUserId = getUserBusId();
-        $addStatusSql = "and a.status=$status ";
+        $curUserId = getUserId();
+        $addStatusSql = "and a.status=$status ";//隶属领导状态
+        if(isset($params['user_assess_status']) && $params['user_assess_status']!==''){
+            $addStatusSql.=" and b.user_assess_status={$params['user_assess_status']}";
+        }
         $getRelationBaseIdSql = "select c.base_id,c.base_status from sa_user_relation as a
-                                 inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId $addStatusSql
+                                 inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId  $addStatusSql
                                  inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
-        //echo $getRelationBaseIdSql."</br>";
         $result = $this->db->getAll($getRelationBaseIdSql);
         if($result){
             foreach($result as $data){
@@ -85,28 +91,20 @@ class AssessFlowDao extends BaseDao{
                 }
             }
         }
+
         return $baseIdList;
     }
 
     //获取某一考核下领导的下属员工
     public function getStaffListForLeaderSql($conditionParams = array()){
         $base_Id = $conditionParams['base_id'];
-        $curUserId = getUserBusId();
+        $curUserId = getUserId();
         $addSql = "";
         $pageConditionUrl = '';
         $resultList = array();
         if(isset($conditionParams['user_assess_status']) && $conditionParams['user_assess_status']!==''){
             $addSql.= "and b.user_assess_status={$conditionParams['user_assess_status']}";//附加用户填写状态条件
             $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
-        }
-        if(isset($conditionParams['bus_area_parent']) && $conditionParams['bus_area_parent']){
-            $addSql.=" and a.tixi={$conditionParams['bus_area_parent']}";
-            $pageConditionUrl.="&bus_area_parent={$conditionParams['bus_area_parent']}";
-        }
-
-        if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
-            $addSql.=" and a.comp_dept={$conditionParams['bus_area_parent']}";
-            $pageConditionUrl.="&bus_area_child={$conditionParams['bus_area_child']}";
         }
 
         if(isset($conditionParams['username']) && $conditionParams['username']){
@@ -119,6 +117,31 @@ class AssessFlowDao extends BaseDao{
         $resultList['pageConditionUrl'] = $pageConditionUrl;
         return $resultList;
 
+    }
+
+    public function validLeaderSetFlow($userAssessStatus){
+        $allowStatusList = array(
+            self::AssessCreate,
+            self::AssessPreLeadVIew,
+            self::AssessRealLeadView
+        );
+        if(in_array($userAssessStatus,$allowStatusList)){
+            return true;
+        }else{
+            throw new Exception('500');
+        }
+    }
+
+    public function validStuffSetFow($userAssessStatus){
+        $allowStatusList = array(
+            self::AssessPreStaffWrite,
+            self::AssessPreReport,
+        );
+        if(in_array($userAssessStatus,$allowStatusList)){
+            return true;
+        }else{
+            throw new Exception('500');
+        }
     }
 
     public function getUserAssessRecord($baseId,$userId){

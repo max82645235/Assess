@@ -72,12 +72,14 @@ if($_REQUEST['act']=='myAssessFlow'){
         }
         $uids = array($userId);
         try{
+
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
+            $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
             $nextStatus = $_REQUEST['status']=='next';
-            if($nextStatus){
+            if($_REQUEST['status']=='next'){
                 $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
-                $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);
             }
+            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);
             $assessDao->setAssessUserItemRecord($uids,$attrRecord);
 
         }catch (Exception $e){
@@ -87,9 +89,11 @@ if($_REQUEST['act']=='myAssessFlow'){
         die();
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        $assessFlowDao->validStuffSetFow($record_info['relation']['user_assess_status']);
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }
+
     $tpl = new NewTpl('myAssess/myAssessFlow.php',array(
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,

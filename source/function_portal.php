@@ -283,7 +283,7 @@ function tbl_check_auth($m,$a,$act,$tbl,$inajax=0,$id=0,$authfield="deal_userid"
 }
 
 function getUserId(){
-    if(@LOCAL_EV){
+    if(defined("LOCAL_EV")){
         return 2;
     }
     return (isset($_SESSION[DB_PREFIX.'user_id']))?$_SESSION[DB_PREFIX.'user_id']:'';
@@ -306,5 +306,12 @@ function alertMsg($msg,$url=''){
     }
     $script.="</script>";
     echo  $script;
+}
+
+function utfToGbk($str){
+    if(mb_detect_encoding($str)=='UTF-8'){
+        $str =  iconv('UTF-8','GBK//IGNORE',$str);
+    }
+    return $str;
 }
 ?>

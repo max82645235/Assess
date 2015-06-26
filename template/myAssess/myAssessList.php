@@ -8,10 +8,6 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
-    <style>
-        .jbtab tr th{color: #3186c8;font-weight:600;}
-        .jbtab tr td{color: #3186c8;}
-    </style>
 </head>
 <body>
 <div class="bg">
@@ -71,9 +67,8 @@
                 </tr>
                 <?php
                 $btnArr = array(
-                    '1'=>'填写考核',
-                    '3'=>'提交初审',
-                    '4'=>'提交终审',
+                    '1'=>'填写考核计划',
+                    '5'=>'填写考核提报'
                 );
                 ?>
                 <?php if($tableData){?>
@@ -91,7 +86,7 @@
                             <td><?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td class="left">
-                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
+                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                     <span >
                                              <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>

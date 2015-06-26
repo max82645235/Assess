@@ -23,12 +23,27 @@ Assess.prototype = {
         });
     },
 
+    initHide:function(){
+        if(this.getLeadDirectSetValue()){
+            $("#attr_type_checkboxes_td").parents('tr').hide();
+            $(".attr_content").hide();
+        }
+    },
+
     getLeadDirectSetValue:function(){
         return ($("#lead_direct_set_status").is(":checked"))?1:0;
     },
 
+    getCreateOnMonthValue:function(){
+        return ($("#create_on_month_status").is(":checked"))?1:0;
+    },
+
     getAttrTypeCheckedValue:function(){
-        return $("#attr_type_checkboxes_td input:checked").val();
+        if(!this.getLeadDirectSetValue()){
+            return $("#attr_type_checkboxes_td input:checked").val();
+        }else{
+            return '';
+        }
     },
 
     selectAttrType:function(){
@@ -47,15 +62,17 @@ Assess.prototype = {
     selectLeadSetStatus:function(){
         var lead_direct_set_status = this.getLeadDirectSetValue();
         if(lead_direct_set_status){
-            $(".attr_content").children("div").each(function(){
-                $(this).hide();
-            });
+            $("#attr_type_checkboxes_td").parents('tr').hide();
+            $(".attr_content").hide();
         }else{
+            $("#attr_type_checkboxes_td").parents('tr').show();
+            $(".attr_content").show();
             this.selectAttrType();
         }
     },
-    formSubHandle:function(){
+    formSubHandle:function(jumpUrl){
         var subFormData = {};
+        var jumpUrl = jumpUrl;
         subFormData.baseData = this.getBaseData().baseSubDataList;
         subFormData.attrData = this.getAttrData();
         var data = {
@@ -73,6 +90,7 @@ Assess.prototype = {
             success:function(retData){
                 if(retData.status=='success'){
                     alert('保存成功！');
+                    location.href = jumpUrl;
                 }
             }
         });
@@ -89,14 +107,8 @@ Assess.prototype = {
                 'uids',
                 'assess_period_type',
                 'base_start_date',
-                'staff_plan_start_date',
-                'staff_plan_end_date',
-                'lead_plan_start_date',
-                'lead_plan_end_date',
                 'staff_sub_start_date',
-                'staff_sub_end_date',
-                'lead_sub_start_date',
-                'lead_sub_end_date'
+                'create_on_month_status'
             ],
             baseSubDataList:{}
         };
@@ -109,7 +121,7 @@ Assess.prototype = {
             }
             baseIdData['assess_attr_type'] = this.parentPro.getAttrTypeCheckedValue();
             baseIdData['lead_direct_set_status'] = this.parentPro.getLeadDirectSetValue();
-
+            baseIdData['create_on_month_status'] = this.parentPro.getCreateOnMonthValue();
             this.baseSubDataList = baseIdData;
         };
 
@@ -155,6 +167,8 @@ Assess.prototype = {
                     tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
                     tmp.qz = $(this).find("input[name=qz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     c_data['table_data'].push(tmp);
                 });
 
@@ -166,7 +180,9 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.job_name = $(this).find("input[name=job_name]").val();
                     tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.qz = $(this).find("input[name=qz]").val();
+                    tmp.qz = $(this).find("input[name=job_qz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     j_data['table_data'].push(tmp);
                 });
                 return {commission:c_data,job:j_data};
@@ -179,7 +195,8 @@ Assess.prototype = {
                 s_table.find("tr").each(function(k,v){
                     var tmp = {};
                     tmp.score_name = $(this).find("input[name=score_name]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
+                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
                     s_data['table_data'].push(tmp);
                 });
                 return {score:s_data};
@@ -192,8 +209,8 @@ Assess.prototype = {
                 t_data.cash = $(".attr_form_3[flag=4] input[name=attr3_cash]").val();
                 t_table.find("tr").each(function(k,v){
                     var tmp = {};
-                    tmp.score_name = $(this).find("input[name=score_name]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
+                    tmp.tc_name = $(this).find("input[name=tc_name]").val();
+                    tmp.finishCash = $(this).find("input[name=finishCash]").val();
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};
@@ -233,22 +250,26 @@ Assess.prototype = {
                 itemDom.find("select[name=indicator_child] option:eq(0)").attr("checked",true);
                 itemDom.find("input[name=zbyz]").val('');
                 itemDom.find("input[name=qz]").val('');
+                itemDom.find("input[name=selfScore]").val('');
+                itemDom.find("input[name=leadScore]").val('');
                 break;
 
             case '2':
                 itemDom.find("input[name=job_name]").val('');
-                itemDom.find("input[name=zbyz]").val('');
-                itemDom.find("input[name=qz]").val('');
+                itemDom.find("input[name=job_qz]").val('');
+                itemDom.find("input[name=selfScore]").val('');
+                itemDom.find("input[name=leadScore]").val('');
                 break;
 
             case '3':
                 itemDom.find("input[name=score_name]").val('');
-                itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=selfScore]").val('');
+                itemDom.find("input[name=leadScore]").val('');
                 break;
 
             case '4':
-                itemDom.find("input[name=score_name]").val('');
-                itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=tc_name]").val('');
+                itemDom.find("input[name=finishCash]").val('');
                 break;
         }
         return itemDom;
@@ -333,5 +354,75 @@ Assess.prototype = {
            location.href = url;
         }
         setTimeout(j,mis,url);
+    },
+    adduser:function(userId,username){
+        var uids = $("#uids").val();
+        var uidArr = $("#uids").val().split(',');
+        var status = true;
+        for(var i=0;i<uidArr.length;i++){
+            if(uidArr[i]==userId){
+                status = false;
+            }
+        }
+        if(status){
+            if(uids==''){
+                uids =userId;
+            }else{
+                uids+=","+userId;
+            }
+            $("#uids").val(uids);
+            if($(".div_userlist").is(":hidden")){
+                $(".div_userlist").show();
+            }
+            var newSpan = "<span id=\"span_auto_"+userId+"\">"+username+"<a id=\""+userId+","+username+"\" href=\"javascript:void(0)\" class=\"close deluser\" onclick=\"Assess.prototype.delUserADom(this)\"></a></span>";
+            $(".div_userlist .userlist").append(newSpan);
+            $("#username").val('');
+        }
+    },
+    delUserADom:function(dom){
+        //获取删除的userId
+        var idArr = $(dom).parent().attr('id').split('_');
+        var index = idArr.length-1;
+        var userId = idArr[index];
+
+        //获取遍历除userId的uids
+        var uids = [];
+        var uidArr = $("#uids").val().split(',');
+        for(var i=0;i<uidArr.length;i++){
+            if(uidArr[i]!=userId){
+                uids.push(uidArr[i]);
+            }
+        }
+        $("#uids").val(uids.join(','));
+        $(dom).parent().remove();
+        if($(".div_userlist .userlist span").length==0){
+            $(".div_userlist").hide();
+        }
+    },
+    userListTrigger:function(uidArr,delUids){
+        for(var i=0;i<uidArr.length;i++){
+            this.adduser(uidArr[i]['userId'],uidArr[i]['username']);
+        }
+        for(var i=0;i<delUids.length;i++){
+            $("#span_auto_"+delUids[i]).find("a").trigger('click');
+        }
+    },
+    selectChildValid:function(select){
+        if($(select).val()=='' && $(select).is(":visible")){
+            $(select).addClass('redBorder');
+            return false;
+        }else{
+            $(select).removeClass('redBorder');
+            return true;
+        }
+    },
+    submitSelectValid:function(){
+        var status = true;
+        $("#bus_area_child,.commission_indicator_child").each(function(){
+            if(Assess.prototype.selectChildValid(this)==false){
+                status = false;
+            }
+        });
+        return status;
     }
 };

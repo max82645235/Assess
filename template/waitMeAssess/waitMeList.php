@@ -38,10 +38,6 @@
             });
         });
     </script>
-    <style>
-            .jbtab tr th{color: #3186c8;font-weight:600;}
-            .jbtab tr td{color: #3186c8;}
-    </style>
 </head>
 <body>
 <div class="bg">
@@ -49,7 +45,7 @@
         <p class="icon1">待我考核 >考核列表</p>
     </div>
     <div class="pad25">
-        <div class="brdbt zykc" style="height: 30px;">
+        <div class="brdbt zykc" style="height: 50px;">
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
                 <input type="hidden" name="m" value="myassessment">
                 <input type="hidden" name="a" value="waitMeAssess">
@@ -66,15 +62,26 @@
                 <div class="jssel" style="z-index:49">
                     &nbsp;&nbsp;
                     <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
+                        <option value="">请选择</option>
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
                 <div class="jssel" style="z-index:98">
                     &nbsp;&nbsp;&nbsp;考核状态：
                     <select name="base_status">
-                        <option value=""    <?php if(isset($_REQUEST['base_status']) && $_REQUEST['base_status']===''){?> selected="selected"<?php }?>>请选择</option>
-                        <?php foreach(AssessDao::$LeaderAssessBaseStatus as $k=>$val){?>
-                            <option value="<?=$k?>"  <?php if(isset($_REQUEST['base_status']) && $_REQUEST['base_status']!=='' && $_REQUEST['base_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
+                        <option value=""    <?php if(isset($_REQUEST['base_status'])){?> selected="selected"<?php }?>>请选择</option>
+                        <?php foreach(array_slice(AssessDao::$HrAssessBaseStatus,1,null,true) as $k=>$val){?>
+                            <option value="<?=$k?>"  <?php if(isset($_REQUEST['base_status']) &&$_REQUEST['base_status']!=='' &&$_REQUEST['base_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
+                        <?php }?>
+                    </select>
+                </div>
+
+                <div class="jssel" style="z-index:98">
+                    &nbsp;&nbsp;&nbsp;流程状态：
+                    <select name="user_assess_status" style="width: 150px;">
+                        <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>请选择</option>
+                        <?php foreach(AssessFlowDao::$UserAssessStatusByLeader as $k=>$val){?>
+                            <option value="<?=$k?>"  <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']!=='' && $_REQUEST['user_assess_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
                         <?php }?>
                     </select>
                 </div>
@@ -99,12 +106,13 @@
                         <?php }?>
                     </select>
                 </div>
-                <div  class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;考核名称：
-                    <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
 
+                <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
+                    考核名称：
+                    <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
                 </div>
-                <div  class="jssel" style="z-index:98;margin-left: 20px;margin-bottom: 5px;">
+
+                <div  class="jssel" style="z-index:98;margin-left: 20px;margin-top: 5px;">
                     <input type="submit" value="搜索" class="btn48"  >
                 </div>
 
@@ -113,15 +121,15 @@
 
         <div class="mrtb10" >
             <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
-                <tr >
+                <tr>
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核周期</th>
-                    <th width="100" style="text-align: center;">状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
+                    <th width="100" style="text-align: center;">考核状态</th>
                     <th width="250" style="text-align: center;">操作</th>
                 </tr>
                 <?php if($tableData){?>
@@ -137,10 +145,9 @@
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
-                            <td><?=AssessDao::$LeaderAssessBaseStatus[$data['base_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
+                            <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td>
-                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>
                                 <a href="?m=myassessment&a=waitMeAssess&act=staffDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">员工自行设置</a>
                             </td>

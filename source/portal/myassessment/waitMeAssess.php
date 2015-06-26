@@ -15,8 +15,7 @@ if($_REQUEST['act']=='waitMeList'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $assessFlowDao->setAssessDao($assessDao);
-    $_REQUEST['base_status'] = (!isset($_REQUEST['base_status']))?'1':$_REQUEST['base_status']; //状态初始默认为0  待发布状态
-    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];
+    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];//下属状态
     $searchResult = $assessFlowDao->waitMeSearchHandlerList($_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$searchResult['pageConditionUrl'];
     $where = $searchResult['sqlWhere'];
@@ -29,7 +28,7 @@ if($_REQUEST['act']=='waitMeList'){
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
     $sql = " select base_id,base_name,assess_period_type,base_start_date,base_end_date,base_status,publish_date,userId  from  sa_assess_base where 1=1 {$where}  order  by base_id desc limit {$offset},{$limit}";
-    //echo $sql;
+   // echo $sql;
     $tableData = $db->GetAll($sql);
     $tpl = new NewTpl('waitMeAssess/waitMeList.php',array(
         'tableData'=>$tableData,
@@ -60,7 +59,6 @@ if($_REQUEST['act']=='myStaffList'){
     //获取表格查询结果
     $findSql = " a.*,b.user_assess_status,b.base_id";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
-    //echo $findSql."<br/>";
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
         'tableData'=>$tableData,
@@ -79,7 +77,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
     $base_id = $_REQUEST['base_id'];
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
-    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
+    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next','back','start'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
         foreach($_REQUEST['attrData']['fromData']['handlerData'] as $key=>$data){
@@ -105,20 +103,36 @@ if($_REQUEST['act']=='leaderSetFlow'){
         $uids = array($userId);
         try{
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
-            //考核类型更改
-            $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
-            $nextStatus = $_REQUEST['status']=='next';
-            if($delStatus || $nextStatus){
-                $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
-                if($nextStatus){
-                    $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+            //校验考核状态
+            if($assessFlowDao->validLeaderSetFlow($userRelationRecord['user_assess_status'])){
+                //考核类型更改
+                if($userRelationRecord){
+                    $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
+                    $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
+                    $changeStatus = true;
+                    if($_REQUEST['status']=='next'){
+                        $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+                    }elseif($_REQUEST['status']=='back'){
+                        $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
+                    }elseif($_REQUEST['status']=='start'){
+                        $userRelationRecord['user_assess_status'] = AssessFlowDao::AssessChecking;
+                    }else{$changeStatus=false;}
+
+                    if($delStatus || $changeStatus){
+                        $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+                    }
+                }else{
+                    $baseRecord = $assessDao->getAssessBaseRecord($base_id);
+                    $baseRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
+                    $assessDao->setAssessUserRelation($uids,$baseRecord);
                 }
-                $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+                $assessDao->setAssessUserItemRecord($uids,$attrRecord);
+
+                //校验该考核下所有考核人状态，如果都已经设置为考核中（3） 需要变更base主表状态
+                if($_REQUEST['status']=='start'){
+                    $assessDao->checkAssessAllUserStatus($base_id);
+                }
             }
-
-            $assessDao->setAssessUserItemRecord($uids,$attrRecord);
-            $assessDao->setAssessUserRelation($uids,$base_id);
-
         }catch (Exception $e){
             throw new Exception('500');
         }
@@ -126,6 +140,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
         die();
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        $assessFlowDao->validLeaderSetFlow($record_info['relation']['user_assess_status']);
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }
@@ -134,7 +149,6 @@ if($_REQUEST['act']=='leaderSetFlow'){
         'assessAttrWidget'=>$assessAttrWidget,
         'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act','userId'))
     ));
-
     $tpl->render();
     die();
 }
@@ -146,6 +160,17 @@ if($_REQUEST['act']=='staffDiySet'){
 
 //查看流程
 if($_REQUEST['act']=='viewFlow'){
+    $userId = $_REQUEST['userId'];
+    $base_id = $_REQUEST['base_id'];
+    $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+    $tpl = new NewTpl('waitMeAssess/viewFlow.php',array(
+        'record_info'=>$record_info,
+        'assessAttrWidget'=>$assessAttrWidget
+    ));
+}
 
+//状态变更
+if($_REQUEST['act']=='changeCheckingStatus'){
 
 }

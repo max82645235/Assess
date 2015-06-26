@@ -66,10 +66,6 @@
             });
         });
     </script>
-    <style>
-            .jbtab tr th{color: #3186c8;font-weight:600;}
-            .jbtab tr td{color: #3186c8;}
-    </style>
 </head>
 <body>
 <div class="bg">
@@ -94,6 +90,7 @@
                 <div class="jssel" style="z-index:49">
                     &nbsp;&nbsp;
                     <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
+                        <option value="">ÇëÑ¡Ôñ</option>
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
@@ -180,7 +177,7 @@
                                 <?php }?>
 
                                 <?php if($authList['authClone']->setIsMy($isMy)->validIsAuth()){?>
-                                        <a href="?m=assessment&a=launchList&act=cloneAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">¿ËÂ¡</a>
+                                        <a href="?m=assessment&a=launchList&act=cloneAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">¸´ÖÆ</a>
                                 <?php }?>
 
                                 <?php if($authList['authPublish']->setIsMy($isMy)->validIsAuth() && $data['base_status']==AssessDao::HrAssessWait){?>
