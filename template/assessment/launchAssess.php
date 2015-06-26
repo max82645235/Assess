@@ -222,7 +222,13 @@ EOF;
                         <input <?=$mValid->getDisableValid('selectUserList');?>  type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
                         <div class="shcon div_userlist" style="width: 500px;display: none;">
                             <div class="tjxm userlist">
-
+                                <?php if($relationUsers){?>
+                                    <?php foreach($relationUsers as $k=>$user){?>
+                                <span id="span_auto_<?=$user['userId']?>">
+                                    张文斌<a id="<?=$user['userId']?>,<?=$user['username']?>" href="javascript:void(0)" class="close deluser" onclick="Assess.prototype.delUserADom(this)"></a>
+                                </span>
+                                        <?php }?>
+                                <?php }?>
                             </div>
                         </div>
                     </td>

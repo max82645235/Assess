@@ -54,6 +54,7 @@ Assess.prototype = {
             $(".attr_content").children("div").each(function(){
                 $(this).hide();
             });
+            $("#attr_type_checkboxes_td").hide();
         }else{
             this.selectAttrType();
         }

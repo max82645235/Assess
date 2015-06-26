@@ -243,10 +243,10 @@ class AssessDao extends BaseDao{
     }
 
 
-    public function setAssessUserRelation($uidArr,$base_id){
+    public function setAssessUserRelation($uidArr,$baseRecord){
+        $base_id = $baseRecord['base_id'];
         if($uidArr && $base_id){
             $tbl =  "`".DB_PREFIX."assess_user_relation`";
-            $baseRecord = $this->getAssessBaseRecord($base_id);
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 $tmpArr['userId'] = $userId;
@@ -384,7 +384,8 @@ class AssessDao extends BaseDao{
                         if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
                             if($findBaseRecord['lead_direct_set_status']==0){//没有勾选直接由领导设置时
                                 $this->setAssessUserItemRecord($uids,$attrResult);
-                                $this->setAssessUserRelation($uids,$base_id);
+                                $baseRecord = $this->getAssessBaseRecord($base_id);
+                                $this->setAssessUserRelation($uids,$baseRecord);
                             }
                         }
                     }
@@ -397,10 +398,14 @@ class AssessDao extends BaseDao{
 
     //获取base_id相关人
     public function getRelatedUserRecord($base_id){
-        $sql = "select * from sa_assess_user_relation where base_id={$base_id}";
+        $sql = "select a.*,b.username from sa_assess_user_relation as a
+                inner  join sa_user as b on a.userId=b.userId
+                where a.base_id={$base_id}";
         $findRecords = $this->db->GetAll($sql);
         return $findRecords;
     }
+
+
 
     public function getBusParentDropList(){
         global $cfg;

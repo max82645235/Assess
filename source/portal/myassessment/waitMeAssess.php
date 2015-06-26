@@ -122,7 +122,9 @@ if($_REQUEST['act']=='leaderSetFlow'){
                         $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
                     }
                 }else{
-                    $assessDao->setAssessUserRelation($uids,$base_id);
+                    $baseRecord = $assessDao->getAssessBaseRecord($base_id);
+                    $baseRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
+                    $assessDao->setAssessUserRelation($uids,$baseRecord);
                 }
                 $assessDao->setAssessUserItemRecord($uids,$attrRecord);
             }

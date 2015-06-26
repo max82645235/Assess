@@ -27,7 +27,8 @@ if($_REQUEST['act']=='launchAssess'){
                 //assess_baseÖ÷±í±£´æ
                 if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
                     $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
-                    $assessDao->setAssessUserRelation($uids,$base_id);
+                    $baseRecord = $assessDao->getAssessBaseRecord($base_id);
+                    $assessDao->setAssessUserRelation($uids,$baseRecord);
                     if(isset($_REQUEST['subFormData']['attrData'])){
                         $attrRecord = array();
                         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
@@ -57,6 +58,7 @@ if($_REQUEST['act']=='launchAssess'){
             $record_info = array();
             if($base_id){
                 $record_info = $assessDao->getAssessRecordInfo($base_id);
+                $relationUsers = $assessDao->getRelatedUserRecord($base_id);
             }
         }
 
@@ -66,6 +68,7 @@ if($_REQUEST['act']=='launchAssess'){
 
         $tpl = new NewTpl('assessment/launchAssess.php',array(
             'record_info'=>$record_info,
+            'relationUsers'=>$relationUsers,
             'attrTypeMaps'=>AssessDao::$attrTypeMaps,
             'assessAttrWidget'=>$assessAttrWidget,
             'cfg'=>$cfg,
