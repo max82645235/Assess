@@ -152,13 +152,13 @@
     </style>
 </head>
 <?php
-function dateHtml($data,$key){
+function dateHtml($data,$key,$disabled){
     if(!isset($data[$key])){
         $data[$key] = '';
     }
     print <<<EOF
 <div class="data" style="margin-right:6px;">
-                <input type="text" name="{$key}" id="{$key}" value="{$data[$key]}" class="width135" />
+                <input type="text" {$disabled} name="{$key}" id="{$key}" value="{$data[$key]}" class="width135" />
                 <a href="javascript:void(0);" class="dataicon" id="f_trigger_{$key}"></a>
             </div>
             <script type="text/javascript">
@@ -188,7 +188,7 @@ EOF;
                 <tr>
                     <td width="188" align="right"><em class="c-yel">*</em> 考核名称：&nbsp;</td>
                     <td>
-                        <input type="text" name="base_name" id="base_name" value="<?=(isset($record_info['base_info']['base_name']))?$record_info['base_info']['base_name']:'';?>" class="width190" />
+                        <input <?=$mValid->getDisableValid('base_name');?> type="text" name="base_name" id="base_name" value="<?=(isset($record_info['base_info']['base_name']))?$record_info['base_info']['base_name']:'';?>" class="width190" />
                     </td>
                 </tr>
                 <tr>
@@ -196,7 +196,7 @@ EOF;
                     <td align="right" valign="top"><em class="c-yel">*</em> 业务单元：&nbsp;</td>
                     <td>
                         <div class="jssel" style="z-index:98">
-                            <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
+                            <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;" <?=$mValid->getDisableValid('bus_area_parent');?>>
                                 <?php foreach($cfg['tixi'] as $k=>$v){?>
                                     <option value="<?=$k?>" <?php if(isset($record_info['base_info']['base_name']) && $record_info['base_info']['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v['title']?></option>
                                 <?php }?>
@@ -205,7 +205,7 @@ EOF;
                         </div>
 
                         <div class="jssel" style="z-index:49">
-                            <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
+                            <select id="bus_area_child" name="bus_area_child" style="width: 150px;" <?=$mValid->getDisableValid('bus_area_child');?>>
                             </select>
                             <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($record_info['base_info']['bus_area_child'])?$record_info['base_info']['bus_area_child']:'';?>">
                         </div>
@@ -215,11 +215,11 @@ EOF;
                     <!--  @todo 被考核人列表选择-->
                     <td align="right" valign="top"><em class="c-yel">*</em> 被考核人：&nbsp;</td>
                     <td>
-                        <input type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
+                        <input <?=$mValid->getDisableValid('username');?>  type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
                         <input type="hidden" id="username_userId" value=""/>
-                        <input type="hidden" name="uids" id="uids" value="" />
-                        <input type="button" class="btn48 adduser" value="添加" id="adduser" name="adduser"/>
-                        <input type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
+                        <input <?=$mValid->getDisableValid('uids');?>  type="hidden" name="uids" id="uids" value="" />
+                        <input <?=$mValid->getDisableValid('adduser');?>  type="button" class="btn48 adduser" value="添加" id="adduser" name="adduser"/>
+                        <input <?=$mValid->getDisableValid('selectUserList');?>  type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
                         <div class="shcon div_userlist" style="width: 500px;display: none;">
                             <div class="tjxm userlist">
 
@@ -230,7 +230,7 @@ EOF;
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核周期：&nbsp;</td>
                     <td class="jsline">
-                        <select name="assess_period_type" id="assess_period_type">
+                        <select name="assess_period_type" id="assess_period_type" <?=$mValid->getDisableValid('assess_period_type');?>>
                             <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
                                 <option value="<?=$k?>"
                                     <?php if($record_info['base_info']['assess_period_type']==$k){?> selected="selected"<?php }?>>
@@ -244,78 +244,80 @@ EOF;
                 <tr>
                     <td align="right">按月生成：&nbsp;</td>
                     <td>
-                        <input type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
+                        <input <?=$mValid->getDisableValid('create_on_month_status');?>  type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
                     </td>
                 </tr>
 
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核开始时间：&nbsp;</td>
                     <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'base_start_date');?>
+                        <?=dateHtml($record_info['base_info'],'base_start_date',$mValid->getDisableValid('base_start_date'));?>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核计划员工填写时间：&nbsp;</td>
                     <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'staff_plan_start_date');?>
+                        <?=dateHtml($record_info['base_info'],'staff_plan_start_date',$mValid->getDisableValid('staff_plan_start_date'));?>
                         <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'staff_plan_end_date');?>
+                        <?=dateHtml($record_info['base_info'],'staff_plan_end_date',$mValid->getDisableValid('staff_plan_end_date'));?>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核计划直接领导审批时间：&nbsp;</td>
                     <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'lead_plan_start_date');?>
+                        <?=dateHtml($record_info['base_info'],'lead_plan_start_date',$mValid->getDisableValid('lead_plan_start_date'));?>
                         <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'lead_plan_end_date');?>
+                        <?=dateHtml($record_info['base_info'],'lead_plan_end_date',$mValid->getDisableValid('lead_plan_end_date'));?>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核提报员工填写时间：&nbsp;</td>
                     <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'staff_sub_start_date');?>
+                        <?=dateHtml($record_info['base_info'],'staff_sub_start_date',$mValid->getDisableValid('staff_sub_start_date'));?>
                         <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'staff_sub_end_date');?>
+                        <?=dateHtml($record_info['base_info'],'staff_sub_end_date',$mValid->getDisableValid('staff_sub_end_date'));?>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"><em class="c-yel">*</em> 考核提报直接领导审批时间：&nbsp;</td>
                     <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'lead_sub_start_date');?>
+                        <?=dateHtml($record_info['base_info'],'lead_sub_start_date',$mValid->getDisableValid('lead_sub_start_date'));?>
                         <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'lead_sub_end_date');?>
+                        <?=dateHtml($record_info['base_info'],'lead_sub_end_date',$mValid->getDisableValid('lead_sub_end_date'));?>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"> 由直接领导设置：&nbsp;</td>
                     <td>
-                        <input type="checkbox" name="lead_direct_set_status"  value="1" id="lead_direct_set_status" <?php if(isset($record_info['base_info']['lead_direct_set_status']) && $record_info['base_info']['lead_direct_set_status']==1){?>checked="checked" <?php }?>>
+                        <input type="checkbox" <?=$mValid->getDisableValid('lead_direct_set_status')?> name="lead_direct_set_status"  value="1" id="lead_direct_set_status" <?php if(isset($record_info['base_info']['lead_direct_set_status']) && $record_info['base_info']['lead_direct_set_status']==1){?>checked="checked" <?php }?>>
                     </td>
                 </tr>
 
                 <tr>
                     <td align="right">考核类型选择：&nbsp;</td>
                     <td id="attr_type_checkboxes_td">
-                        <input type="checkbox" name="assess_attr_type" value="1" <?=($record_info['base_info']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
-                        <input type="checkbox" name="assess_attr_type" value="2" <?=($record_info['base_info']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
-                        <input type="checkbox" name="assess_attr_type" value="3" <?=($record_info['base_info']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
+                        <input type="checkbox" <?=$mValid->getDisableValid('assess_attr_type')?>   name="assess_attr_type" value="1" <?=($record_info['base_info']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>任务/指标类&nbsp;
+                        <input type="checkbox"  <?=$mValid->getDisableValid('assess_attr_type')?> name="assess_attr_type" value="2" <?=($record_info['base_info']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
+                        <input type="checkbox" <?=$mValid->getDisableValid('assess_attr_type')?>  name="assess_attr_type" value="3" <?=($record_info['base_info']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
                     </td>
                 </tr>
             </table>
             <div class="attr_content">
                 <!--任务/指标类-->
-                <?=$assessAttrWidget->renderAttr($record_info['attr_info'],1)?>
+                <?=$assessAttrWidget->renderAttr($record_info['attr_info'],1,array(),$mValid)?>
 
                 <!--打分类-->
-                <?=$assessAttrWidget->renderAttr($record_info['attr_info'],2)?>
+                <?=$assessAttrWidget->renderAttr($record_info['attr_info'],2,array(),$mValid)?>
 
                 <!--提成类-->
-                <?=$assessAttrWidget->renderAttr($record_info['attr_info'],3)?>
+                <?=$assessAttrWidget->renderAttr($record_info['attr_info'],3,array(),$mValid)?>
             </div>
 
 
             <div class="kctjbot">
-                <input type="submit" class="bluebtn" value="确定" />
+                <?php if(!isset($record_info['base_info']) ||$record_info['base_info']!=AssessDao::HrAssessOver){?>
+                    <input type="submit" class="bluebtn" value="确定" />
+                <?php }?>
                 <input type="button" class="btn67" value="返回"  name="backBtn" onclick="history.go(-1);"/>
             </div>
         </form>

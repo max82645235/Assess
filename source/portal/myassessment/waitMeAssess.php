@@ -103,29 +103,29 @@ if($_REQUEST['act']=='leaderSetFlow'){
         $uids = array($userId);
         try{
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
-            //考核类型更改
-            if($userRelationRecord){
-                $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
-                $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
-                $changeStatus = true;
-                if($_REQUEST['status']=='next'){
-                    $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
-                }elseif($_REQUEST['status']=='back'){
-                    $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
-                }elseif($_REQUEST['status']=='start'){
-                    $userRelationRecord['user_assess_status'] = 3;
-                }else{$changeStatus=false;}
+            //校验考核状态
+            if($assessFlowDao->validLeaderSetFlow($userRelationRecord['user_assess_status'])){
+                //考核类型更改
+                if($userRelationRecord){
+                    $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
+                    $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
+                    $changeStatus = true;
+                    if($_REQUEST['status']=='next'){
+                        $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+                    }elseif($_REQUEST['status']=='back'){
+                        $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
+                    }elseif($_REQUEST['status']=='start'){
+                        $userRelationRecord['user_assess_status'] = 3;
+                    }else{$changeStatus=false;}
 
-                if($delStatus || $changeStatus){
-                    $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+                    if($delStatus || $changeStatus){
+                        $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+                    }
+                }else{
+                    $assessDao->setAssessUserRelation($uids,$base_id);
                 }
-
-            }else{
-                $assessDao->setAssessUserRelation($uids,$base_id);
+                $assessDao->setAssessUserItemRecord($uids,$attrRecord);
             }
-            $assessDao->setAssessUserItemRecord($uids,$attrRecord);
-
-
         }catch (Exception $e){
             throw new Exception('500');
         }
@@ -133,6 +133,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
         die();
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        $assessFlowDao->validLeaderSetFlow($record_info['relation']['user_assess_status']);
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }
@@ -141,7 +142,6 @@ if($_REQUEST['act']=='leaderSetFlow'){
         'assessAttrWidget'=>$assessAttrWidget,
         'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act','userId'))
     ));
-
     $tpl->render();
     die();
 }

@@ -8,9 +8,9 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
 
     <script>
         var AssessInstance =  new Assess();
@@ -70,7 +70,7 @@
                     status:status
                 };
                 var confirmMsg = {
-                    next:'您确定发布此考核么?',
+                    next:'您确定此考核审核通过么?',
                     start:'您确定直接开始此考核么?',
                     back:'您确定驳回此考核审批申请么?'
                 };
@@ -138,7 +138,7 @@
                         <tr>
                             <td align="right">考核类型选择：&nbsp;</td>
                             <td id="attr_type_checkboxes_td">
-                                <input type="checkbox" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
+                                <input type="checkbox" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>任务/指标类&nbsp;
                                 <input type="checkbox" name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
                                 <input type="checkbox" name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
                             </td>
@@ -148,7 +148,7 @@
                 <div class="pad25">
                     <?php
                         $scoreList = array();
-                        if($record_info['relation']['user_assess_status']==5){
+                        if($record_info['relation']['user_assess_status']==6){
                             $scoreList['selfScore'] = true;
                             $scoreList['leadScore'] = true;
                         }
@@ -171,7 +171,7 @@
                       <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
                     <?php }?>
 
-                    <?php if(in_array($record_info['relation']['user_assess_status'],array(2,5))){?>
+                    <?php if(in_array($record_info['relation']['user_assess_status'],array(2,6))){?>
                         <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
                         <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
                     <?php }?>

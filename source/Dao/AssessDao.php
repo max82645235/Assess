@@ -211,7 +211,6 @@ class AssessDao extends BaseDao{
                        // echo $sql."</br>";
                         $this->db->Execute($sql);
                     }else{
-
                         $sql = self::get_insert_sql($tbl,$tmpArr);
                       //  echo $sql."</br>";
                         $this->db->Execute($sql);
@@ -341,6 +340,13 @@ class AssessDao extends BaseDao{
                 $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
+                //如果不是由领导直接设置，需要把该base_id对应的考核人考核状态改为待考核
+                if($findRecord['lead_direct_set_status']==0){
+                    $where = " base_id={$baseId} ";
+                    $data['user_assess_status']  = 3;
+                    $sql = self::get_update_sql(" sa_assess_user_relation ",$data,$where);
+                    $this->db->Execute($sql);
+                }
                 return true;
             }
         }

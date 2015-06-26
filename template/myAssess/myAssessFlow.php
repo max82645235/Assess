@@ -8,9 +8,9 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://newscms.house365.com/js/artDialog/skins/idialog.css">
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/artDialog.js?skin=idialog"></script>
-    <script type="text/javascript" src="http://newscms.house365.com/js/artDialog/plugins/iframeTools.js"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
 
     <script>
         var AssessInstance =  new Assess();
@@ -131,7 +131,7 @@
                         <tr>
                             <td align="right">考核类型选择：&nbsp;</td>
                             <td id="attr_type_checkboxes_td">
-                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>[任务/指标]类&nbsp;
+                                <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>任务/指标类&nbsp;
                                 <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?>  name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
                                 <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
                             </td>
@@ -141,7 +141,7 @@
                 <div class="pad25">
                     <?php
                         $scoreList = array();
-                        if($record_info['relation']['user_assess_status']==4){
+                        if($record_info['relation']['user_assess_status']==5){
                             $scoreList['selfScore'] = true;
                         }
                     ?>
@@ -158,9 +158,7 @@
                 </div>
                 <div class="kctjbot">
                     <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                    <?php if(in_array($record_info['relation']['user_assess_status'],array(1,4))){?>
-                        <input type="button" class="bluebtn" value="提交审核" id="nextBtn" />
-                    <?php }?>
+                    <input type="button" class="bluebtn" value="提交审核" id="nextBtn" />
                     <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
                 </div>
             </form>

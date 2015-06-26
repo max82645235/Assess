@@ -89,6 +89,7 @@ if($_REQUEST['act']=='myAssessFlow'){
         die();
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        $assessFlowDao->validStuffSetFow($record_info['relation']['user_assess_status']);
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }
