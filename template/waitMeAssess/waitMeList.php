@@ -67,6 +67,16 @@
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
                 <div class="jssel" style="z-index:98">
+                    &nbsp;&nbsp;&nbsp;考核状态：
+                    <select name="base_status">
+                        <option value=""    <?php if(isset($_REQUEST['base_status'])){?> selected="selected"<?php }?>>请选择</option>
+                        <?php foreach(array_slice(AssessDao::$HrAssessBaseStatus,1,null,true) as $k=>$val){?>
+                            <option value="<?=$k?>"  <?php if(isset($_REQUEST['base_status']) &&$_REQUEST['base_status']!=='' &&$_REQUEST['base_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
+                        <?php }?>
+                    </select>
+                </div>
+
+                <div class="jssel" style="z-index:98">
                     &nbsp;&nbsp;&nbsp;流程状态：
                     <select name="user_assess_status" style="width: 150px;">
                         <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>请选择</option>
@@ -119,6 +129,7 @@
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核周期</th>
                     <th width="100" style="text-align: center;">发布日期</th>
+                    <th width="100" style="text-align: center;">考核状态</th>
                     <th width="250" style="text-align: center;">操作</th>
                 </tr>
                 <?php if($tableData){?>
@@ -135,6 +146,7 @@
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
+                            <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>
                                 <a href="?m=myassessment&a=waitMeAssess&act=staffDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">员工自行设置</a>

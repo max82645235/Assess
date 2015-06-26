@@ -86,7 +86,7 @@
                             <td><?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td class="left">
-                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看流程</a>
+                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                     <span >
                                              <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>

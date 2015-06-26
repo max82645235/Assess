@@ -25,71 +25,13 @@
         </td>
     </tr>
 
-    <tr>
-        <td align="right">考核计划员工填写时间：&nbsp;</td>
-        <td class="jsline">
-            <span style="float: left;">
-                <?=$baseInfo['staff_plan_start_date']?>
-                &nbsp;-&nbsp;
-                <?=$baseInfo['staff_plan_end_date']?>
-                &nbsp;&nbsp;
-            </span>
-            <?php if($baseInfo['user_assess_status']>1){?>
-                [已完成]
-            <?php }else{?>
-                <span style="color: #ff3333">[待完成]</span>
-            <?php }?>
-        </td>
-    </tr>
-
-    <tr>
-        <td align="right">考核计划直接领导审批时间：&nbsp;</td>
-        <td class="jsline">
-            <span style="float: left;">
-                <?=$baseInfo['lead_plan_start_date']?>
-                &nbsp;-&nbsp;
-                <?=$baseInfo['lead_plan_end_date']?>
-                &nbsp;&nbsp;
-            </span>
-            <?php if($baseInfo['user_assess_status']>2){?>
-                [已完成]
-            <?php }else{?>
-                <span style="color: #ff3333">[待完成]</span>
-            <?php }?>
-        </td>
-    </tr>
 
     <tr>
         <td align="right">考核提报员工填写时间：&nbsp;</td>
         <td class="jsline">
             <span style="float: left;">
                 <?=$baseInfo['staff_sub_start_date']?>
-                &nbsp;-&nbsp;
-                <?=$baseInfo['staff_sub_end_date']?>
-                &nbsp;&nbsp;
             </span>
-
-            <?php if($baseInfo['user_assess_status']>4){?>
-                [已完成]
-            <?php }else{?>
-                <span style="color: #ff3333">[待完成]</span>
-            <?php }?>
         </td>
     </tr>
 
-    <tr>
-        <td align="right">考核提报直接领导审批时间：&nbsp;</td>
-        <td class="jsline">
-            <span style="float: left;">
-                <?=$baseInfo['lead_plan_start_date']?>
-                &nbsp;-&nbsp;
-                <?=$baseInfo['lead_plan_end_date']?>
-                &nbsp;&nbsp;
-            </span>
-            <?php if($baseInfo['user_assess_status']>6){?>
-                [已完成]
-            <?php }else{?>
-                <span style="color: #ff3333">[待完成]</span>
-            <?php }?>
-        </td>
-    </tr>

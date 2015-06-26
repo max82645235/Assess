@@ -14,36 +14,33 @@ class AssessFlowDao extends BaseDao{
         '0'=>'待我创建',
         '1'=>'待被考核人填写计划',
         '2'=>'待我初审',
-        '3'=>"待考核",
-        '4'=>"考核中",
-        '5'=>'待下属汇报',
-        '6'=>'待我终审',
-        '7'=>'终审完成',
-        '8'=>'考核结束'
+        '3'=>"考核中",
+        '4'=>'待下属汇报',
+        '5'=>'待我终审',
+        '6'=>'终审完成',
+        '7'=>'考核结束'
     );
 
     static $UserAssessStatusByStaff = array(
         '0'=>'待考核人创建',
         '1'=>"待我填写计划",
         '2'=>"待考核人初审",
-        '3'=>'待考核',
-        '4'=>"考核中",
-        '5'=>'待我汇报',
-        '6'=>"待考核人终审",
-        '7'=>'终审完成',
-        '8'=>'考核结束'
+        '3'=>"考核中",
+        '4'=>'待我汇报',
+        '5'=>"待考核人终审",
+        '6'=>'终审完成',
+        '7'=>'考核结束'
     );
 
 
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写
     const AssessPreLeadVIew = 2;//待领导初审|员工已填写完成预期
-    const AssessWait = 3;//待领导初审|员工已填写完成预期
-    const AssessPreSuccess = 4;//领导初审通过
-    const AssessPreReport = 5;//待我汇报
-    const AssessRealLeadView = 6;//待领导终审|员工已填写完实际
-    const AssessRealSuccess = 7;//领导终审通过
-
+    const AssessChecking = 3;//考核中
+    const AssessPreReport = 4;//待我汇报
+    const AssessRealLeadView = 5;//待领导终审|员工已填写完实际
+    const AssessRealSuccess = 6;//领导终审通过
+    const AssessRealOver = 7;//考核结束
     public function setAssessDao(AssessDao $assessDao){
         $this->assessDao = $assessDao;
     }

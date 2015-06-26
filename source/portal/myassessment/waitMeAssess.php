@@ -115,7 +115,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     }elseif($_REQUEST['status']=='back'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
                     }elseif($_REQUEST['status']=='start'){
-                        $userRelationRecord['user_assess_status'] = 3;
+                        $userRelationRecord['user_assess_status'] = AssessFlowDao::AssessChecking;
                     }else{$changeStatus=false;}
 
                     if($delStatus || $changeStatus){
@@ -127,6 +127,11 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $assessDao->setAssessUserRelation($uids,$baseRecord);
                 }
                 $assessDao->setAssessUserItemRecord($uids,$attrRecord);
+
+                //校验该考核下所有考核人状态，如果都已经设置为考核中（3） 需要变更base主表状态
+                if($_REQUEST['status']=='start'){
+                    $assessDao->checkAssessAllUserStatus($base_id);
+                }
             }
         }catch (Exception $e){
             throw new Exception('500');
@@ -163,4 +168,9 @@ if($_REQUEST['act']=='viewFlow'){
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget
     ));
+}
+
+//状态变更
+if($_REQUEST['act']=='changeCheckingStatus'){
+
 }

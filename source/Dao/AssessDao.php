@@ -506,5 +506,22 @@ class AssessDao extends BaseDao{
         return $retList;
     }
 
-
+    public function checkAssessAllUserStatus($base_id){
+        $record = $this->getRelatedUserRecord($base_id);
+        if($record){
+            $allStatus = true;
+            foreach($record as $data){
+                if($data['user_assess_status']!=3){
+                    $allStatus = false;
+                    break;
+                }
+            }
+            if($allStatus){
+                $updateBaseStatus = self::HrAssessChecking;
+                //将base表[已发布]状态改为[考核中]
+                $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =1";
+                $this->db->Execute($updateSql);
+            }
+        }
+    }
 }

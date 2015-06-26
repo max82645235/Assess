@@ -55,8 +55,8 @@
             //表单提交sub
             $("#sub_form").submit(function(e){
                 if($.myValidate.errorList.length==0 && AssessInstance.submitSelectValid()){
-                    AssessInstance.formSubHandle();
-                    location.href = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
+                    var jumpUrl = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
+                    AssessInstance.formSubHandle(jumpUrl);
                 }
                 return false;
                 e.preventDefault();

@@ -74,6 +74,10 @@
                     start:'您确定直接开始此考核么?',
                     back:'您确定驳回此考核审批申请么?'
                 };
+
+                if($(this).attr('sp')==1){
+                    confirmMsg.next = '您确定此考核由员工设置么？';
+                }
                 formData.attrData = AssessInstance.getAttrData();
                 formData.base_id = $("#hidden_base_id").val();
                 formData.userId = $("#hidden_user_id").val();
@@ -125,61 +129,64 @@
     <div class="rtop">
         <p class="icon1">待我考核 > <?=AssessFlowDao::$UserAssessStatusByLeader[$record_info['relation']['user_assess_status']]?></p>
     </div>
-    <fieldset>
-        <legend>考核人姓名：<span style="color:#8DDB75;"><?=$record_info['relation']['username']?></span></legend>
-        <div class="kctjcon">
-            <p class="tjtip">考核基本信息</p>
-            <form action="" method="post" id="sub_form" class="clearfix" >
-                <input type="hidden" id="hidden_user_id" value="<?=$record_info['relation']['userId']?>"/>
-                <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
-                <div class="baseinfo">
-                    <table cellpadding="0" cellspacing="0" width="100%">
+    <div class="kctjcon">
+        <p class="tjtip">考核基本信息</p>
+        <form action="" method="post" id="sub_form" class="clearfix" >
+            <input type="hidden" id="hidden_user_id" value="<?=$record_info['relation']['userId']?>"/>
+            <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
+            <div class="baseinfo">
+                <table cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td width="188" align="right"> 考核名称：&nbsp;</td>
+                        <td>
+                            <?=$record_info['relation']['username']?>
+                        </td>
+                    </tr>
                     <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
-                        <tr>
-                            <td align="right">考核类型选择：&nbsp;</td>
-                            <td id="attr_type_checkboxes_td">
-                                <input type="checkbox" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>任务/指标类&nbsp;
-                                <input type="checkbox" name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
-                                <input type="checkbox" name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="pad25">
-                    <?php
-                        $scoreList = array();
-                        if($record_info['relation']['user_assess_status']==6){
-                            $scoreList['selfScore'] = true;
-                            $scoreList['leadScore'] = true;
-                        }
-                    ?>
-                    <div class="attr_content">
-                        <!--任务/指标类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList)?>
+                    <tr>
+                        <td align="right">考核类型选择：&nbsp;</td>
+                        <td id="attr_type_checkboxes_td">
+                            <input type="checkbox" name="assess_attr_type" value="1" <?=($record_info['relation']['assess_attr_type']==1)?"checked=\"checked\"":"";?>>任务/指标类&nbsp;
+                            <input type="checkbox" name="assess_attr_type" value="2" <?=($record_info['relation']['assess_attr_type']==2)?"checked=\"checked\"":"";?>>打分类&nbsp;
+                            <input type="checkbox" name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="pad25">
+                <?php
+                $scoreList = array();
+                if($record_info['relation']['user_assess_status']==6){
+                    $scoreList['selfScore'] = true;
+                    $scoreList['leadScore'] = true;
+                }
+                ?>
+                <div class="attr_content">
+                    <!--任务/指标类-->
+                    <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList)?>
 
-                        <!--打分类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],2,$scoreList)?>
+                    <!--打分类-->
+                    <?=$assessAttrWidget->renderAttr($record_info['item'],2,$scoreList)?>
 
-                        <!--提成类-->
-                        <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList)?>
-                    </div>
+                    <!--提成类-->
+                    <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList)?>
                 </div>
-                <div class="kctjbot">
-                    <input type="button" class="bluebtn" value="保存" id="saveBtn" tag="save" />
-                    <?php if($record_info['relation']['user_assess_status']==0){?>
-                      <input type="button" class="bluebtn" value="发布" id="nextBtn" tag="next" />
-                      <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
-                    <?php }?>
+            </div>
+            <div class="kctjbot">
+                <input type="button" class="bluebtn" value="保存" id="saveBtn" tag="save" />
+                <?php if($record_info['relation']['user_assess_status']==0){?>
+                    <input type="button" class="bluebtn" value="由员工设置" id="nextBtn" tag="next" sp="1" />
+                    <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
+                <?php }?>
 
-                    <?php if(in_array($record_info['relation']['user_assess_status'],array(2,6))){?>
-                        <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
-                        <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
-                    <?php }?>
-                    <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
-                </div>
-            </form>
-        </div>
-    </fieldset>
+                <?php if(in_array($record_info['relation']['user_assess_status'],array(2,6))){?>
+                    <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
+                    <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
+                <?php }?>
+                <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="tck" style="display:none;"></div>
 </body>

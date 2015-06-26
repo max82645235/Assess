@@ -70,8 +70,9 @@ Assess.prototype = {
             this.selectAttrType();
         }
     },
-    formSubHandle:function(){
+    formSubHandle:function(jumpUrl){
         var subFormData = {};
+        var jumpUrl = jumpUrl;
         subFormData.baseData = this.getBaseData().baseSubDataList;
         subFormData.attrData = this.getAttrData();
         var data = {
@@ -89,6 +90,7 @@ Assess.prototype = {
             success:function(retData){
                 if(retData.status=='success'){
                     alert('±£´æ³É¹¦£¡');
+                    location.href = jumpUrl;
                 }
             }
         });
