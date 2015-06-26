@@ -28,8 +28,9 @@ if($_REQUEST['act']=='launchAssess'){
                 if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
                     $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                     $baseRecord = $assessDao->getAssessBaseRecord($base_id);
-                    $assessDao->setAssessUserRelation($uids,$baseRecord);
-                    if(isset($_REQUEST['subFormData']['attrData'])){
+                    $assessDao->setAssessUserRelation($uids,$baseRecord);//考核用户关系表设置
+                    //如果不勾选领导设置时
+                    if(isset($_REQUEST['subFormData']['attrData']) && $_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){
                         $attrRecord = array();
                         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
                         foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
@@ -44,9 +45,7 @@ if($_REQUEST['act']=='launchAssess'){
 
                         //assess_attr表保存
                         if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
-                            if($_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){//没有勾选直接由领导设置时
-                                $assessDao->setAssessUserItemRecord($uids,$attrResult);
-                            }
+                            $assessDao->setAssessUserItemRecord($uids,$attrResult);
                         }
                     }
                     echo json_encode(array('status'=>'success'));

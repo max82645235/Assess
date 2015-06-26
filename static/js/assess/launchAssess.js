@@ -39,7 +39,11 @@ Assess.prototype = {
     },
 
     getAttrTypeCheckedValue:function(){
-        return $("#attr_type_checkboxes_td input:checked").val();
+        if(!this.getLeadDirectSetValue()){
+            return $("#attr_type_checkboxes_td input:checked").val();
+        }else{
+            return '';
+        }
     },
 
     selectAttrType:function(){

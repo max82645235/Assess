@@ -80,7 +80,7 @@ class AssessDao extends BaseDao{
 
     //设置考核基础表信息
     public function setAssessBaseRecord($baseRecord){
-        global $p_gid;
+        global $p_uid;
         try{
             $tableSafeAttr = array(
                 'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','lead_plan_end_date','lead_plan_start_date','lead_sub_end_date','lead_sub_start_date','staff_plan_end_date','staff_plan_start_date','staff_sub_end_date','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId'
@@ -110,14 +110,13 @@ class AssessDao extends BaseDao{
                 }
 
                 $baseRecord['update_time'] = date("Y-m-d H:i:s");
-
                 $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
                 $base_id = $findRecord['base_id'];
             }else{
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
-                $baseRecord['uid'] = $p_gid;
+                $baseRecord['uid'] = $p_uid;
                 $baseRecord['userId'] = getUserId();
                 $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);
@@ -374,26 +373,25 @@ class AssessDao extends BaseDao{
                     }
                 }
                 $relationRecords = $this->getRelatedUserRecord($baseId);
-                $uids = '';
+                $uids = array();
                 if($relationRecords){
                     foreach($relationRecords as $record){
-                        $uids.=$record['userId'].",";
+                        $uids[] =$record['userId'];
                     }
-                    $uids = substr($uids,0,-1);
                 }
                 if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
-                    $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
-                    $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
-                    if($findAttrRecords){
-                        foreach($findAttrRecords as $k=>$record){
-                            $findAttrRecords[$k]['base_id'] = $base_id;
-                            unset($findAttrRecords[$k]['attr_id']);
-                        }
-                        if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
-                            if($findBaseRecord['lead_direct_set_status']==0){//没有勾选直接由领导设置时
+                    $baseRecord = $this->getAssessBaseRecord($base_id);
+                    $this->setAssessUserRelation($uids,$baseRecord); //设置考核人员关系表
+                    if($findBaseRecord['lead_direct_set_status']==0){ //没有勾选直接由领导设置时
+                        $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
+                        $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
+                        if($findAttrRecords){
+                            foreach($findAttrRecords as $k=>$record){
+                                $findAttrRecords[$k]['base_id'] = $base_id;
+                                unset($findAttrRecords[$k]['attr_id']);
+                            }
+                            if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
                                 $this->setAssessUserItemRecord($uids,$attrResult);
-                                $baseRecord = $this->getAssessBaseRecord($base_id);
-                                $this->setAssessUserRelation($uids,$baseRecord);
                             }
                         }
                     }
