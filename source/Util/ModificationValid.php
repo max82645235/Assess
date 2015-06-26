@@ -26,14 +26,10 @@ class ModificationValid{
 
     static $elementsMap = array(
         'basicElement'=>array(
-            'base_name','assess_period_type','create_on_month_status','base_start_date',
-            'lead_plan_end_date','lead_plan_start_date',
-            'lead_sub_end_date','lead_sub_start_date',
-            'staff_plan_end_date','staff_plan_start_date',
-            'staff_sub_end_date','staff_sub_start_date',
+            'base_name','base_start_date','staff_sub_start_date',
         ),
         'flowElement'=>array(
-            'bus_area_parent','bus_area_child',
+            'assess_period_type','create_on_month_status','bus_area_parent','bus_area_child',
             'username','adduser','selectUserList',
             'uids','lead_direct_set_status','assess_attr_type'
         )
@@ -55,7 +51,7 @@ class ModificationValid{
 
             case AssessDao::HrAssessPublish:
                             if($this->getIsLeadDirect()){
-                                if(in_array($element,self::$elementsMap['basicElement'])){
+                                if(!$element || in_array($element,self::$elementsMap['basicElement'])){
                                     return true;
                                 }
                             }else{
@@ -77,6 +73,9 @@ class ModificationValid{
                             }
                 break;
 
+            case AssessDao::HrAssessSubbing:
+                            return false;
+                break;
             case AssessDao::HrAssessOver:
                             return false;
                 break;

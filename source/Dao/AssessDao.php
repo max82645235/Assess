@@ -29,21 +29,17 @@ class AssessDao extends BaseDao{
     static $HrAssessBaseStatus =  array(
         '0'=>'待发布',
         '1'=>'已发布',
-        //'2'=>'考核中',
-        //'3'=>'考核完'
-    );
-
-    static $LeaderAssessBaseStatus = array(
-        '1'=>'待我审核',
         '2'=>'考核中',
-        '3'=>'考核完'
+        '3'=>'提报中',
+        '4'=>'考核完'
     );
 
 
     const HrAssessWait = 0;
     const HrAssessPublish = 1;
     const HrAssessChecking = 2;
-    const HrAssessOver = 3;
+    const HrAssessSubbing = 3;
+    const HrAssessOver = 4;
 
 
 
@@ -83,7 +79,7 @@ class AssessDao extends BaseDao{
         global $p_uid;
         try{
             $tableSafeAttr = array(
-                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','lead_plan_end_date','lead_plan_start_date','lead_sub_end_date','lead_sub_start_date','staff_plan_end_date','staff_plan_start_date','staff_sub_end_date','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId'
+                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status'
             );
             $tbl = "`".DB_PREFIX."assess_base`";
             $baseRecord['base_end_date'] = self::getAssessBaseEndDate($baseRecord['assess_period_type'],$baseRecord['base_start_date']);
@@ -92,13 +88,15 @@ class AssessDao extends BaseDao{
                     unset($baseRecord[$key]);
                 }
             }
-            $baseRecord['base_status'] = self::HrAssessWait;
             if(mb_detect_encoding($baseRecord['base_name'])=='UTF-8'){
                 $baseRecord['base_name'] = iconv('UTF-8','GBK//IGNORE',$baseRecord['base_name']);
             }
+
+
             if(isset($baseRecord['base_id']) && $baseRecord['base_id']){
                 $base_sql = "select * from sa_assess_base where base_id={$baseRecord['base_id']} ";
                 $findRecord = $this->db->GetRow($base_sql);
+
                 if($findRecord['assess_attr_type']!=$baseRecord['assess_attr_type']){
                     $this->updateAttrTypeChangeEvent($baseRecord['base_id']);//判断考核类型改变事件
                 }
@@ -109,12 +107,13 @@ class AssessDao extends BaseDao{
                     }
                 }
 
-                $baseRecord['update_time'] = date("Y-m-d H:i:s");
+                $findRecord['update_time'] = date("Y-m-d H:i:s");
                 $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
                 $base_id = $findRecord['base_id'];
             }else{
+                $baseRecord['base_status'] = self::HrAssessWait;
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
                 $baseRecord['uid'] = $p_uid;
                 $baseRecord['userId'] = getUserId();
@@ -334,18 +333,20 @@ class AssessDao extends BaseDao{
         if($findRecord = $this->db->GetRow($findRecordSql)){
             $isMy = $findRecord['userId'] == getUserId();
             if($auth->setIsMy($isMy)->validIsAuth()){
-                $findRecord['base_status'] = 1;//已发布
-                $findRecord['publish_date'] = date("Y-m-d");
-                $where = " base_id={$findRecord['base_id']}";
-                $sql = self::get_update_sql($tbl,$findRecord,$where);
-                $this->db->Execute($sql);
                 //如果不是由领导直接设置，需要把该base_id对应的考核人考核状态改为待考核
                 if($findRecord['lead_direct_set_status']==0){
+                    $findRecord['base_status'] = self::HrAssessChecking;//考核中
                     $where = " base_id={$baseId} ";
                     $data['user_assess_status']  = 3;
                     $sql = self::get_update_sql(" sa_assess_user_relation ",$data,$where);
                     $this->db->Execute($sql);
-                }else{
+                }
+                $findRecord['base_status'] = self::HrAssessPublish;//已发布
+                $findRecord['publish_date'] = date("Y-m-d");
+                $where = " base_id={$findRecord['base_id']}";
+                $sql = self::get_update_sql($tbl,$findRecord,$where);
+                $this->db->Execute($sql);
+                if($findRecord['lead_direct_set_status']==1){
                     //因为是领导直接设置，发布前校验下 sa_assess_user_item 表，需要删除Hr可能改变领导状态情况下残留的item数据
                     $sql = "select count(*) from sa_assess_user_item where base_id={$baseId}";
                     $tmpRecord = $this->db->GetOne($sql);

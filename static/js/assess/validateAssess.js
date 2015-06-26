@@ -79,33 +79,8 @@ $(function(){
             base_start_date:{
                 dateFormat:true
             },
-            staff_plan_start_date:{
-                dateFormat:true
-            },
-            staff_plan_end_date:{
-                dateFormat:true,
-                compareDate:"#staff_plan_start_date"
-            },
-            lead_plan_start_date:{
-                dateFormat:true
-            },
-            lead_plan_end_date:{
-                dateFormat:true,
-                compareDate:"#lead_plan_start_date"
-            },
-            staff_sub_start_date:{
-                dateFormat:true
-            },
-            staff_sub_end_date:{
-                dateFormat:true,
-                compareDate:"#staff_sub_start_date"
-            },
             lead_sub_start_date:{
                 dateFormat:true
-            },
-            lead_sub_end_date:{
-                dateFormat:true,
-                compareDate:"#lead_sub_start_date"
             },
 
             //commissionÀàĞÍ

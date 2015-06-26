@@ -21,23 +21,21 @@ class AssessAttrWidget{
 
     public function renderAttr($renderDataList,$attrType=false,$scoreList = array(),$mValid=array()){
         $index = $attrType;
-
         if(array_key_exists($index,self::$renderPathMaps)){
             $prefixPathArr = explode(',',self::$renderPathMaps[$index]);
             if($mValid){
                 $this->mValid = $mValid;
             }
-            foreach($prefixPathArr as $prefix){
 
+            foreach($prefixPathArr as $prefix){
                 $renderData = array();
                 foreach($renderDataList as $key=>$d){
                     if(AssessDao::$AttrRecordTypeMaps[$d['attr_type']]==$prefix){
                         $renderData = $d;
+                        unset($renderDataList[$key]);
+                        break;
                     }
-                    unset($renderDataList[$key]);
-                    break;
                 }
-
                 if($renderPath = $this->getRenderPath($prefix)){
                     $this->tpl->set_tpl($renderPath);
                     $this->tpl->set_data(array('renderData'=>$renderData,'scoreList'=>$scoreList,'widget'=>$this));

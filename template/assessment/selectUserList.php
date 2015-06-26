@@ -100,10 +100,6 @@
             });
         });
     </script>
-    <style>
-        .jbtab tr th{color: #3186c8;font-weight:600;}
-        .jbtab tr td{color: #3186c8;}
-    </style>
 </head>
 <body>
 <div class="bg">

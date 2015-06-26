@@ -20,8 +20,6 @@
         });
     </script>
     <style>
-        .jbtab tr th{color: #3186c8;font-weight:600;}
-        .jbtab tr td{color: #3186c8;}
         fieldset{
             padding: 10px;
             margin: 10px;
@@ -58,23 +56,6 @@
                     <input type="hidden" name="act" value="myStaffList">
                     <input type="hidden" name="base_id" value="<?=$_REQUEST['base_id']?>">
                     <div class="jssel" style="z-index:98">
-                        业务部门：
-                        <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
-                            <option value="">请选择</option>
-                            <?php foreach($bus_parent_list as $k=>$v){?>
-                                <option value="<?=$k?>" <?php if(isset($_REQUEST['bus_area_parent']) && $_REQUEST['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v?></option>
-                            <?php }?>
-                        </select>
-                        <input type="hidden" name="bus_area_parent_hidden" id="bus_area_parent_hidden" value="<?=isset($_REQUEST['bus_area_parent'])?$_REQUEST['bus_area_parent']:'';?>">
-                    </div>
-                    <div class="jssel" style="z-index:49">
-                        &nbsp;&nbsp;
-                        <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
-                        </select>
-                        <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
-                    </div>
-
-                    <div class="jssel" style="z-index:98">
                         &nbsp;&nbsp;&nbsp;流程状态：
                         <select name="user_assess_status" style="width: 150px;">
                             <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>请选择</option>
@@ -86,7 +67,6 @@
                     <div  class="jssel" style="z-index:98">
                         &nbsp;&nbsp;&nbsp;被考核人：
                         <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="输入被考核人姓名"  style="margin-bottom: 3px;">
-
                     </div>
                     <div  class="jssel" style="z-index:98;margin-left: 20px;margin-bottom: 5px;">
                         <input type="submit" value="搜索" class="btn48"  >

@@ -226,7 +226,10 @@ EOF;
                                 <?php if($relationUsers){?>
                                     <?php foreach($relationUsers as $k=>$user){?>
                                 <span id="span_auto_<?=$user['userId']?>">
-                                    <?=$user['username']?><a id="<?=$user['userId']?>,<?=$user['username']?>" href="javascript:void(0)" class="close deluser" onclick="Assess.prototype.delUserADom(this)"></a>
+                                    <?=$user['username']?>
+                                    <?php if($mValid->validElement('uids')){?>
+                                        <a id="<?=$user['userId']?>,<?=$user['username']?>" href="javascript:void(0)" class="close deluser" onclick="Assess.prototype.delUserADom(this)"></a>
+                                     <?php }?>
                                 </span>
                                         <?php }?>
                                 <?php }?>
@@ -261,38 +264,14 @@ EOF;
                         <?=dateHtml($record_info['base_info'],'base_start_date',$mValid->getDisableValid('base_start_date'));?>
                     </td>
                 </tr>
+
                 <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核计划员工填写时间：&nbsp;</td>
-                    <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'staff_plan_start_date',$mValid->getDisableValid('staff_plan_start_date'));?>
-                        <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'staff_plan_end_date',$mValid->getDisableValid('staff_plan_end_date'));?>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核计划直接领导审批时间：&nbsp;</td>
-                    <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'lead_plan_start_date',$mValid->getDisableValid('lead_plan_start_date'));?>
-                        <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'lead_plan_end_date',$mValid->getDisableValid('lead_plan_end_date'));?>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核提报员工填写时间：&nbsp;</td>
+                    <td align="right"><em class="c-yel">*</em> 员工填写提报时间：&nbsp;</td>
                     <td class="jsline">
                         <?=dateHtml($record_info['base_info'],'staff_sub_start_date',$mValid->getDisableValid('staff_sub_start_date'));?>
-                        <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'staff_sub_end_date',$mValid->getDisableValid('staff_sub_end_date'));?>
                     </td>
                 </tr>
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核提报直接领导审批时间：&nbsp;</td>
-                    <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'lead_sub_start_date',$mValid->getDisableValid('lead_sub_start_date'));?>
-                        <div class="data" style="margin-right:6px;_margin-right:8px;">―</div>
-                        <?=dateHtml($record_info['base_info'],'lead_sub_end_date',$mValid->getDisableValid('lead_sub_end_date'));?>
-                    </td>
-                </tr>
+
                 <tr>
                     <td align="right"> 由直接领导设置：&nbsp;</td>
                     <td>

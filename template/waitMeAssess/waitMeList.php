@@ -38,10 +38,6 @@
             });
         });
     </script>
-    <style>
-            .jbtab tr th{color: #3186c8;font-weight:600;}
-            .jbtab tr td{color: #3186c8;}
-    </style>
 </head>
 <body>
 <div class="bg">
@@ -66,6 +62,7 @@
                 <div class="jssel" style="z-index:49">
                     &nbsp;&nbsp;
                     <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
+                        <option value="">«Î—°‘Ò</option>
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>

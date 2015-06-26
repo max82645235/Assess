@@ -109,15 +109,6 @@ class AssessFlowDao extends BaseDao{
             $addSql.= "and b.user_assess_status={$conditionParams['user_assess_status']}";//附加用户填写状态条件
             $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
         }
-        if(isset($conditionParams['bus_area_parent']) && $conditionParams['bus_area_parent']){
-            $addSql.=" and a.tixi={$conditionParams['bus_area_parent']}";
-            $pageConditionUrl.="&bus_area_parent={$conditionParams['bus_area_parent']}";
-        }
-
-        if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
-            $addSql.=" and a.comp_dept={$conditionParams['bus_area_child']}";
-            $pageConditionUrl.="&bus_area_child={$conditionParams['bus_area_child']}";
-        }
 
         if(isset($conditionParams['username']) && $conditionParams['username']){
             $addSql.= "and a.username like'%{$conditionParams['username']}%'"; //附加用户名模糊查询条件

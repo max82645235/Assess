@@ -105,14 +105,8 @@ Assess.prototype = {
                 'uids',
                 'assess_period_type',
                 'base_start_date',
-                'staff_plan_start_date',
-                'staff_plan_end_date',
-                'lead_plan_start_date',
-                'lead_plan_end_date',
                 'staff_sub_start_date',
-                'staff_sub_end_date',
-                'lead_sub_start_date',
-                'lead_sub_end_date',
+                'create_on_month_status'
             ],
             baseSubDataList:{}
         };
@@ -125,7 +119,7 @@ Assess.prototype = {
             }
             baseIdData['assess_attr_type'] = this.parentPro.getAttrTypeCheckedValue();
             baseIdData['lead_direct_set_status'] = this.parentPro.getLeadDirectSetValue();
-            baseIdData['create_on_month_stauts'] = this.parentPro.getCreateOnMonthValue();
+            baseIdData['create_on_month_status'] = this.parentPro.getCreateOnMonthValue();
             this.baseSubDataList = baseIdData;
         };
 
@@ -254,17 +248,21 @@ Assess.prototype = {
                 itemDom.find("select[name=indicator_child] option:eq(0)").attr("checked",true);
                 itemDom.find("input[name=zbyz]").val('');
                 itemDom.find("input[name=qz]").val('');
+                itemDom.find("input[name=selfScore]").val('');
+                itemDom.find("input[name=leadScore]").val('');
                 break;
 
             case '2':
                 itemDom.find("input[name=job_name]").val('');
-                itemDom.find("input[name=zbyz]").val('');
-                itemDom.find("input[name=qz]").val('');
+                itemDom.find("input[name=job_qz]").val('');
+                itemDom.find("input[name=selfScore]").val('');
+                itemDom.find("input[name=leadScore]").val('');
                 break;
 
             case '3':
                 itemDom.find("input[name=score_name]").val('');
-                itemDom.find("input[name=zbyz]").val('');
+                itemDom.find("input[name=selfScore]").val('');
+                itemDom.find("input[name=leadScore]").val('');
                 break;
 
             case '4':
