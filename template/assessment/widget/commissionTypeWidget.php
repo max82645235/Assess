@@ -9,12 +9,6 @@
         <p class="icon1"><b class="sm_blue">量化指标类</b></p>
     </div>
     <div class="kctjcon">
-        <div class="sm_div mlr30" style="padding:10px;">
-            基本设置：<br /><br />
-            整体权重：<input <?=$widget->disabled()?> type="text" value="<?=@$renderData['weight']?>" name="attr1_weight"  class="width80 j-notnull widget" />&nbsp;%
-        </div>
-    </div>
-    <div class="kctjcon">
         <div class="sm_div mlr30">
             <table class="sm_xsmbadd" width="100%">
                 <?php
@@ -40,12 +34,6 @@
                                     <input <?=$widget->disabled()?> type="hidden" name="indicator_child_hidden" class="indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
                                 </td>
 
-                                <td width="17%" class="sm_xsmbadd_td1">
-                                    <div class="smfl">
-                                        <span><em class="c-yel">*</em> 指标阈值：</span>
-                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['zbyz']?>" name="zbyz"  class="width40 j-notnull"/>
-                                    </div>
-                                </td>
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
@@ -68,16 +56,19 @@
                                         </div>
                                     </td>
                                 <?php }?>
-                                <td width="15%" class="sm_xsmbadd_td2">
-                                    <div class="del_td" onclick="Assess.prototype.delItemDom(this,1)">
-                                        <input <?=$widget->disabled()?>  type="button" class="btn67" name="del" value="删除">
-                                    </div>
-                                </td>
+                                <?php if($widget->validElement()){?>
+                                    <td width="15%" class="sm_xsmbadd_td2">
+                                        <div class="del_td" onclick="Assess.prototype.delItemDom(this,1)">
+                                            <input <?=$widget->disabled()?>  type="button" class="btn67" name="del" value="删除">
+                                        </div>
+                                    </td>
+                                 <?php }?>
                             </tr>
+
                         <?php }?>
                     <?php }?>
                 <?php }?>
-                <?php if(!isset($itemDataList) || empty($itemDataList)){?>
+                <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
                     <tr>
                         <td width="25%">
                             <em class="c-yel">*</em>
@@ -93,12 +84,6 @@
                             </select>
                         </td>
 
-                        <td width="15%" class="sm_xsmbadd_td1">
-                            <div class="smfl">
-                                <span><em class="c-yel">*</em> 指标阈值：</span>
-                                <input <?=$widget->disabled()?>  type="text" value="" name="zbyz"  class="width40 j-notnull required"/>
-                            </div>
-                        </td>
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 权重：</span>

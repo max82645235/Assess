@@ -139,11 +139,10 @@ class AssessDao extends BaseDao{
         $attrRetRecord = array();
         if($attrRecords){
             $tbl = "`".DB_PREFIX."assess_attr`";
-
             foreach($attrRecords as $key=>$data){
                 $findRecordSql = "select * from {$tbl} where base_id = {$data['base_id']} and  attr_type = {$data['attr_type']} ";
                 $tableSafeAttr = array(
-                    'attr_id','base_id','weight','attr_type','itemData','cash'
+                    'attr_id','base_id','attr_type','itemData','cash'
                 );
                 foreach($data as $k=>$attr){
                     if(!in_array($k,$tableSafeAttr)){
@@ -195,7 +194,6 @@ class AssessDao extends BaseDao{
                     $tmpArr['attr_type'] = $attrData['attr_type'];
                     $tmpArr['itemData'] = $attrData['itemData'];
                     $tmpArr['base_id'] = $attrData['base_id'];
-                    $tmpArr['item_weight'] = $attrData['weight'];
                     $tmpArr['cash'] = $attrData['cash'];
                     $findRecordSql = "select * from {$tbl} where userId = $userId and  base_id={$attrData['base_id']}  and  attr_type = {$attrData['attr_type']}";
                     if($findRecord = $this->db->GetRow($findRecordSql)){
@@ -297,9 +295,11 @@ class AssessDao extends BaseDao{
             $pageConditionUrl.="&base_status=".$conditionParams['base_status'];
         }
 
-        if(isset($conditionParams['byme_status']) && $conditionParams['byme_status']==1){
-            $userId = getUserId();
-            $sqlWhere.=" AND $tableName.userId='$userId'";
+        if(isset($conditionParams['byme_status'])){
+            if($conditionParams['byme_status']==1){
+                $userId = getUserId();
+                $sqlWhere.=" AND $tableName.userId='$userId'";
+            }
             $pageConditionUrl.="&byme_status=".$conditionParams['byme_status'];
         }
 
@@ -313,16 +313,7 @@ class AssessDao extends BaseDao{
         return $searchResult;
     }
 
-    //拼接获取搜索查询条件url
-    public function getConditionParamUrl($filterParam = array()){
-        $pageUrl = '';
-        foreach($_GET as $key=>$v){
-            if(!$filterParam ||!in_array($key,$filterParam)){
-                $pageUrl .= "{$key}={$v}&";
-            }
-        }
-        return substr($pageUrl,0,-1);
-    }
+
 
 
 
@@ -332,7 +323,7 @@ class AssessDao extends BaseDao{
         $findRecordSql = "select * from {$tbl} where base_id = {$baseId}";
         if($findRecord = $this->db->GetRow($findRecordSql)){
             $isMy = $findRecord['userId'] == getUserId();
-            if($auth->setIsMy($isMy)->validIsAuth()){
+            if($auth->setIsMy($isMy)->validIsAuth('publishAssess')){
                 //如果不是由领导直接设置，需要把该base_id对应的考核人考核状态改为待考核
                 if($findRecord['lead_direct_set_status']==0){
                     $findRecord['base_status'] = self::HrAssessChecking;//考核中
@@ -365,7 +356,7 @@ class AssessDao extends BaseDao{
         $findRecordSql = "select * from sa_assess_base where base_id = {$baseId}";
         if($findBaseRecord = $this->db->GetRow($findRecordSql)){
             $isMy = $findBaseRecord['userId'] == getUserId();
-            if($auth->setIsMy($isMy)->validIsAuth()){
+            if($auth->setIsMy($isMy)->validIsAuth('cloneAssess')){
                 //克隆数据-start
                 $unsetBaseAttr = array('base_id','base_status','uid','userId','create_time','update_time','publish_date');
                 foreach($findBaseRecord as $k=>$v){
@@ -524,4 +515,28 @@ class AssessDao extends BaseDao{
             }
         }
     }
+
+    //获取某一考核下所有下属员工
+    public function getStaffListForHrSql($conditionParams = array()){
+        $base_Id = $conditionParams['base_id'];
+        $curUserId = getUserId();
+        $addSql = "";
+        $pageConditionUrl = '';
+        $resultList = array();
+        if(isset($conditionParams['user_assess_status']) && $conditionParams['user_assess_status']!==''){
+            $addSql.= "and b.user_assess_status={$conditionParams['user_assess_status']}";//附加用户填写状态条件
+            $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
+        }
+
+        if(isset($conditionParams['username']) && $conditionParams['username']){
+            $addSql.= "and a.username like'%{$conditionParams['username']}%'"; //附加用户名模糊查询条件
+            $pageConditionUrl.="&username={$conditionParams['username']}";
+        }
+        $resultList['staffListSql'] = "select [*] from sa_user as a
+                inner join sa_assess_user_relation as b on a.userId=b.userId and b.base_id={$base_Id} $addSql";
+        $resultList['pageConditionUrl'] = $pageConditionUrl;
+        return $resultList;
+
+    }
+
 }

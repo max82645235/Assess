@@ -28,7 +28,7 @@ if($_REQUEST['act']=='myAssessList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.user_assess_status,b.*";
+    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,b.*";
     $findSql = str_replace('[*]',$findSql,$sql);
     $findSql.= " order by b.base_id desc limit {$offset},{$limit}";
     $tableData = $db->GetAll($findSql);
@@ -102,4 +102,36 @@ if($_REQUEST['act']=='myAssessFlow'){
 
     $tpl->render();
     die();
+}
+
+
+//hr查看具体成员考核进程
+if($_REQUEST['act']=='staffViewStaffDetail'){
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    $base_id = $_REQUEST['base_id'];
+    $userId = $_REQUEST['userId'];
+    $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+
+    $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
+    require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
+    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+    $tpl = new NewTpl('assessment/viewStaffDetail.php',array(
+        'record_info'=>$record_info,
+        'assessAttrWidget'=>$assessAttrWidget,
+        'conditionUrl'=>$assessFlowDao->getConditionParamUrl(array('a','m','act','userId'))
+    ));
+    $tpl->render();
+    die();
+}
+
+if($_REQUEST['act']=='triggerStatusUpdate'){
+    $assessFlowDao = new AssessFlowDao();
+    $userId = $_REQUEST['userId'];
+    $base_id = $_REQUEST['base_id'];
+    $assessFlowDao->triggerStatusUpdate($base_id,$userId);
+    $conditionUrl = $assessFlowDao->getConditionParamUrl(array('act'));
+    $location = P_SYSPATH."index.php?act=myAssessList&$conditionUrl";
+    header("Location: $location");
+
 }

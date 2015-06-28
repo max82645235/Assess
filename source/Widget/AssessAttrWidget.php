@@ -74,4 +74,11 @@ class AssessAttrWidget{
             return $this->mValid->validElement();
         }
     }
+
+    public function renderItemTable($itemInfo){
+        $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('itemInfo'=>$itemInfo,'widget'=>$this));
+        $this->tpl->render();
+    }
 }

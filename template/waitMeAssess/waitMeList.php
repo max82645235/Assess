@@ -17,14 +17,14 @@
                 AssessInstance.triggerBusSelect(true);
             });
 
-            $("#copy_assess_btn").click(function(){
+            $("#assess_diy_set").click(function(){
                 AssessInstance.tableBtnHandler($('#table_style'),
                     true,
                     function(selectedItem){
                         $.ajax({
                             type:'get',
                             url:'/salary/index.php',
-                            data:{m:'myassessment',a:'waitMeAssess',act:'staffDiySet',diyItemList:selectedItem},
+                            data:{m:'myassessment',a:'waitMeAssess',act:'mulAssessDiySet',diyItemList:selectedItem},
                             dataType:'json',
                             success:function(ret){
                                 if(ret.status=='success'){
@@ -36,6 +36,7 @@
                     }
                 );
             });
+
         });
     </script>
 </head>
@@ -120,7 +121,7 @@
         </div>
 
         <div class="mrtb10" >
-            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
+            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
                 <tr>
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
@@ -160,8 +161,7 @@
                 <?=$page_nav?>
             </p>
             <div>
-
-                     <input type="button" name="" value="自行设置" class="btn139" id="copy_assess_btn" style="cursor:pointer;">
+                     <input type="button" name="" value="自行设置" class="btn139" id="assess_diy_set" style="cursor:pointer;">
 
             </div>
 

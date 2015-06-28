@@ -119,7 +119,7 @@
             </form>
         </div>
         <div class="mrtb10" >
-            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
+            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" >
                 <tr >
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">

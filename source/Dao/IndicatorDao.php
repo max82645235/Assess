@@ -27,6 +27,18 @@ class IndicatorDao extends BaseDao{
                 $list[$k]['title'] = iconv('GBK','UTF-8',$v['title']);
             }
         }
-        return$list;
+        return $list;
+    }
+
+    public function getSingleType($typeId){
+        $sql = "select * from sa_indicator_type where status=1 and typeid={$typeId}";
+        $record = $this->db->GetRow($sql);
+        return $record;
+    }
+
+    public function getSingleIndicatorChild($id){
+        $sql = "select * from sa_indicator  where id={$id} and status=1";
+        $record = $this->db->GetRow($sql);
+        return $record;
     }
 }

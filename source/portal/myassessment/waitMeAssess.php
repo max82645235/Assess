@@ -57,7 +57,7 @@ if($_REQUEST['act']=='myStaffList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.*,b.user_assess_status,b.base_id";
+    $findSql = " a.*,b.user_assess_status,b.base_id,b.score";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
@@ -112,6 +112,10 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $changeStatus = true;
                     if($_REQUEST['status']=='next'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+                        //当为领导终审通过时,需要计算得分写入assess_user_relation表score字段
+                        if($userRelationRecord['user_assess_status'] == AssessFlowDao::AssessRealSuccess){
+                            $userRelationRecord['score'] = $assessFlowDao->getUserAssessScore($attrRecord);
+                        }
                     }elseif($_REQUEST['status']=='back'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
                     }elseif($_REQUEST['status']=='start'){
@@ -127,7 +131,6 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $assessDao->setAssessUserRelation($uids,$baseRecord);
                 }
                 $assessDao->setAssessUserItemRecord($uids,$attrRecord);
-
                 //校验该考核下所有考核人状态，如果都已经设置为考核中（3） 需要变更base主表状态
                 if($_REQUEST['status']=='start'){
                     $assessDao->checkAssessAllUserStatus($base_id);
@@ -153,9 +156,35 @@ if($_REQUEST['act']=='leaderSetFlow'){
     die();
 }
 
-//员工自设
-if($_REQUEST['act']=='staffDiySet'){
+//多考核项员工自设
+if($_REQUEST['act']=='mulAssessDiySet'){
+    $baseList = $_REQUEST['diyItemList'];
+    $assessFlowDao = new AssessFlowDao();
+    $ret = array();
+    if(count($baseList)){
+        foreach($baseList as $base_id){
+            if($assessFlowDao->changeCreateToStaff($base_id)){
+                $ret['status'] = 'success';
+            }
+        }
+    }
+    echo json_encode($ret);
+    die();
+}
 
+//单考核项员工自设
+if($_REQUEST['act']=='singleAssessDiySet'){
+    $userList = implode(',',$_REQUEST['diyItemList']);
+    $base_id = $_REQUEST['base_id'];
+    $assessFlowDao = new AssessFlowDao();
+    $ret = array();
+    if($userList && $base_id){
+        if($assessFlowDao->changeCreateToStaff($base_id,$userList)){
+            $ret['status'] = 'success';
+        }
+    }
+    echo json_encode($ret);
+    die();
 }
 
 //查看流程
@@ -172,5 +201,29 @@ if($_REQUEST['act']=='viewFlow'){
 
 //状态变更
 if($_REQUEST['act']=='changeCheckingStatus'){
+    $userId = $_REQUEST['userId'];
+    $baseId = $_REQUEST['base_id'];
+    $assessFlowDao = new AssessFlowDao();
+    $assessFlowDao->changeCheckingStatus($userId,$baseId);
+    die();
+}
 
+//hr查看具体成员考核进程
+if($_REQUEST['act']=='leadViewStaffDetail'){
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    $base_id = $_REQUEST['base_id'];
+    $userId = $_REQUEST['userId'];
+    $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+
+    $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
+    require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
+    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+    $tpl = new NewTpl('assessment/viewStaffDetail.php',array(
+        'record_info'=>$record_info,
+        'assessAttrWidget'=>$assessAttrWidget,
+        'conditionUrl'=>$assessFlowDao->getConditionParamUrl(array('a','m','act','userId'))
+    ));
+    $tpl->render();
+    die();
 }

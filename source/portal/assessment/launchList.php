@@ -12,6 +12,7 @@ function checkUserAuthority(){
     return true;
 }
 require_once BATH_PATH.'source/Dao/AssessDao.php';
+require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
 require_once BATH_PATH.'source/Util/Auth.php';
 
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchList':$_REQUEST['act'];
@@ -36,14 +37,11 @@ if($_REQUEST['act']=='launchList'){
     $tableData = $db->GetAll($sql);
 
     //建立权限验证类
-    $authLaunch = new Auth($m,'launchAssess','launchAssess');
-    $authClone = new Auth($m,$a,'cloneAssess');
-    $authPublish = new Auth($m,$a,'publishAssess');
-    $authList = array(
-        'authLaunch'=>$authLaunch,
-        'authClone'=>$authClone,
-        'authPublish'=>$authPublish
-    );
+    $auth = new Auth();
+    $auth->addAuthItem('launchAssess',array('m'=>$m,'a'=>'launchAssess','act'=>'launchAssess'));
+    $auth->addAuthItem('cloneAssess',array('m'=>$m,'a'=>$a,'act'=>'cloneAssess'));
+    $auth->addAuthItem('publishAssess',array('m'=>$m,'a'=>$a,'act'=>'publishAssess'));
+    $auth->addAuthItem('hrViewPublish',array('m'=>$m,'a'=>$a,'act'=>'hrViewPublish'));
 
     $tpl = new NewTpl('assessment/launchList.php',array(
         'tableData'=>$tableData,
@@ -51,7 +49,7 @@ if($_REQUEST['act']=='launchList'){
         'pageConditionUrl'=>$searchResult['pageConditionUrl'],
         'bus_parent_list'=>$assessDao->getBusParentDropList(),
         'userId'=>getUserId(),
-        'authList'=>$authList
+        'auth'=>$auth
     ));
     $tpl->render();
     die();
@@ -60,7 +58,8 @@ if($_REQUEST['act']=='launchList'){
 //克隆考核
 if($_REQUEST['act']=='cloneAssess'){
     $assessDao = new AssessDao();
-    $auth = new Auth($m,$a,'cloneAssess');
+        $auth =  new Auth();
+        $auth->addAuthItem('cloneAssess',array('m'=>$m,'a'=>$a,'act'=>"cloneAssess"));
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
         $baseId = intval($_REQUEST['base_id']);
@@ -91,7 +90,7 @@ if($_REQUEST['act']=='cloneAssess'){
 //发布考核
 if($_REQUEST['act']=='publishAssess'){
     $assessDao = new AssessDao();
-    $auth = new Auth($m,$a,'publishAssess');
+    $auth->addAuthItem('publishAssess',array('m'=>$m,'a'=>$a,'act'=>"publishAssess"));
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
         $baseId = intval($_REQUEST['base_id']);
@@ -121,5 +120,51 @@ if($_REQUEST['act']=='publishAssess'){
 
 }
 
+//Hr查看考核成员列表
+if($_REQUEST['act']=='hrViewStaffList'){
+    $assessDao = new AssessDao();
+    $base_Id = $_REQUEST['base_id'];
+    $assessBaseRecord = $assessDao->getAssessBaseRecord($base_Id);
+    $resultList = $assessDao->getStaffListForHrSql($_REQUEST);
+    $pageurl = '?m='.$m.'&a='.$a.$resultList['pageConditionUrl'];
+    $getStaffSql = $resultList['staffListSql'];
+    $countSql = " count(a.*)";
+    $countSql = str_replace('[*]',$countSql,$getStaffSql);
+    $count = $db->GetOne($countSql);
+    $page = isset($_GET['pn']) ? (int)$_GET['pn'] : 1;
+    $limit = 10;
+    $offset = ($page-1)*$limit;
+    $page_nav = page($count,$limit,$page,$pageurl);
+    //获取表格查询结果
+    $findSql = " a.*,b.user_assess_status,b.base_id,b.score";
+    $findSql = str_replace('[*]',$findSql,$getStaffSql);
+    $tableData = $db->GetAll($findSql);
+    $tpl = new NewTpl('assessment/hrViewStaffList.php',array(
+        'tableData'=>$tableData,
+        'page_nav'=>$page_nav,
+        'pageConditionUrl'=>$resultList['pageConditionUrl'],
+        'assessBaseRecord'=>$assessBaseRecord
+    ));
+    $tpl->render();
+    die();
+}
 
+//hr查看具体成员考核进程
+if($_REQUEST['act']=='hrViewStaffDetail'){
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    $base_id = $_REQUEST['base_id'];
+    $userId = $_REQUEST['userId'];
+    $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+    $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
+    require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
+    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+    $tpl = new NewTpl('assessment/viewStaffDetail.php',array(
+        'record_info'=>$record_info,
+        'assessAttrWidget'=>$assessAttrWidget,
+        'conditionUrl'=>$assessFlowDao->getConditionParamUrl(array('a','m','act','userId'))
+    ));
+    $tpl->render();
+    die();
+}
 

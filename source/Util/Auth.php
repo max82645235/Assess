@@ -9,20 +9,17 @@
 *   return  $obj->validIsAuth();
 */
 class Auth{
-    protected $m;
-    protected $a;
     protected $isMy;
-    protected $act;
-    public function __construct($m,$a,$act){
-        $this->m = $m;
-        $this->a = $a;
-        $this->act = $act;
+    protected $authList;
+
+    public function addAuthItem($key,$authItem = array()){
+        $this->authList[$key] = $authItem;
     }
 
 
     //判断是否有改条记录的操作权限
-    public function validIsAuth(){
-        if(getIsRootGroup() || ( $this->getUserGroupAuth() && $this->getBtnAuth())){
+    public function validIsAuth($btnKey){
+        if(getIsRootGroup() || ( $this->getUserGroupAuth() && $this->getBtnAuth($btnKey))){
             $this->setIsMy(false);
             return true;
         }
@@ -37,9 +34,6 @@ class Auth{
         return $this;
     }
 
-    protected function setAct($act){
-        $this->act = $act;
-    }
 
     //判断用户组权限
     public function getUserGroupAuth(){
@@ -50,12 +44,22 @@ class Auth{
     }
 
     //判断按钮权限
-    public function getBtnAuth(){
+    public function getBtnAuth($btnKey){
         global $p_power;
         if(getIsRootGroup()){
             return true;
         }
-        return  ($p_power[$this->m."_".$this->a."_".$this->act.""])?true:false;
+        if(array_key_exists($btnKey,$this->authList)){
+            $m = $this->authList[$btnKey]['m'];
+            $a = $this->authList[$btnKey]['a'];
+            $act = $this->authList[$btnKey]['act'];
+            if($p_power[$m."_".$a."_".$act.""]){
+                return true;
+            }
+        }
     }
+
+
+
 
 }

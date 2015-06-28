@@ -8,40 +8,6 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        var AssessInstance =  new Assess();
-        $(function(){
-            $("#assess_user_diy_set").click(function(){
-                AssessInstance.tableBtnHandler($('#table_style'),
-                    function(jInput){
-                        var status = jInput.parents('tr').find('td:eq(3)').text();
-                        if(status=='待我创建'){
-                            return true;
-                        }else{
-                            alert('请保证勾选项都为待我创建！');
-                            return false;
-                        }
-                    },
-                    function(selectedItem){
-                        var base_id = $("#base_id").val();
-                        $.ajax({
-                            type:'get',
-                            url:'/salary/index.php',
-                            data:{m:'myassessment',a:'waitMeAssess',act:'singleAssessDiySet',diyItemList:selectedItem,base_id:base_id},
-                            dataType:'json',
-                            success:function(ret){
-                                if(ret.status=='success'){
-                                    alert('设置成功');
-                                    location.reload();
-                                }
-                            }
-                        });
-                    }
-                );
-            });
-
-        });
-    </script>
     <style>
         fieldset{
             padding: 10px;
@@ -66,15 +32,15 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">待我考核 > 员工列表 ><?=$assessBaseRecord['base_name']?></p>
+        <p class="icon1">考核管理 > 被考核人列表 > <?=$assessBaseRecord['base_name']?></p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
 
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
-                <input type="hidden" name="m" value="myassessment">
-                <input type="hidden" name="a" value="waitMeAssess">
-                <input type="hidden" name="act" value="myStaffList">
+                <input type="hidden" name="m" value="assessment">
+                <input type="hidden" name="a" value="launchList">
+                <input type="hidden" name="act" value="hrViewStaffList">
                 <input type="hidden" name="base_id" value="<?=$_REQUEST['base_id']?>" id="base_id">
                 <div class="jssel" style="z-index:98">
                     &nbsp;&nbsp;&nbsp;流程状态：
@@ -108,13 +74,6 @@
                     <th width="150" style="text-align: center;">得分</th>
                     <th  width="300" style="text-align: center;">操作</th>
                 </tr>
-                <?php
-                $btnArr = array(
-                    '0'=>'创建',
-                    '2'=>'初审',
-                    '5'=>'终审',
-                );
-                ?>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
@@ -126,16 +85,7 @@
                             <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
-                                <a href="?m=myassessment&a=waitMeAssess&act=leadViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
-                                <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <span >
-                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
-                                        </span>
-                                <?php }?>
-
-                                <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking){?>
-                                 <a href="?m=myassessment&a=waitMeAssess&act=changeCheckingStatus&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333">变更状态</a>
-                                <?php }?>
+                                <a href="?m=assessment&a=launchList&act=hrViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                             </td>
                         </tr>
                     <?php }?>
@@ -145,9 +95,6 @@
             <p class="pagenum">
                 <?=$page_nav?>
             </p>
-            <div>
-                <input type="button" name="" value="自行设置" class="btn139" id="assess_user_diy_set" style="cursor:pointer;">
-            </div>
         </div>
     </div>
 </div>
