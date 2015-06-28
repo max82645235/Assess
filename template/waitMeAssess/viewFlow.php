@@ -8,8 +8,7 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <style>
-        .jbtab tr th{color: #3186c8;font-weight:600;}
-        .jbtab tr td{color: #3186c8;}
+        .jbtab tr th{font-weight:600;}
         fieldset{
             padding: 10px;
             margin: 10px;

@@ -102,8 +102,7 @@
 
     </script>
     <style>
-        .jbtab tr th{color: #3186c8;font-weight:600;}
-        .jbtab tr td{color: #3186c8;}
+        .jbtab tr th{font-weight:600;}
         fieldset{
             padding: 10px;
             margin: 10px;
@@ -156,7 +155,7 @@
             <div class="pad25">
                 <?php
                 $scoreList = array();
-                if($record_info['relation']['user_assess_status']==6){
+                if($record_info['relation']['user_assess_status']==5){
                     $scoreList['selfScore'] = true;
                     $scoreList['leadScore'] = true;
                 }
@@ -179,7 +178,7 @@
                     <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
                 <?php }?>
 
-                <?php if(in_array($record_info['relation']['user_assess_status'],array(2,6))){?>
+                <?php if(in_array($record_info['relation']['user_assess_status'],array(2,5))){?>
                     <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
                     <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
                 <?php }?>

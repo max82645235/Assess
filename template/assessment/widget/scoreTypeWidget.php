@@ -49,7 +49,7 @@
                         <?php }?>
                     <?php }?>
                 <?php }?>
-                <?php if(!isset($itemDataList) || empty($itemDataList)){?>
+                <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
                     <tr>
                         <td width="40%">
                             <div class="smfl">
@@ -83,5 +83,7 @@
             </table>
         </div>
     </div>
+    <?php if($widget->validElement()){?>
     <div class="sm_target"><a href="javascript:void(0);">Ìí¼ÓÏîÄ¿</a></div>
+    <?php }?>
 </div>

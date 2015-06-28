@@ -130,13 +130,13 @@
 
 
             </form>
-            <?php if(true){?>
+            <?php if($auth->setIsMy(true)->validIsAuth('launchAssess')){?>
                 <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">发起考核</a>
             <?php }?>
         </div>
 
         <div class="mrtb10" >
-            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
+            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
                 <tr >
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
@@ -156,8 +156,8 @@
                                         //克隆 || 发布 至少有一个权限类验证通过时，checkbox选项才能开启
                                         $canEdit = true;
                                         $isMy =  $data['userId']==$userId;
-                                        $canEdit = $authList['authClone']->setIsMy($isMy)->validIsAuth();
-                                        $canEdit = $canEdit && $authList['authPublish']->setIsMy($isMy)->validIsAuth();
+                                        $canEdit = $auth->setIsMy($isMy)->validIsAuth('cloneAssess');
+                                        $canEdit = $canEdit && $auth->setIsMy($isMy)->validIsAuth('publishAssess');
                                 ?>
                                     <input type="checkbox" class="table_item_checkbox" tag="<?=$data['base_id']?>"
                                            <?php if(!$canEdit){?>disabled="disabled" <?php }?>>
@@ -172,16 +172,21 @@
                             <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td>
-                                <?php if($authList['authLaunch']->setIsMy($isMy)->validIsAuth()){?>
+
+                                <?php if($auth->setIsMy($isMy)->validIsAuth('launchAssess')){?>
                                         <a href="?m=assessment&a=launchAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">编辑</a>
                                 <?php }?>
 
-                                <?php if($authList['authClone']->setIsMy($isMy)->validIsAuth()){?>
+                                <?php if($auth->setIsMy($isMy)->validIsAuth('cloneAssess')){?>
                                         <a href="?m=assessment&a=launchList&act=cloneAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">复制</a>
                                 <?php }?>
 
-                                <?php if($authList['authPublish']->setIsMy($isMy)->validIsAuth() && $data['base_status']==AssessDao::HrAssessWait){?>
+                                <?php if($auth->setIsMy($isMy)->validIsAuth('publishAssess') && $data['base_status']==AssessDao::HrAssessWait){?>
                                         <a href="?m=assessment&a=launchList&act=publishAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">发布</a>
+                                <?php }?>
+
+                                <?php if($auth->setIsMy($isMy)->validIsAuth('hrViewPublish')){?>
+                                         <a href="?m=assessment&a=launchList&act=hrViewStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php }?>
                             </td>
                         </tr>
@@ -193,11 +198,11 @@
                 <?=$page_nav?>
             </p>
             <div>
-                <?php if($authList['authClone']->getBtnAuth()){?>
+                <?php if($auth->setIsMy(true)->validIsAuth('cloneAssess')){?>
                      <input type="button" name="" value="考核复制" class="btn139" id="copy_assess_btn" style="cursor:pointer;">
                 <?php }?>&nbsp;&nbsp;
 
-                <?php if($authList['authPublish']->getBtnAuth()){?>
+                <?php if($auth->setIsMy(true)->validIsAuth('publishAssess')){?>
                      <input type="button" name="" value="考核发布" class="btn139" id="publish_assess_btn" style="cursor:pointer;">
                 <?php }?>
             </div>

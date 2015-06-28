@@ -2,13 +2,6 @@
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">工作任务类</b></p>
     </div>
-
-    <div class="kctjcon">
-        <div class="sm_div mlr30" style="padding:10px;">
-            基本设置：<br /><br />
-            整体权重：<input type="text" value="<?=@$renderData['weight']?>" name="attr2_weight"  class="width80 j-notnull" />&nbsp;%
-        </div>
-    </div>
     <div class="kctjcon">
         <div class="sm_div mlr30">
             <table class="sm_xsmbadd" width="100%">
@@ -57,7 +50,7 @@
                     <?php }?>
                 <?php }?>
 
-                <?php if(!isset($itemDataList) || empty($itemDataList)){?>
+                <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
                     <tr>
                         <td width="26%">
                             <div class="smfl">
@@ -97,5 +90,7 @@
             </table>
         </div>
     </div>
+    <?php if($widget->validElement()){?>
     <div class="sm_target"><a href="javascript:void(0);">添加任务</a></div>
+    <?php }?>
 </div>

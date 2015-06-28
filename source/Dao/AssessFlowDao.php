@@ -9,6 +9,16 @@
 require_once 'BaseDao.php';
 class AssessFlowDao extends BaseDao{
     protected $assessDao;
+    static $UserAssessStatusByHr = array(
+        '0'=>'待考核人创建',
+        '1'=>'待被考核人填写计划',
+        '2'=>'待考核人初审',
+        '3'=>"考核中",
+        '4'=>'待被考核人汇报',
+        '5'=>'待考核人终审',
+        '6'=>'终审完成',
+        '7'=>'考核结束'
+    );
 
     static $UserAssessStatusByLeader = array(
         '0'=>'待我创建',
@@ -146,12 +156,8 @@ class AssessFlowDao extends BaseDao{
 
     public function getUserAssessRecord($baseId,$userId){
         $resultRecord = array();
-        //获取考核人状态信息
-        $userAssessRelationSql = "select a.*,b.username from sa_assess_user_relation as a
-                                    inner join sa_user as b on a.userId=b.userId
-                                     where a.userId={$userId} and a.base_id = {$baseId}";
-        //echo $userAssessRelationSql."<br/>";
-        if($relationRecord = $this->db->GetRow($userAssessRelationSql)){
+        $relationRecord = $this->getUserRelationRecord($baseId,$userId);
+        if($relationRecord){
             //获取考核人填写具体信息
             $userAssessItemSql = "select a.*,a.item_weight as weight from sa_assess_user_item as a where a.base_id={$baseId} and a.userId={$userId}";
             //echo $userAssessItemSql."<br/>";
@@ -160,6 +166,15 @@ class AssessFlowDao extends BaseDao{
             $resultRecord['item'] = $userAssessItem;
         }
         return $resultRecord;
+    }
+
+    //获取考核人状态信息
+    public function getUserRelationRecord($baseId,$userId){
+        $userAssessRelationSql = "select a.*,b.username from sa_assess_user_relation as a
+                                    inner join sa_user as b on a.userId=b.userId
+                                     where a.userId={$userId} and a.base_id = {$baseId}";
+        $relationRecord = $this->db->GetRow($userAssessRelationSql);
+        return $relationRecord;
     }
 
     //获取用户考核列表页
@@ -187,5 +202,76 @@ class AssessFlowDao extends BaseDao{
             'pageConditionUrl'=>$pageConditionUrl
         );
         return $resultList;
+    }
+
+    public function changeCheckingStatus($userId,$baseId){
+        $relationRecord = $this->getUserRelationRecord($baseId,$userId);
+        if($relationRecord && $relationRecord['user_assess_status'] == self::AssessChecking){
+            $relationRecord['user_assess_status'] = self::AssessPreLeadVIew;
+            unset($relationRecord['username']);
+            $where = " rid={$relationRecord['rid']}";
+            self::get_update_sql('sa_assess_user_relatioin',$relationRecord,$where);
+            $conditionUrl = $this->getConditionParamUrl();
+            $location = P_SYSPATH."index.php?$conditionUrl";
+            header("Location: $location");
+        }
+    }
+
+    public function getUserAssessScore($attrRecord){
+        $finalScore = 0;
+        if($attrRecord){
+            foreach($attrRecord as $k=>$data){
+                $itemData = unserialize($data['itemData']);
+                foreach($itemData as $i=>$item){
+                    switch($data['attr_type']){
+                        case 1://量化指标
+                            $finalScore+=$item['leadScore']*$item['qz']/100;
+                            break;
+
+                        case 2://工作任务
+                            $finalScore+=$item['leadScore']*$item['qz']/100;
+                            break;
+
+                        case 3://打分类
+                            $finalScore+=$item['cash']*$item['leadScore'];
+                            break;
+
+                        case 4://提成类
+                            $finalScore = $item['tc_name']*$item['finishCash'];
+                            break;
+                    }
+                }
+            }
+        }
+        return $finalScore;
+    }
+
+    //将领导设置转给员工设置
+    public function changeCreateToStaff($baseId,$userId=''){
+        $leadId = getUserId();
+        $user_assess_status = self::AssessCreate;
+        $sql = "select a.rid from sa_assess_user_relation as a
+                inner join sa_assess_base as b on a.base_id = b.base_id and b.lead_direct_set_status=1 and a.user_assess_status={$user_assess_status}
+                inner join sa_user_relation as c on  c.super_userId={$leadId} and a.userId=c.low_userId";
+        $records = $this->db->GetAll($sql);
+        if($records){
+            $rids = '';
+            foreach($records as $rid){
+                $rids.=$rid['rid'].",";
+            }
+            $rids = substr($rids,0,-1);
+            $addSql = '';
+            if($userId){
+                $addSql = " and userId in ({$userId})";
+            }
+            $updateSql = "update sa_assess_user_relation set user_assess_status=1 where base_id={$baseId}   and user_assess_status=0 and rid in ({$rids}) {$addSql}";
+            $this->db->Execute($updateSql);
+            return true;
+        }
+    }
+
+    public function triggerStatusUpdate($base_id,$userId){
+        $sql = "update sa_assess_user_relation set user_assess_status=4 where base_id={$base_id} and userId ={$userId} and user_assess_status=3";
+        $this->db->Execute($sql);
     }
 }

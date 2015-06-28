@@ -48,4 +48,15 @@ class BaseDao{
         return $sql;
     }
 
+    //拼接获取搜索查询条件url
+    public function getConditionParamUrl($filterParam = array()){
+        $pageUrl = '';
+        foreach($_GET as $key=>$v){
+            if(!$filterParam ||!in_array($key,$filterParam)){
+                $pageUrl .= "{$key}={$v}&";
+            }
+        }
+        return substr($pageUrl,0,-1);
+    }
+
 }

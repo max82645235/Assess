@@ -37,12 +37,10 @@ if($_REQUEST['act']=='launchAssess'){
                             $tmp = array();
                             $tmp['base_id'] = $base_id;
                             $tmp['attr_type'] = $attrRecordType[$key];
-                            $tmp['weight'] = (isset($data['weight']))?$data['weight']:'';
                             $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
                             $tmp['itemData'] = $data['table_data'];
                             $attrRecord[$key] = $tmp;
                         }
-
                         //assess_attr±í±£´æ
                         if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);

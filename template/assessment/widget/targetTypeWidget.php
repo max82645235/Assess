@@ -2,7 +2,6 @@
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">Ã·≥…¿‡</b></p>
     </div>
-
     <div class="kctjcon">
         <div class="sm_div mlr30" id="sales_target_div">
             <table class="sm_xsmbadd" width="100%">
@@ -30,7 +29,7 @@
                         <?php }?>
                     <?php }?>
                 <?php }?>
-                <?php if(!isset($itemDataList) || empty($itemDataList)){?>
+                <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
                     <tr>
                         <td width="40%">
                             <div class="smfl">

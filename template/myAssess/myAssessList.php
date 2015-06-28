@@ -53,7 +53,7 @@
         </div>
 
         <div class="mrtb10" >
-            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" style="color: #3186c8;">
+            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" >
                 <tr >
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
@@ -63,12 +63,13 @@
                     <th width="200" style="text-align: center;">考核周期</th>
                     <th width="200" style="text-align: center;">流程状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
+                    <th width="100" style="text-align: center;">得分</th>
                     <th width="200" style="text-align: center;">操作</th>
                 </tr>
                 <?php
                 $btnArr = array(
                     '1'=>'填写考核计划',
-                    '5'=>'填写考核提报'
+                    '4'=>'填写考核提报'
                 );
                 ?>
                 <?php if($tableData){?>
@@ -85,13 +86,17 @@
                             </td>
                             <td><?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
+                            <th width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></th>
                             <td class="left">
-                                <a href="?m=myassessment&a=waitMeAssess&act=viewFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
+                                <a href="?m=myassessment&a=myAssess&act=staffViewStaffDetail&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                     <span >
                                              <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
+                                <?php }?>
 
+                                <?php if($data['user_assess_status']==3){?>
+                                <a href="?m=myassessment&a=myAssess&act=triggerStatusUpdate&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt"  style="color: #ff3333">更改到提报时</a>
                                 <?php }?>
                             </td>
                         </tr>

@@ -160,7 +160,6 @@ Assess.prototype = {
                 //量化指标类
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table");
-                c_data.weight = $(".attr_form_1[flag=1] input[name=attr1_weight]").val();
                 c_table.find("tr").each(function(){
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
@@ -175,7 +174,6 @@ Assess.prototype = {
                 //工作任务类
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table");
-                j_data.weight = $(".attr_form_1[flag=2] input[name=attr2_weight]").val();
                 j_table.find("tr").each(function(k,v){
                     var tmp = {};
                     tmp.job_name = $(this).find("input[name=job_name]").val();
@@ -230,7 +228,7 @@ Assess.prototype = {
 
     /*添加指标*/
     addItem:function(jDom,type){
-        var itemContainer = jDom.parent().find('.kctjcon:eq(1) .sm_div table');
+        var itemContainer = jDom.parent().find('.kctjcon:eq(0) .sm_div table');
         if( itemContainer.find('tr').length>0){
             var clonedItemDom = itemContainer.find('tr:eq(0)');
             var cDom = $.extend(true,{}, clonedItemDom);
