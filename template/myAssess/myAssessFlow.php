@@ -115,7 +115,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">我的考核 > <?=AssessFlowDao::$UserAssessStatusByLeader[$record_info['relation']['user_assess_status']]?></p>
+        <p class="icon1">我的考核 > <?=AssessFlowDao::$UserAssessStatusByStaff[$record_info['relation']['user_assess_status']]?></p>
     </div>
     <fieldset>
         <legend>考核人姓名：<span style="color:#8DDB75;"><?=$record_info['relation']['username']?></span></legend>

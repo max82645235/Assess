@@ -160,7 +160,6 @@ class AssessFlowDao extends BaseDao{
         if($relationRecord){
             //获取考核人填写具体信息
             $userAssessItemSql = "select a.*,a.item_weight as weight from sa_assess_user_item as a where a.base_id={$baseId} and a.userId={$userId}";
-            //echo $userAssessItemSql."<br/>";
             $userAssessItem = $this->db->GetAll($userAssessItemSql);
             $resultRecord['relation'] = $relationRecord;
             $resultRecord['item'] = $userAssessItem;

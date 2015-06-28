@@ -133,7 +133,7 @@
                                         </span>
                                 <?php }?>
 
-                                <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking){?>
+                                <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking && $assessBaseRecord['lead_direct_set_status']==1){?>
                                  <a href="?m=myassessment&a=waitMeAssess&act=changeCheckingStatus&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333">±ä¸ü×´Ì¬</a>
                                 <?php }?>
                             </td>

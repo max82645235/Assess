@@ -15,20 +15,20 @@
                                 <td width="26%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>工作任务名称： </span>
-                                        <input type="text" value="<?=$itemData['job_name']?>" name="job_name" class="width160 j-notnull" />
+                                        <input  <?=$widget->disabled()?> type="text" value="<?=$itemData['job_name']?>" name="job_name" class="width160 j-notnull" />
                                     </div>
                                 </td>
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input type="text" value="<?=$itemData['qz']?>" name="job_qz"  class="width40 j-notnull" />&nbsp;%
+                                        <input   <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" name="job_qz"  class="width40 j-notnull" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
-                                            <input type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull" />
+                                            <input  type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -40,11 +40,14 @@
                                         </div>
                                     </td>
                                 <?php }?>
-                                <td width="15%" class="sm_xsmbadd_td2">
-                                    <div class="del_td" onclick="Assess.prototype.delItemDom(this,2)">
-                                        <input type="button" class="btn67"  name="del" value="删除">
-                                    </div>
-                                </td>
+
+                                 <?php if($widget->validElement()){?>
+                                    <td width="15%" class="sm_xsmbadd_td2">
+                                        <div class="del_td" onclick="Assess.prototype.delItemDom(this,2)">
+                                            <input type="button" class="btn67"  name="del" value="删除">
+                                        </div>
+                                    </td>
+                                <?php }?>
                             </tr>
                         <?php }?>
                     <?php }?>

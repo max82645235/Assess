@@ -25,6 +25,9 @@ if($_REQUEST['act']=='launchAssess'){
         if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
             if(isset($_REQUEST['subFormData']['baseData'])){
                 //assess_baseÖ÷±í±£´æ
+                if(mb_detect_encoding($_REQUEST['subFormData']['baseData']['base_name'])=='UTF-8'){
+                    $_REQUEST['subFormData']['baseData']['base_name'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['subFormData']['baseData']['base_name']);
+                }
                 if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
                     $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                     $baseRecord = $assessDao->getAssessBaseRecord($base_id);

@@ -88,9 +88,6 @@ class AssessDao extends BaseDao{
                     unset($baseRecord[$key]);
                 }
             }
-            if(mb_detect_encoding($baseRecord['base_name'])=='UTF-8'){
-                $baseRecord['base_name'] = iconv('UTF-8','GBK//IGNORE',$baseRecord['base_name']);
-            }
 
 
             if(isset($baseRecord['base_id']) && $baseRecord['base_id']){
