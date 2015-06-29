@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
     <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
     <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
-
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.validate.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.min.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <script src="<?=P_SYSPATH?>static/js/assess/validateAssess.js" type="text/javascript"></script>
     <script>
         var AssessInstance =  new Assess();
         $(function(){
@@ -136,7 +140,7 @@
             <div class="baseinfo">
                 <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
-                        <td width="188" align="right"> øº∫À√˚≥∆£∫&nbsp;</td>
+                        <td width="188" align="right"> øº∫À»À–’√˚£∫&nbsp;</td>
                         <td>
                             <?=$record_info['relation']['username']?>
                         </td>

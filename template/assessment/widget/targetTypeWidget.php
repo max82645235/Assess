@@ -14,7 +14,7 @@
                                 <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>提成点： </span>
-                                        <input <?=$widget->disabled()?>  type="text" value="<?=$itemData['tc_name']?>" name="tc_name" class="width160 j-notnull" />&nbsp;%
+                                        <input <?=$widget->disabled()?>  type="text" value="<?=$itemData['tc_name']?>" name="tc_name" class="width40 j-notnull percent" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -34,7 +34,7 @@
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>提成点： </span>
-                                <input type="text" value="" name="tc_name" class="width60 j-notnull" />&nbsp;%
+                                <input type="text" value="" name="tc_name" class="width40 j-notnull percent" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>

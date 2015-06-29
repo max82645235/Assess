@@ -347,10 +347,11 @@ Assess.prototype = {
         }
     },
     jump:function(url,mis){
-        var j = function(url){
+        var url = url;
+        var jp = function(){
            location.href = url;
-        }
-        setTimeout(j,mis,url);
+        };
+        setTimeout(jp,mis);
     },
     adduser:function(userId,username){
         var uids = $("#uids").val();

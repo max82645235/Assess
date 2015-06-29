@@ -11,10 +11,10 @@
     <script type="text/javascript">
         var AssessInstance =  new Assess();
         $(function(){
-            AssessInstance.triggerBusSelect(true); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(0); //刚进页面时触发一次部门二级联动ajax查询
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect(true);
+                AssessInstance.triggerBusSelect(0);
             });
 
             $("#copy_assess_btn").click(function(){
@@ -70,7 +70,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">考核管理 >管理列表</p>
+        <p class="icon1">考核管理 > 管理列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 50px;">
@@ -78,7 +78,7 @@
                 <input type="hidden" name="m" value="<?=getgpc('m')?>">
                 <input type="hidden" name="a" value="<?=getgpc('a')?>">
                 <div class="jssel" style="z-index:98">
-                    业务部门：
+                    业务单元：
                     <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
                         <option value="">请选择</option>
                         <?php foreach($bus_parent_list as $k=>$v){?>

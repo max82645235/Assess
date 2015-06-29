@@ -12,7 +12,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">我的考核 >考核列表</p>
+        <p class="icon1">我的考核 > 考核列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
@@ -86,7 +86,7 @@
                             </td>
                             <td><?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?></td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
-                            <th width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></th>
+                            <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
                                 <a href="?m=myassessment&a=myAssess&act=staffViewStaffDetail&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>

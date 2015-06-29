@@ -290,6 +290,9 @@ function getUserId(){
 }
 
 function getIsRootGroup(){
+    if(defined("LOCAL_EV")){
+        return true;
+    }
     return false;
 }
 

@@ -38,10 +38,10 @@ if($_REQUEST['act']=='launchList'){
 
     //建立权限验证类
     $auth = new Auth();
-    $auth->addAuthItem('launchAssess',array('m'=>$m,'a'=>'launchAssess','act'=>'launchAssess'));
+    $auth->addAuthItem('launchAssess',array('m'=>$m,'a'=>$a,'act'=>'launchAssess'));
     $auth->addAuthItem('cloneAssess',array('m'=>$m,'a'=>$a,'act'=>'cloneAssess'));
     $auth->addAuthItem('publishAssess',array('m'=>$m,'a'=>$a,'act'=>'publishAssess'));
-    $auth->addAuthItem('hrViewPublish',array('m'=>$m,'a'=>$a,'act'=>'hrViewPublish'));
+    $auth->addAuthItem('hrViewPublish',array('m'=>$m,'a'=>$a,'act'=>'hrViewStaffList'));
 
     $tpl = new NewTpl('assessment/launchList.php',array(
         'tableData'=>$tableData,

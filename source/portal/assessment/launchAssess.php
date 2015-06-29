@@ -84,10 +84,11 @@ if($_REQUEST['act']=='launchAssess'){
 
 //部门二级分类
 if($_REQUEST['act']=='ajaxBusClassify'){
+    global $cfg;
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $validAuth = $_REQUEST['validAuth'];
-        $retData = array();
+        $retData = array('data'=>array());
         $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
