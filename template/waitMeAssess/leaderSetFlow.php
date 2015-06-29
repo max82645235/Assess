@@ -15,6 +15,7 @@
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js"></script>
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.validate.js"></script>
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.min.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.metadata.js"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/validateAssess.js" type="text/javascript"></script>
     <script>
@@ -70,7 +71,12 @@
             });
 
             $("#nextBtn,#startBtn,#backBtn").click(function(){
-                if($("#sub_form").valid()){
+                var valid = true;
+                if($(this).attr('id')!='backBtn'){
+                     valid = $("#sub_form").valid();
+                }
+
+                if(valid){
                     var status = $(this).attr('tag');
                     var formData = {
                         m:'myassessment',

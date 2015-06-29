@@ -164,10 +164,10 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
                     tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.qz = $(this).find("input[name=qz]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
+                    tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
+                    tmp.qz = $(this).find("input[tagname=qz]").val();
+                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     c_data['table_data'].push(tmp);
                 });
 
@@ -176,11 +176,11 @@ Assess.prototype = {
                 var j_table = $(".attr_form_1[flag=2] table");
                 j_table.find("tr").each(function(k,v){
                     var tmp = {};
-                    tmp.job_name = $(this).find("input[name=job_name]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.qz = $(this).find("input[name=job_qz]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
+                    tmp.job_name = $(this).find("input[tagname=job_name]").val();
+                    tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
+                    tmp.qz = $(this).find("input[tagname=job_qz]").val();
+                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     j_data['table_data'].push(tmp);
                 });
                 return {commission:c_data,job:j_data};
@@ -192,9 +192,9 @@ Assess.prototype = {
                 s_data.cash = $(".attr_form_2[flag=3] input[name=attr3_cash]").val();
                 s_table.find("tr").each(function(k,v){
                     var tmp = {};
-                    tmp.score_name = $(this).find("input[name=score_name]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
+                    tmp.score_name = $(this).find("input[tagname=score_name]").val();
+                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     s_data['table_data'].push(tmp);
                 });
                 return {score:s_data};
@@ -207,8 +207,8 @@ Assess.prototype = {
                 t_data.cash = $(".attr_form_3[flag=4] input[name=attr3_cash]").val();
                 t_table.find("tr").each(function(k,v){
                     var tmp = {};
-                    tmp.tc_name = $(this).find("input[name=tc_name]").val();
-                    tmp.finishCash = $(this).find("input[name=finishCash]").val();
+                    tmp.tc_name = $(this).find("input[tagname=tc_name]").val();
+                    tmp.finishCash = $(this).find("input[tagname=finishCash]").val();
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};
@@ -229,13 +229,16 @@ Assess.prototype = {
     /*添加指标*/
     addItem:function(jDom,type){
         var itemContainer = jDom.parent().find('.kctjcon:eq(0) .sm_div table');
-        if( itemContainer.find('tr').length>0){
+        var len = itemContainer.find('tr').length;
+        if( len>0){
             var clonedItemDom = itemContainer.find('tr:eq(0)');
             var cDom = $.extend(true,{}, clonedItemDom);
+            var html  = cDom.html().replace(new RegExp(/(\[@\])/g),len);
+            itemContainer.append("<tr>"+html+"</tr>");
         }else if(this.delTrCache[type] !=undefined){
             var cDom = this.delTrCache[type];
+            itemContainer.append("<tr>"+cDom.html()+"</tr>");
         }
-        itemContainer.append("<tr>"+cDom.html()+"</tr>");
         this.clearItemData(itemContainer.find('tr:last'),type);
     },
 
@@ -245,28 +248,28 @@ Assess.prototype = {
             case '1':
                 itemDom.find("select[name=indicator_parent] option:eq(0)").attr("checked",true);
                 itemDom.find("select[name=indicator_child] option:eq(0)").attr("checked",true);
-                itemDom.find("input[name=zbyz]").val('');
-                itemDom.find("input[name=qz]").val('');
-                itemDom.find("input[name=selfScore]").val('');
-                itemDom.find("input[name=leadScore]").val('');
+                itemDom.find("input[tagname=zbyz]").val('');
+                itemDom.find("input[tagname=qz]").val('');
+                itemDom.find("input[tagname=selfScore]").val('');
+                itemDom.find("input[tagname=leadScore]").val('');
                 break;
 
             case '2':
-                itemDom.find("input[name=job_name]").val('');
-                itemDom.find("input[name=job_qz]").val('');
-                itemDom.find("input[name=selfScore]").val('');
-                itemDom.find("input[name=leadScore]").val('');
+                itemDom.find("input[tagname=job_name]").val('');
+                itemDom.find("input[tagname=job_qz]").val('');
+                itemDom.find("input[tagname=selfScore]").val('');
+                itemDom.find("input[tagname=leadScore]").val('');
                 break;
 
             case '3':
-                itemDom.find("input[name=score_name]").val('');
-                itemDom.find("input[name=selfScore]").val('');
-                itemDom.find("input[name=leadScore]").val('');
+                itemDom.find("input[tagname=score_name]").val('');
+                itemDom.find("input[tagname=selfScore]").val('');
+                itemDom.find("input[tagname=leadScore]").val('');
                 break;
 
             case '4':
-                itemDom.find("input[name=tc_name]").val('');
-                itemDom.find("input[name=finishCash]").val('');
+                itemDom.find("input[tagname=tc_name]").val('');
+                itemDom.find("input[tagname=finishCash]").val('');
                 break;
         }
         return itemDom;
@@ -275,9 +278,29 @@ Assess.prototype = {
     delTrCache:{},
     //删除item节点
     delItemDom:function(dBtn,type){
-        if($(dBtn).parents('table').find('tr').length==1){
-            this.delTrCache[type] =  $.extend(true,{}, $(dBtn).parents('tr'));
+        var reg = /^.*\[@\]$/;
+        var find = '';
+        if(type==1 || type ==2){
+            find = 'td:eq(1) input';
+        }else if(type==3){
+            find = 'td:eq(0) input';
         }
+        if(reg.test($(dBtn).parents('tr').find(find).attr('name'))){
+            return false;
+        }
+
+        if($(dBtn).parents('table').find('tr').length==1){
+            var name = $(dBtn).parents('tr').find(find).attr('name');
+            var reg = /^.*_old_.*$/;
+            if(reg.test(name)){
+                var tmp = name.split('_');
+                name = tmp[0]+"_new_[@]";
+                $(dBtn).parents('tr').find(find).attr('name',name);
+                this.delTrCache[type]=  $.extend(true,{}, $(dBtn).parents('tr'));
+            }
+        }
+
+
         $(dBtn).parents('tr').remove();
     },
     triggerIndicatorSelect:function(jSelectDom){

@@ -16,19 +16,19 @@
                     $itemDataList = unserialize($renderData['itemData']);
                     ?>
                     <?php if($itemDataList){?>
-                        <?php foreach($itemDataList as $itemData){?>
+                        <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
                                 <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>考核项： </span>
-                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['score_name']?>" name="score_name" class="width160 j-notnull required " />
+                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['score_name']?>" tagname="score_name" name="score_name_old_<?=$key?>" class="{validate:{ required:true,percent:true}}" />
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
-                                            <input type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull required percent" />
+                                            <input type="text" value="<?=$itemData['selfScore']?>"  tagname="selfScore"   name="selfScore_old_<?=$key?>"  class="width40 j-notnull required percent" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -36,7 +36,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
-                                            <input type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull required percent" />&nbsp;%
+                                            <input type="text" value="<?=$itemData['leadScore']?>"  tagname="leadScore"   name="leadScore_old_<?=$key?>"  class="width40 j-notnull required percent" />&nbsp;%
                                         </div>
                                     </td>
                                 <?php }?>
@@ -56,14 +56,14 @@
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>考核项： </span>
-                                <input type="text" value="" name="score_name" class="width160 j-notnull required" />
+                                <input type="text" value="" tagname="score_name" name="score_name_new_[@]" class="{validate:{ required:true,percent:true }}" />
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 自评分：</span>
-                                    <input type="text" value="" name="selfScore"  class="width40 j-notnull required percent" />
+                                    <input type="text" value="" tagname="selfScore"  name="selfScore_new_[@]"  class="width40 j-notnull required percent" />
                                 </div>
                             </td>
                         <?php }?>
@@ -71,7 +71,7 @@
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 领导评分：</span>
-                                    <input type="text" value="" name="leadScore"  class="width40 j-notnull required percent" />&nbsp;%
+                                    <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull required percent" />&nbsp;%
                                 </div>
                             </td>
                         <?php }?>

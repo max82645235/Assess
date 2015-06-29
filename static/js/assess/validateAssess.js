@@ -70,12 +70,14 @@ $(function(){
     $.validator.addMethod('totalQz',function(value,element,arg){
         var cntQz = 0;
         $(".attr_form_1[flag=1] .sm_xsmbadd tr").each(function(){
-            cntQz+=parseInt($(this).find('td:eq(1) input[name=qz]').val());
+            cntQz+=parseInt($(this).find('td:eq(1) input[tagname=qz]').val());
+
         });
 
         $(".attr_form_1[flag=2] .sm_xsmbadd tr").each(function(){
-            cntQz+=parseInt($(this).find('td:eq(1) input[name=job_qz]').val());
+            cntQz+=parseInt($(this).find('td:eq(1) input[tagname=job_qz]').val());
         });
+
         if(cntQz==100){
             return true;
         }
@@ -85,6 +87,7 @@ $(function(){
 
     $.myValidate = $("#sub_form").validate({
         debug:true,
+        meta:"validate",
         rules:{
             base_name:{
                 required: true
@@ -106,12 +109,12 @@ $(function(){
             },
             zbyz:{
                 required: true,
-                digits:true,
+                digits:true
             },
             qz:{
                 required: true,
                 percent:true,
-                totalQz:true,
+                totalQz:true
             },
 
             //ÆÀ·Ö
