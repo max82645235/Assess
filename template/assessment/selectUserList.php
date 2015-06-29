@@ -104,7 +104,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">考核管理 >发起考核 > 用户列表</p>
+        <p class="icon1">考核管理 > 发起考核 > 用户列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 50px;">

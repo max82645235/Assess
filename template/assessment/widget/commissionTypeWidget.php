@@ -37,14 +37,14 @@
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />&nbsp;%
+                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull required percent" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
-                                            <input  type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull" />
+                                            <input  type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull required percent" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -52,7 +52,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
-                                            <input  type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull" />&nbsp;%
+                                            <input  type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull required percent" />&nbsp;%
                                         </div>
                                     </td>
                                 <?php }?>
@@ -87,14 +87,14 @@
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 权重：</span>
-                                <input <?=$widget->disabled()?>  type="text" value="" name="qz"  class="width40 j-notnull percent" />&nbsp;%
+                                <input <?=$widget->disabled()?>  type="text" value="" name="qz"  class="width40 j-notnull required percent" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 自评分：</span>
-                                    <input type="text" value="" name="selfScore"  class="width40 j-notnull" />
+                                    <input type="text" value="" name="selfScore"  class="width40 j-notnull required percent" />
                                 </div>
                             </td>
                         <?php }?>
@@ -102,7 +102,7 @@
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 领导评分：</span>
-                                    <input type="text" value="" name="leadScore"  class="width40 j-notnull" />&nbsp;%
+                                    <input type="text" value="" name="leadScore"  class="width40 j-notnull required percent" />&nbsp;%
                                 </div>
                             </td>
                         <?php }?>

@@ -129,7 +129,7 @@ if($_REQUEST['act']=='selectUserList'){
     $cid = $_REQUEST['cid'];
     $uids = explode(',',$_REQUEST['uids']);
     $assessDao = new AssessDao();
-    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid}";
+    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid} order by deptlist desc";
     $userList = $assessDao->db->GetAll($sql);
     $tpl = new NewTpl('assessment/selectUserList.php',array(
         'userList'=>$userList,
