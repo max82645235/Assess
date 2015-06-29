@@ -290,7 +290,7 @@ function getUserId(){
 }
 
 function getIsRootGroup(){
-    return true;
+    return false;
 }
 
 //获取用户的业务部门id

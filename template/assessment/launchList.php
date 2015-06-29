@@ -184,7 +184,6 @@
                                 <?php if($auth->setIsMy($isMy)->validIsAuth('publishAssess') && $data['base_status']==AssessDao::HrAssessWait){?>
                                         <a href="?m=assessment&a=launchList&act=publishAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">发布</a>
                                 <?php }?>
-
                                 <?php if($auth->setIsMy($isMy)->validIsAuth('hrViewPublish')){?>
                                          <a href="?m=assessment&a=launchList&act=hrViewStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php }?>

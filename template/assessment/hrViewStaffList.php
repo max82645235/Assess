@@ -46,7 +46,7 @@
                     &nbsp;&nbsp;&nbsp;流程状态：
                     <select name="user_assess_status" style="width: 150px;">
                         <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>请选择</option>
-                        <?php foreach(AssessFlowDao::$UserAssessStatusByLeader as $k=>$val){?>
+                        <?php foreach(AssessFlowDao::$UserAssessStatusByHr as $k=>$val){?>
                             <option value="<?=$k?>"  <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']!=='' && $_REQUEST['user_assess_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
                         <?php }?>
                     </select>
@@ -82,7 +82,7 @@
                             </td>
                             <td class="left"><?=$data['username']?></td>
                             <td class="left"><?=$data['deptlist']?></td>
-                            <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
+                            <td><?=AssessFlowDao::$UserAssessStatusByHr[$data['user_assess_status']]?></td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
                                 <a href="?m=assessment&a=launchList&act=hrViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>

@@ -8,6 +8,7 @@
 */
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
+require_once BATH_PATH.'source/Util/ModificationValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'waitMeList':$_REQUEST['act'];
 
 //¥˝Œ“…Û∫À¡–±Ì“≥

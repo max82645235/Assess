@@ -207,11 +207,13 @@ class AssessFlowDao extends BaseDao{
         $relationRecord = $this->getUserRelationRecord($baseId,$userId);
         if($relationRecord && $relationRecord['user_assess_status'] == self::AssessChecking){
             $relationRecord['user_assess_status'] = self::AssessPreLeadVIew;
-            unset($relationRecord['username']);
             $where = " rid={$relationRecord['rid']}";
-            self::get_update_sql('sa_assess_user_relatioin',$relationRecord,$where);
-            $conditionUrl = $this->getConditionParamUrl();
-            $location = P_SYSPATH."index.php?$conditionUrl";
+            unset($relationRecord['rid']);
+            unset($relationRecord['username']);
+            $sql = self::get_update_sql('sa_assess_user_relation',$relationRecord,$where);
+            $this->db->Execute($sql);
+            $conditionUrl = $this->getConditionParamUrl(array('act'));
+            $location = P_SYSPATH."index.php?act=myStaffList&$conditionUrl";
             header("Location: $location");
         }
     }
