@@ -3,7 +3,7 @@
  */
 $(function(){
     jQuery.extend(jQuery.validator.messages, {
-        required: "必选字段",
+        required: "必填字段",
         remote: "请修正该字段",
         email: "请输入正确格式的电子邮件",
         url: "请输入合法的网址",
@@ -67,6 +67,22 @@ $(function(){
         return (value>=0 && value<=100 && re.test(value));
     },'请输出0-100之内的整数');
 
+    $.validator.addMethod('totalQz',function(value,element,arg){
+        var cntQz = 0;
+        $(".attr_form_1[flag=1] .sm_xsmbadd tr").each(function(){
+            cntQz+=parseInt($(this).find('td:eq(1) input[name=qz]').val());
+        });
+
+        $(".attr_form_1[flag=2] .sm_xsmbadd tr").each(function(){
+            cntQz+=parseInt($(this).find('td:eq(1) input[name=job_qz]').val());
+        });
+        if(cntQz==100){
+            return true;
+        }
+        return false;
+    },'请保证所有项权重之和为100');
+
+
     $.myValidate = $("#sub_form").validate({
         debug:true,
         rules:{
@@ -90,11 +106,12 @@ $(function(){
             },
             zbyz:{
                 required: true,
-                digits:true
+                digits:true,
             },
             qz:{
                 required: true,
-                percent:true
+                percent:true,
+                totalQz:true,
             },
 
             //评分
@@ -113,7 +130,8 @@ $(function(){
             },
             job_qz:{
                 required: true,
-                percent:true
+                percent:true,
+                totalQz:true
             },
             attr2_weight:{
                 required: true

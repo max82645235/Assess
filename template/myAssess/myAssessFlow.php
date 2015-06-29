@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
     <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
     <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.css">
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js"></script>
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.validate.js"></script>
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.min.js"></script>
@@ -41,27 +42,29 @@
             });
 
             $('#saveBtn').click(function(){
-                var formData = {
-                    m:'myassessment',
-                    a:'myAssess',
-                    act:'myAssessFlow',
-                    status:'save'
-                };
-                formData.attrData = AssessInstance.getAttrData();
-                formData.base_id = $("#hidden_base_id").val();
-                formData.userId = $("#hidden_user_id").val();
-                $.ajax({
-                    type:'post',
-                    url:'/salary/index.php',
-                    data:formData,
-                    dataType:'json',
-                    success:function(retData){
-                        if(retData.status=='success'){
-                            art.dialog.tips('保存成功！');
+                if($("#sub_form").valid()){
+                    var formData = {
+                        m:'myassessment',
+                        a:'myAssess',
+                        act:'myAssessFlow',
+                        status:'save'
+                    };
+                    formData.attrData = AssessInstance.getAttrData();
+                    formData.base_id = $("#hidden_base_id").val();
+                    formData.userId = $("#hidden_user_id").val();
+                    $.ajax({
+                        type:'post',
+                        url:'/salary/index.php',
+                        data:formData,
+                        dataType:'json',
+                        success:function(retData){
+                            if(retData.status=='success'){
+                                art.dialog.tips('保存成功！');
 
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
 
             $("#nextBtn").click(function(){
@@ -164,9 +167,9 @@
                 </div>
             </div>
             <div class="kctjbot">
-                <input type="button" class="bluebtn" value="保存" id="saveBtn" />
-                <input type="button" class="bluebtn" value="提交审核" id="nextBtn" />
-                <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
+                <input type="button" class="bluebtn" value="保存" name="saveBtn"  id="saveBtn" />
+                <input type="button" class="bluebtn" value="提交审核" name="nextBtn" id="nextBtn" />
+                <input type="button" class="btn67" value="返回" name="backBtn" onclick="history.go(-1);"/>
             </div>
         </form>
     </div>

@@ -31,7 +31,7 @@
         var AssessInstance =  new Assess();
         $(function(){
             AssessInstance.initHide();
-            AssessInstance.triggerBusSelect(0); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(1); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
@@ -70,7 +70,7 @@
 
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect(0);
+                AssessInstance.triggerBusSelect(1);
             });
 
             //考核人模糊搜索

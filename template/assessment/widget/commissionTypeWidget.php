@@ -51,8 +51,8 @@
                                 <?php if(isset($scoreList['leadScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
-                                            <span><em class="c-yel">*</em> 领导打分：</span>
-                                            <input  type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull" />
+                                            <span><em class="c-yel">*</em> 领导评分：</span>
+                                            <input  type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull" />&nbsp;%
                                         </div>
                                     </td>
                                 <?php }?>
@@ -101,8 +101,8 @@
                         <?php if(isset($scoreList['leadScore'])){?>
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
-                                    <span><em class="c-yel">*</em> 领导打分：</span>
-                                    <input type="text" value="" name="leadScore"  class="width40 j-notnull" />
+                                    <span><em class="c-yel">*</em> 领导评分：</span>
+                                    <input type="text" value="" name="leadScore"  class="width40 j-notnull" />&nbsp;%
                                 </div>
                             </td>
                         <?php }?>
