@@ -235,7 +235,6 @@ Assess.prototype = {
         }else if(this.delTrCache[type] !=undefined){
             var cDom = this.delTrCache[type];
         }
-        console.log(cDom);
         itemContainer.append("<tr>"+cDom.html()+"</tr>");
         this.clearItemData(itemContainer.find('tr:last'),type);
     },

@@ -47,6 +47,7 @@ if($_REQUEST['act']=='myAssessFlow'){
     $assessFlowDao = new AssessFlowDao();
     $userId = getUserId();
     $base_id = $_REQUEST['base_id'];
+    $mValid = new ModificationValid($base_id);
     if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
@@ -97,7 +98,8 @@ if($_REQUEST['act']=='myAssessFlow'){
     $tpl = new NewTpl('myAssess/myAssessFlow.php',array(
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,
-        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act'))
+        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act')),
+        'mValid'=>$mValid
     ));
 
     $tpl->render();

@@ -162,13 +162,13 @@
                 ?>
                 <div class="attr_content">
                     <!--任务/指标类-->
-                    <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList)?>
+                    <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList,$mValid)?>
 
                     <!--打分类-->
-                    <?=$assessAttrWidget->renderAttr($record_info['item'],2,$scoreList)?>
+                    <?=$assessAttrWidget->renderAttr($record_info['item'],2,$scoreList,$mValid)?>
 
                     <!--提成类-->
-                    <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList)?>
+                    <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList,$mValid)?>
                 </div>
             </div>
             <div class="kctjbot">

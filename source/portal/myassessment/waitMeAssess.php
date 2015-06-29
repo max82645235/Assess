@@ -77,6 +77,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
     $base_id = $_REQUEST['base_id'];
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
+    $mValid = new ModificationValid($base_id);
     if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next','back','start'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
@@ -150,7 +151,8 @@ if($_REQUEST['act']=='leaderSetFlow'){
     $tpl = new NewTpl('waitMeAssess/leaderSetFlow.php',array(
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,
-        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act','userId'))
+        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act','userId')),
+        'mValid'=>$mValid
     ));
     $tpl->render();
     die();
