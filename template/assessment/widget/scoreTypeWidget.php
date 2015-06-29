@@ -21,7 +21,7 @@
                                 <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>¿¼ºËÏî£º </span>
-                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['score_name']?>" tagname="score_name" name="score_name_old_<?=$key?>" class="{validate:{ required:true,percent:true}}" />
+                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['score_name']?>" tagname="score_name" name="score_name_old_<?=$key?>" class="{validate:{ required:true}}" />
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -56,7 +56,7 @@
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>¿¼ºËÏî£º </span>
-                                <input type="text" value="" tagname="score_name" name="score_name_new_[@]" class="{validate:{ required:true,percent:true }}" />
+                                <input type="text" value="" tagname="score_name" name="score_name_new_[@]" class="{validate:{ required:true}}" />
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>

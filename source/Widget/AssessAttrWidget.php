@@ -75,10 +75,10 @@ class AssessAttrWidget{
         }
     }
 
-    public function renderItemTable($itemInfo){
+    public function renderItemTable($itemInfo,$assessAttrType){
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);
-        $this->tpl->set_data(array('itemInfo'=>$itemInfo,'widget'=>$this));
+        $this->tpl->set_data(array('itemInfo'=>$itemInfo,'widget'=>$this,'assessAttrType'=>$assessAttrType));
         $this->tpl->render();
     }
 }

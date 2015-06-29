@@ -108,7 +108,7 @@
             <div class="pad25">
                 <div class="attr_content">
                     <!--¿¼ºËÊôÐÔ±í¸ñ-->
-                    <?=$assessAttrWidget->renderItemTable($record_info['item'])?>
+                    <?=$assessAttrWidget->renderItemTable($record_info['item'],$record_info['relation']['assess_attr_type'])?>
                 </div>
             </div>
             <div class="kctjbot">
