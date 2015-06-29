@@ -55,7 +55,7 @@
             </tr>
             <?php foreach($itemList as $data){?>
                 <tr>
-                    <td width="40%"><?=$itemList['cash']?></td>
+                    <td width="40%"><?=$item['cash']?></td>
                     <td><?=$data['score_name']?></td>
                     <td><?=$data['selfScore']?></td>
                     <td><?=$data['leadScore']?></td>

@@ -90,6 +90,7 @@ if($_REQUEST['act']=='cloneAssess'){
 //发布考核
 if($_REQUEST['act']=='publishAssess'){
     $assessDao = new AssessDao();
+    $auth =  new Auth();
     $auth->addAuthItem('publishAssess',array('m'=>$m,'a'=>$a,'act'=>"publishAssess"));
     //按钮单条方式
     if(isset($_REQUEST['base_id'])){
@@ -102,6 +103,7 @@ if($_REQUEST['act']=='publishAssess'){
     }
 
     //ajax批量方式
+
     if(isset($_REQUEST['selectedItemList'])){
         $baseIdList = array();
         $retData = array();

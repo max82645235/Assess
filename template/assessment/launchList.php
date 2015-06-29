@@ -57,7 +57,7 @@
                             success:function(ret){
                                 if(ret.status=='success'){
                                     alert('考核发布成功');
-                                   // location.reload();
+                                    location.reload();
                                 }
                             }
                         });

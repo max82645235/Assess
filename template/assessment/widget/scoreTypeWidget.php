@@ -2,10 +2,10 @@
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">打分类</b></p>
     </div>
-    <div class="kctjcon">
+    <div class="kctjcon1">
         <div class="sm_div mlr30"  style="padding:10px;">
             基本设置：<br /><br />
-            1分 ＝ <input type="text" value="<?=@$renderData['cash']?>" name="attr3_cash"  class="width80 j-notnull" /> 元
+            1分 ＝ <input type="text" <?=$widget->disabled()?> value="<?=@$renderData['cash']?>" name="attr3_cash"  class="width80 j-notnull" /> 元
         </div>
     </div>
     <div class="kctjcon">
@@ -21,7 +21,7 @@
                                 <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>考核项： </span>
-                                        <input type="text" value="<?=$itemData['score_name']?>" name="score_name" class="width160 j-notnull" />
+                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['score_name']?>" name="score_name" class="width160 j-notnull" />
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -40,11 +40,13 @@
                                         </div>
                                     </td>
                                 <?php }?>
+                            <?php if($widget->validElement()){?>
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="del_td" onclick="Assess.prototype.delItemDom(this,3)">
                                         <input type="button" class="btn67"  name="del" value="删除">
                                     </div>
                                 </td>
+                            <?php }?>
                             </tr>
                         <?php }?>
                     <?php }?>
