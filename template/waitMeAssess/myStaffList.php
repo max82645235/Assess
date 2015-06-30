@@ -66,7 +66,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">待我考核 > 员工列表 ><?=$assessBaseRecord['base_name']?></p>
+        <p class="icon1">待我考核 > 员工列表 > <?=$assessBaseRecord['base_name']?></p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">

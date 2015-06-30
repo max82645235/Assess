@@ -70,7 +70,7 @@
                     </th>
                     <th class="left" width="200"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
-                    <th width="150" style="text-align: center;">考核状态</th>
+                    <th width="150" style="text-align: center;">流程状态</th>
                     <th width="150" style="text-align: center;">得分</th>
                     <th  width="300" style="text-align: center;">操作</th>
                 </tr>

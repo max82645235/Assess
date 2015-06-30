@@ -247,31 +247,22 @@ EOF;
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核周期：&nbsp;</td>
-                    <td class="jsline">
-                        <select name="assess_period_type" id="assess_period_type" <?=$mValid->getDisableValid('assess_period_type');?>>
-                            <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
-                                <option value="<?=$k?>"
-                                    <?php if($record_info['base_info']['assess_period_type']==$k){?> selected="selected"<?php }?>>
-                                    <?=$v?>
-                                </option>
-                            <?php }?>
-                        </select>
-                    </td>
-                </tr>
 
                 <tr>
-                    <td align="right">按月生成：&nbsp;</td>
-                    <td>
-                        <input <?=$mValid->getDisableValid('create_on_month_status');?>  type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核开始时间：&nbsp;</td>
+                    <td align="right"><em class="c-yel">*</em> 考核周期开始时间：&nbsp;</td>
                     <td class="jsline">
+                        <div style="float: left;">
+                            <select name="assess_period_type" id="assess_period_type" <?=$mValid->getDisableValid('assess_period_type');?>>
+                                <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
+                                    <option value="<?=$k?>"
+                                        <?php if($record_info['base_info']['assess_period_type']==$k){?> selected="selected"<?php }?>>
+                                        <?=$v?>
+                                    </option>
+                                <?php }?>
+                            </select>&nbsp;&nbsp;
+                        </div>
                         <?=dateHtml($record_info['base_info'],'base_start_date',$mValid->getDisableValid('base_start_date'));?>
+
                     </td>
                 </tr>
 
@@ -279,6 +270,13 @@ EOF;
                     <td align="right"><em class="c-yel">*</em> 员工填写提报时间：&nbsp;</td>
                     <td class="jsline">
                         <?=dateHtml($record_info['base_info'],'staff_sub_start_date',$mValid->getDisableValid('staff_sub_start_date'));?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="right">按月生成：&nbsp;</td>
+                    <td>
+                        <input <?=$mValid->getDisableValid('create_on_month_status');?>  type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
                     </td>
                 </tr>
 

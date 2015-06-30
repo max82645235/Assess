@@ -77,7 +77,7 @@
                     <th width="100" style="text-align: center;">考核周期</th>
                     <th width="200" style="text-align: center;">考核时间</th>
                     <th width="200" style="text-align: center;">考核类型</th>
-                    <th width="200" style="text-align: center;">考核状态</th>
+                    <th width="200" style="text-align: center;">流程状态</th>
                     <th width="100" style="text-align: center;">得分</th>
                 </tr>
                 <?php if($tableData){?>

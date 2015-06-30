@@ -82,7 +82,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">¿¼ºË×´Ì¬£º&nbsp;</td>
+                        <td align="right">Á÷³Ì×´Ì¬£º&nbsp;</td>
                         <td id="attr_type_checkboxes_td">
                             <?php
                                 if($_REQUEST['act']=='hrViewStaffDetail'){
