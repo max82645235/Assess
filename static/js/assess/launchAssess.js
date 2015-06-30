@@ -28,6 +28,8 @@ Assess.prototype = {
             $("#attr_type_checkboxes_td").parents('tr').hide();
             $(".attr_content").hide();
         }
+
+        this.selectAttrType();
     },
 
     getLeadDirectSetValue:function(){

@@ -16,7 +16,7 @@
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
-            <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
+            <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 92%;">
                 <input type="hidden" name="m" value="report">
                 <input type="hidden" name="a" value="assessReport">
                 <input type="hidden" name="act" value="assessReportList">
@@ -60,12 +60,12 @@
                         <?php }?>
                     </select>
                 </div>
-                <div class="jssel" style="z-index:98">
+                <div class="jssel" style="z-index:98;margin-bottom: 5px;"">
                     &nbsp;&nbsp;&nbsp;考核人姓名：
-                    <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="请输入考核人姓名"  style="margin-bottom: 3px;">
+                    <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="请输入考核人姓名"  >
                 </div>
-                <div class="jssel" style="z-index:98;margin-left: 20px;margin-bottom: 5px;">
-                    <input type="submit" value="搜索" class="btn48">
+                <div class="jssel" style="z-index:98;margin-bottom: 3px;">
+                    &nbsp;<input type="submit" value="搜索" class="btn48">
                 </div>
             </form>
         </div>
@@ -89,7 +89,13 @@
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
-                            <td><?=AssessDao::$attrTypeMaps[$data['assess_attr_type']]?></td>
+                            <td>
+                                <?php if(in_array($data['assess_attr_type'],array(1,2))){?>
+                                    量化指标/工作任务类
+                                <?php }else{?>
+                                    <?=AssessDao::$attrTypeMaps[$data['assess_attr_type']]?>
+                                <?php }?>
+                            </td>
                             <td><?=AssessFlowDao::$UserAssessStatusByHr[$data['user_assess_status']]?></td>
                             <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>
                         </tr>

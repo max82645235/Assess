@@ -75,10 +75,21 @@ class AssessAttrWidget{
         }
     }
 
-    public function renderItemTable($itemInfo,$assessAttrType){
+    public function renderItemTable($record_info){
+        $itemInfo = $record_info['item'];
+        $assessAttrType = $record_info['relation']['assess_attr_type'];
+        $prefixPathArr = explode(',',self::$renderPathMaps[$assessAttrType]);
+        $itemList = array();
+        foreach($itemInfo as $k=>$item){
+            $t = AssessDao::$AttrRecordTypeMaps[$item['attr_type']];
+            if(in_array($t,$prefixPathArr)){
+                $itemList[] = $item;
+            }
+        }
+
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);
-        $this->tpl->set_data(array('itemInfo'=>$itemInfo,'widget'=>$this,'assessAttrType'=>$assessAttrType));
+        $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType));
         $this->tpl->render();
     }
 }

@@ -6,7 +6,7 @@
     ?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th width="40%">任务类型</th>
+            <th width="40%">考核类型</th>
             <th>考核项</th>
             <th>权重</th>
             <th>自评分</th>
@@ -80,7 +80,7 @@
     <?php $itemList = unserialize($itemInfo[0]['itemData']);?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th>任务类型</th>
+            <th>考核类型</th>
             <th width="15%">分值金额转化率(元/分)</th>
             <th>考核项</th>
             <th>自评分</th>
@@ -122,12 +122,7 @@
     <?php $itemList = unserialize($itemInfo[0]['itemData']);?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <?php if($key==0){?>
-                <td rowspan="<?=count($itemList)?>">
-                    <?=($key==0)?AssessDao::$attrTypeMaps[$itemInfo[0]['attr_type']]:'';?>
-                </td>
-            <?php }?>
-            <td>
+            <th>考核类型</th>
             <th>提成点</th>
             <th>完成金额</th>
             <th>合计</th>

@@ -179,7 +179,7 @@ class AssessFlowDao extends BaseDao{
     //获取用户考核列表页
     public function getMyAssessSearchHandlerListSql($userId,$conditionParams = array()){
         $sql = "select [*] from sa_assess_user_relation as a
-                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId}";
+                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId} and b.base_status>0";
         $pageConditionUrl = '';
         $resultList = array();
         if(isset($conditionParams['assess_period_type']) && $conditionParams['assess_period_type']){
@@ -284,7 +284,7 @@ class AssessFlowDao extends BaseDao{
         }
 
         //考核状态
-        if(isset($params['user_assess_status']) && $params['user_assess_status']){
+        if(isset($params['user_assess_status']) && $params['user_assess_status']!==''){
             $addSql.=" and a.user_assess_status={$params['user_assess_status']}";
         }
 
@@ -313,7 +313,7 @@ class AssessFlowDao extends BaseDao{
         $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username from sa_assess_user_relation as a
                 inner join sa_assess_base as b on a.base_id=b.base_id
                 inner join sa_user as c on a.userId=c.userId
-                where 1=1 {$addSql}";
+                where 1=1 {$addSql} group  by a.base_id ";
         $retData = $this->db->GetAll($sql);
         return $retData;
     }

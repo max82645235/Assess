@@ -7,21 +7,21 @@
             <table class="sm_xsmbadd" width="100%">
                 <?php
                 if(isset($renderData['itemData']) && $renderData['itemData']){
-                    $itemData = unserialize($renderData['itemData']);?>
-                    <?php if($itemData){?>
+                    $itemDataList = unserialize($renderData['itemData']);?>
+                    <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $itemData){?>
                             <tr>
                                 <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>提成点： </span>
-                                        <input <?=$widget->disabled()?>  type="text" value="<?=$itemData['tc_name']?>" name="tc_name" class="width40 j-notnull percent" />&nbsp;%
+                                        <input <?=$widget->disabled()?>  type="text" value="<?=$itemData['tc_name']?>" tagname="tc_name" class="width40 j-notnull percent" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 完成金额：</span>
-                                            <input  type="text" value="<?=$itemData['finishCash']?>" name="finishCash"  class="width40 j-notnull" />
+                                            <input  type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash"  class="width40 j-notnull" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -34,14 +34,14 @@
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>提成点： </span>
-                                <input type="text" value="" name="tc_name" class="width40 j-notnull percent" />&nbsp;%
+                                <input type="text" value="" tagname="tc_name" class="width40 j-notnull percent" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 完成金额：</span>
-                                    <input type="text" value="<?=$itemData['finishCash']?>" name="finishCash"  class="width40 j-notnull" />
+                                    <input type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash"  class="width40 j-notnull" />
                                 </div>
                             </td>
                         <?php }?>

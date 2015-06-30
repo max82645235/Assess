@@ -272,6 +272,10 @@ class AssessDao extends BaseDao{
                     $tmpArr['user_assess_status'] = 0;
                     $sql = self::get_insert_sql($tbl,$tmpArr);
                     $this->db->Execute($sql);
+                }else{
+                    $where = ' rid='.$findRecord['rid'];
+                    $sql = self::get_update_sql($tbl,$tmpArr,$where);
+                    $this->db->Execute($sql);
                 }
             }
         }

@@ -32,7 +32,7 @@
         var AssessInstance =  new Assess();
         $(function(){
             AssessInstance.initHide();
-            AssessInstance.triggerBusSelect(1); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(0); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
@@ -71,7 +71,7 @@
 
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect(1);
+                AssessInstance.triggerBusSelect(0);
             });
 
             //考核人模糊搜索
@@ -166,7 +166,7 @@ function dateHtml($data,$key,$disabled){
             <script type="text/javascript">
         Calendar.setup({
                     inputField : "{$key}",
-                    ifFormat : "%Y-%m",
+                    ifFormat : "%Y-%m-%d",
                     showsTime : false,
                     button : "f_trigger_{$key}",
                     singleClick : false,
@@ -217,9 +217,18 @@ EOF;
                     <!--  @todo 被考核人列表选择-->
                     <td align="right" valign="top"><em class="c-yel">*</em> 被考核人：&nbsp;</td>
                     <td>
+                        <?php
+                            if($relationUsers){
+                                $uidsStr = '';
+                                foreach($relationUsers as $k=>$user){
+                                    $uidsStr.=$user['userId'].",";
+                                }
+                                $uidsStr = substr($uidsStr,0,-1);
+                            }
+                        ?>
                         <input <?=$mValid->getDisableValid('username');?>  type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
                         <input type="hidden" id="username_userId" value=""/>
-                        <input <?=$mValid->getDisableValid('uids');?>  type="hidden" name="uids" id="uids" value="" />
+                        <input <?=$mValid->getDisableValid('uids');?>  type="hidden" name="uids" id="uids" value="<?=$uidsStr?>" />
                         <input <?=$mValid->getDisableValid('adduser');?>  type="button" class="btn48 adduser" value="添加" id="adduser" name="adduser"/>
                         <input <?=$mValid->getDisableValid('selectUserList');?>  type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
                         <div class="shcon div_userlist" style="width: 500px;<?php if(!$relationUsers){?>display: none;<?php }?>">

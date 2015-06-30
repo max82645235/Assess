@@ -161,7 +161,7 @@
                 <?=$page_nav?>
             </p>
             <div>
-                     <input type="button" name="" value="自行设置" class="btn139" id="assess_diy_set" style="cursor:pointer;">
+                     <input type="button" name="" value="由员工自行设置"  id="assess_diy_set" style="cursor:pointer;border:2px outset buttonface;">
 
             </div>
 

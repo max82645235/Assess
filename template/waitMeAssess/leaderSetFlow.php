@@ -21,6 +21,7 @@
     <script>
         var AssessInstance =  new Assess();
         $(function(){
+            AssessInstance.initHide();
             $(".commission_indicator_parent").each(function(){
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
