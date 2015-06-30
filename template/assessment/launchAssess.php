@@ -166,7 +166,7 @@ function dateHtml($data,$key,$disabled){
             <script type="text/javascript">
         Calendar.setup({
                     inputField : "{$key}",
-                    ifFormat : "%Y-%m-%d",
+                    ifFormat : "%Y-%m",
                     showsTime : false,
                     button : "f_trigger_{$key}",
                     singleClick : false,

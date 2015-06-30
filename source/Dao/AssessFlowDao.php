@@ -275,4 +275,46 @@ class AssessFlowDao extends BaseDao{
         $sql = "update sa_assess_user_relation set user_assess_status=4 where base_id={$base_id} and userId ={$userId} and user_assess_status=3";
         $this->db->Execute($sql);
     }
+
+    public function getAssessReportData($params){
+        $addSql = '';
+        //考核类型
+        if(isset($params['assess_attr_type']) && $params['assess_attr_type']){
+            $addSql.=" and a.assess_attr_type={$params['assess_attr_type']}";
+        }
+
+        //考核状态
+        if(isset($params['user_assess_status']) && $params['user_assess_status']){
+            $addSql.=" and a.user_assess_status={$params['user_assess_status']}";
+        }
+
+        //考核周期
+        if(isset($params['assess_period_type']) && $params['assess_period_type']){
+            $addSql.=" and b.assess_period_type={$params['assess_period_type']}";
+        }
+
+        //年份
+        if(isset($params['assess_year']) && $params['assess_year']){
+            $addSql.=" and b.assess_year={$params['assess_year']}";
+        }
+
+        //月份
+        if(isset($params['assess_month']) && $params['assess_month']){
+            $params['assess_month'] = intval($params['assess_month']);
+            $addSql.=" and b.assess_month={$params['assess_month']}";
+        }
+
+        //姓名
+        if(isset($params['username']) && $params['username']){
+            $addSql.=" and c.username like '%{$params['username']}%' ";
+        }
+
+
+        $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username from sa_assess_user_relation as a
+                inner join sa_assess_base as b on a.base_id=b.base_id
+                inner join sa_user as c on a.userId=c.userId
+                where 1=1 {$addSql}";
+        $retData = $this->db->GetAll($sql);
+        return $retData;
+    }
 }

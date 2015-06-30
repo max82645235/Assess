@@ -31,9 +31,9 @@
                             echo $indicatorInfo;
                             ?>
                         </td>
-                        <td><?=$data['qz']?>%</td>
+                        <td><?=($data['qz'])?$data['qz'].'%':'';?></td>
                         <td><?=$data['selfScore']?></td>
-                        <td><?=$data['leadScore']?>%</td>
+                        <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
                                 if($data['qz'] && $data['leadScore']){
@@ -42,7 +42,7 @@
                                     echo intval($t);
                                 }
 
-                            ?>%
+                            ?>
                         </td>
                     </tr>
                 <?php }?>
@@ -55,9 +55,9 @@
                             </td>
                         <?php }?>
                         <td><?=$data['job_name']?></td>
-                        <td><?=$data['qz']?>%</td>
+                        <td><?=($data['qz'])?$data['qz'].'%':'';?></td>
                         <td><?=$data['selfScore']?></td>
-                        <td><?=$data['leadScore']?>%</td>
+                        <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
                                  if($data['qz'] && $data['leadScore']){
