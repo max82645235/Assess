@@ -150,7 +150,7 @@
                             <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>
-                                <a href="?m=myassessment&a=waitMeAssess&act=staffDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">员工自行设置</a>
+                                <a href="?m=myassessment&a=waitMeAssess&act=mulAssessDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">员工自行设置</a>
                             </td>
                         </tr>
                     <?php }?>
@@ -161,7 +161,7 @@
                 <?=$page_nav?>
             </p>
             <div>
-                     <input type="button" name="" value="由员工自行设置"  id="assess_diy_set" style="cursor:pointer;border:2px outset buttonface;">
+                     <input type="button" name="" value="由员工自行设置"  class="btn139"  id="assess_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
 
             </div>
 

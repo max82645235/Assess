@@ -161,6 +161,11 @@ if($_REQUEST['act']=='leaderSetFlow'){
 
 //多考核项员工自设
 if($_REQUEST['act']=='mulAssessDiySet'){
+    $jp = false;
+    if(!is_array($_REQUEST['diyItemList'])){
+        $jp = true;
+        $_REQUEST['diyItemList'] = array($_REQUEST['diyItemList']);
+    }
     $baseList = $_REQUEST['diyItemList'];
     $assessFlowDao = new AssessFlowDao();
     $ret = array();
@@ -171,9 +176,16 @@ if($_REQUEST['act']=='mulAssessDiySet'){
             }
         }
     }
-    echo json_encode($ret);
-    die();
+    if($jp ==true){
+        $conditionUrl = $assessFlowDao->getConditionParamUrl(array('act'));
+        $location = P_SYSPATH."index.php?act=waitMeList&$conditionUrl";
+        header("Location: $location");
+    }else{
+        echo json_encode($ret);
+        die();
+    }
 }
+
 
 //单考核项员工自设
 if($_REQUEST['act']=='singleAssessDiySet'){
