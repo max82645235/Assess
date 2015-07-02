@@ -102,11 +102,11 @@
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
-                    <th class="left" width="200"  style="text-align: center;">被考核人</th>
+                    <th  width="100"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
                     <th width="150" style="text-align: center;">考核状态</th>
                     <th width="150" style="text-align: center;">得分</th>
-                    <th  width="300" style="text-align: center;">操作</th>
+                    <th  width="150" style="text-align: center;">操作</th>
                 </tr>
                 <?php
                 $btnArr = array(
@@ -121,7 +121,7 @@
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
                             </td>
-                            <td class="left"><?=$data['username']?></td>
+                            <td ><?=$data['username']?></td>
                             <td class="left"><?=$data['deptlist']?></td>
                             <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
                             <td><?=($data['score'])?$data['score']:'';?></td>

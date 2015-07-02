@@ -118,10 +118,12 @@
             //Ìí¼Ó¿¼ºËÈË
             $("#adduser").click(function(){
                 var userId = $("#username_userId").val();
-                var t = $("#username").val().split('_');
-                var index = t.length-1;
-                var username = t[index];
-                AssessInstance.adduser(userId,username);
+                if(userId){
+                    var t = $("#username").val().split('_');
+                    var index = t.length-1;
+                    var username = t[index];
+                    AssessInstance.adduser(userId,username);
+                }
                 $.myValidate.element('#username');
             });
 

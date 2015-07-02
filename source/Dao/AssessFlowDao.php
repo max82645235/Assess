@@ -57,7 +57,6 @@ class AssessFlowDao extends BaseDao{
 
     public function waitMeSearchHandlerList($searchParam){
         $searchResult = array();
-        $searchParam['base_status'] = 1; // 已发布状态
         $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
         $searchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
         //附加领导对应的员工的baseIdList
@@ -93,6 +92,7 @@ class AssessFlowDao extends BaseDao{
                                  inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId  $addStatusSql
                                  inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
         $result = $this->db->getAll($getRelationBaseIdSql);
+
         if($result){
             foreach($result as $data){
                 //过滤掉待HR发布状态的考核
@@ -101,7 +101,6 @@ class AssessFlowDao extends BaseDao{
                 }
             }
         }
-
         return $baseIdList;
     }
 
@@ -234,7 +233,7 @@ class AssessFlowDao extends BaseDao{
                             break;
 
                         case 3://打分类
-                            $finalScore+=$item['cash']*$item['leadScore'];
+                            $finalScore+=$data['cash']*$item['leadScore'];
                             break;
 
                         case 4://提成类

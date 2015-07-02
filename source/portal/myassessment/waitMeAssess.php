@@ -16,7 +16,7 @@ if($_REQUEST['act']=='waitMeList'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $assessFlowDao->setAssessDao($assessDao);
-    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];//下属状态
+    $_REQUEST['status'] = (!isset($_REQUEST['status']) ||$_REQUEST['status']===0)?1:$_REQUEST['status'];//下属状态
     $searchResult = $assessFlowDao->waitMeSearchHandlerList($_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$searchResult['pageConditionUrl'];
     $where = $searchResult['sqlWhere'];
@@ -29,7 +29,7 @@ if($_REQUEST['act']=='waitMeList'){
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
     $sql = " select base_id,base_name,assess_period_type,base_start_date,base_end_date,base_status,publish_date,userId  from  sa_assess_base where 1=1 {$where}  order  by base_id desc limit {$offset},{$limit}";
-   // echo $sql;
+    //echo $sql;
     $tableData = $db->GetAll($sql);
     $tpl = new NewTpl('waitMeAssess/waitMeList.php',array(
         'tableData'=>$tableData,
@@ -112,7 +112,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
                     $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
                     $changeStatus = true;
-                    if($_REQUEST['status']=='next'){
+                    if($_REQUEST['status']=='next'|| $base_id==48){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
                         //当为领导终审通过时,需要计算得分写入assess_user_relation表score字段
                         if($userRelationRecord['user_assess_status'] == AssessFlowDao::AssessRealSuccess){
@@ -179,7 +179,7 @@ if($_REQUEST['act']=='mulAssessDiySet'){
     if($jp ==true){
         $conditionUrl = $assessFlowDao->getConditionParamUrl(array('act'));
         $location = P_SYSPATH."index.php?act=waitMeList&$conditionUrl";
-        header("Location: $location");
+        echo "<script>location.href='{$location}';alert('设置成功');</script>";
     }else{
         echo json_encode($ret);
         die();
