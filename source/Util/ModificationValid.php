@@ -74,6 +74,17 @@ class ModificationValid{
                 break;
 
             case AssessDao::HrAssessSubbing:
+                            if($this->getIsLeadDirect()){
+                                if(in_array($element,self::$elementsMap['basicElement'])){
+                                    return true;
+                                }
+                            }else{
+                                if(in_array($element,self::$elementsMap['flowElement'])){
+                                    return false;
+                                }else{
+                                    return true;
+                                }
+                            }
                             return false;
                 break;
             case AssessDao::HrAssessOver:

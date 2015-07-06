@@ -441,6 +441,29 @@ Assess.prototype = {
                 status = false;
             }
         });
+
+        if(this.getLeadDirectSetValue()==0){
+            var attrType = this.getAttrTypeCheckedValue();
+            var trStatus = true;
+            if(attrType==1){
+                if($(".attr_form_1[flag=1] table").find("tr:visible").length==0 && $(".attr_form_1[flag=2] table").find("tr:visible").length==0){
+                    trStatus = false;
+                }
+            }else if(attrType==2){
+                if($(".attr_form_2[flag=3] table").find("tr:visible").length==0){
+                    trStatus = false;
+                }
+            }else if(attrType==3){
+                if($(".attr_form_3[flag=4] table").find("tr:visible").length==0){
+                    trStatus = false;
+                }
+            }
+            if(!trStatus){
+                alert('ÇëÌí¼Ó¿¼ºËÏî£¡');
+                status =false;
+            }
+        }
+
         return status;
     }
 };

@@ -347,6 +347,9 @@ class AssessDao extends BaseDao{
         if($findRecord = $this->db->GetRow($findRecordSql)){
             $isMy = $findRecord['userId'] == getUserId();
             if($auth->setIsMy($isMy)->validIsAuth('publishAssess')){
+                $findRecord['base_status'] = self::HrAssessPublish;//已发布
+                $findRecord['publish_date'] = date("Y-m-d");
+                $where = " base_id={$findRecord['base_id']}";
                 //如果不是由领导直接设置，需要把该base_id对应的考核人考核状态改为待考核
                 if($findRecord['lead_direct_set_status']==0){
                     $findRecord['base_status'] = self::HrAssessChecking;//考核中
@@ -355,9 +358,6 @@ class AssessDao extends BaseDao{
                     $sql = self::get_update_sql(" sa_assess_user_relation ",$data,$where);
                     $this->db->Execute($sql);
                 }
-                $findRecord['base_status'] = self::HrAssessPublish;//已发布
-                $findRecord['publish_date'] = date("Y-m-d");
-                $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
                 if($findRecord['lead_direct_set_status']==1){

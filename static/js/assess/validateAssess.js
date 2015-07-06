@@ -101,7 +101,9 @@ $(function(){
             lead_sub_start_date:{
                 dateFormat:true
             },
-
+            staff_sub_start_date:{
+                dateFormat:true
+            },
             //commissionÀàĞÍ
             attr1_weight:{
                 required: true,
