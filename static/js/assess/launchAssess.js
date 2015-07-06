@@ -162,7 +162,7 @@ Assess.prototype = {
                 //量化指标类
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table");
-                c_table.find("tr").each(function(){
+                c_table.find("tr:visible").each(function(){
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
                     tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
@@ -176,7 +176,7 @@ Assess.prototype = {
                 //工作任务类
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table");
-                j_table.find("tr").each(function(k,v){
+                j_table.find("tr:visible").each(function(k,v){
                     var tmp = {};
                     tmp.job_name = $(this).find("input[tagname=job_name]").val();
                     tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
@@ -192,7 +192,7 @@ Assess.prototype = {
                 var s_data = {table_data:[]};
                 var s_table = $(".attr_form_2[flag=3] table");
                 s_data.cash = $(".attr_form_2[flag=3] input[name=attr3_cash]").val();
-                s_table.find("tr").each(function(k,v){
+                s_table.find("tr:visible").each(function(k,v){
                     var tmp = {};
                     tmp.score_name = $(this).find("input[tagname=score_name]").val();
                     tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
@@ -207,7 +207,7 @@ Assess.prototype = {
                 var t_data = {table_data:[]};
                 var t_table = $(".attr_form_3[flag=4] table");
                 t_data.cash = $(".attr_form_3[flag=4] input[name=attr3_cash]").val();
-                t_table.find("tr").each(function(k,v){
+                t_table.find("tr:visible").each(function(k,v){
                     var tmp = {};
                     tmp.tc_name = $(this).find("input[tagname=tc_name]").val();
                     tmp.finishCash = $(this).find("input[tagname=finishCash]").val();
@@ -280,29 +280,24 @@ Assess.prototype = {
     delTrCache:{},
     //删除item节点
     delItemDom:function(dBtn,type){
-        var reg = /^.*\[@\]$/;
         var find = '';
         if(type==1 || type ==2){
             find = 'td:eq(1) input';
         }else if(type==3){
             find = 'td:eq(0) input';
         }
-        if(reg.test($(dBtn).parents('tr').find(find).attr('name'))){
-            return false;
-        }
 
         if($(dBtn).parents('table').find('tr').length==1){
             var name = $(dBtn).parents('tr').find(find).attr('name');
-            var reg = /^.*_old_.*$/;
-            if(reg.test(name)){
+            var reg_new = /^.*_new_.*$/;
+            var reg_old = /^.*_old_.*$/;
+            if(reg_new.test(name) ||reg_old.test(name)){
                 var tmp = name.split('_');
                 name = tmp[0]+"_new_[@]";
                 $(dBtn).parents('tr').find(find).attr('name',name);
                 this.delTrCache[type]=  $.extend(true,{}, $(dBtn).parents('tr'));
             }
         }
-
-
         $(dBtn).parents('tr').remove();
     },
     triggerIndicatorSelect:function(jSelectDom){

@@ -30,7 +30,7 @@
                     <?php }?>
                 <?php }?>
                 <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
-                    <tr>
+                    <tr style="display: none;">
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>Ã·≥…µ„£∫ </span>

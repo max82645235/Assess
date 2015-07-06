@@ -47,6 +47,7 @@ if($_REQUEST['act']=='myStaffList'){
     $assessDao = new AssessDao();
     $assessBaseRecord = $assessDao->getAssessBaseRecord($base_id);
     $assessFlowDao = new AssessFlowDao();
+    $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];//ÏÂÊô×´Ì¬
     $resultList = $assessFlowDao->getStaffListForLeaderSql($_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$resultList['pageConditionUrl'];
     $getStaffSql = $resultList['staffListSql'];

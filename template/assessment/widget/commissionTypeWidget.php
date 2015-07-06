@@ -52,7 +52,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
-                                            <input  type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="leadScore_old_<?=$key?>"  class="width40 j-notnull {validate:{ required:true,percent:true }}" />&nbsp;%
+                                            <input  type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="leadScore_old_<?=$key?>"  class="width40 j-notnull {validate:{ required:true,percent:true }}" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -69,7 +69,7 @@
                     <?php }?>
                 <?php }?>
                 <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
-                    <tr>
+                    <tr style="display: none;">
                         <td width="25%">
                             <em class="c-yel">*</em>
                             <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
@@ -102,7 +102,7 @@
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 领导评分：</span>
-                                    <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull {validate:{ required:true,percent:true}}" />&nbsp;%
+                                    <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull {validate:{ required:true,percent:true}}" />
                                 </div>
                             </td>
                         <?php }?>

@@ -111,6 +111,7 @@ class AssessFlowDao extends BaseDao{
         $addSql = "";
         $pageConditionUrl = '';
         $resultList = array();
+        $statusSql = '';
         if(isset($conditionParams['user_assess_status']) && $conditionParams['user_assess_status']!==''){
             $addSql.= "and b.user_assess_status={$conditionParams['user_assess_status']}";//附加用户填写状态条件
             $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
@@ -120,9 +121,15 @@ class AssessFlowDao extends BaseDao{
             $addSql.= "and a.username like'%{$conditionParams['username']}%'"; //附加用户名模糊查询条件
             $pageConditionUrl.="&username={$conditionParams['username']}";
         }
+
+        if(isset($conditionParams['status']) && $conditionParams['status']){
+            $statusSql = "and c.status={$conditionParams['status']} "; //附加用户名模糊查询条件
+            $pageConditionUrl.="&status={$conditionParams['status']}";
+        }
+
         $resultList['staffListSql'] = "select [*] from sa_user as a
                 inner join sa_assess_user_relation as b on a.userId=b.userId and b.base_id={$base_Id} $addSql
-                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId ";
+                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId {$statusSql}";
         $resultList['pageConditionUrl'] = $pageConditionUrl;
         return $resultList;
 

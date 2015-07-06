@@ -85,6 +85,13 @@
                         <?php }?>
                     </select>
                 </div>
+                <div class="jssel" style="z-index:98">
+                    &nbsp;&nbsp;&nbsp;下属状态：
+                    <select name="status">
+                        <option value="1" <?php if(isset($_REQUEST['status']) && $_REQUEST['status']==1){?> selected="selected"<?php }?>>直属</option>
+                        <option value="2"<?php if(isset($_REQUEST['status']) && $_REQUEST['status']==2){?> selected="selected"<?php }?>>非直属</option>
+                    </select>
+                </div>
                 <div  class="jssel" style="z-index:98">
                     &nbsp;&nbsp;&nbsp;被考核人：
                     <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="输入被考核人姓名"  style="margin-bottom: 3px;">
