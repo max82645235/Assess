@@ -113,7 +113,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
                     $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
                     $changeStatus = true;
-                    if($_REQUEST['status']=='next'|| $base_id==48){
+                    if($_REQUEST['status']=='next'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
                         //当为领导终审通过时,需要计算得分写入assess_user_relation表score字段
                         if($userRelationRecord['user_assess_status'] == AssessFlowDao::AssessRealSuccess){
@@ -136,8 +136,13 @@ if($_REQUEST['act']=='leaderSetFlow'){
                 $assessDao->setAssessUserItemRecord($uids,$attrRecord);
                 //校验该考核下所有考核人状态，如果都已经设置为考核中（3） 需要变更base主表状态
                 if($_REQUEST['status']=='start'){
-                    $assessDao->checkAssessAllUserStatus($base_id);
+                    $assessDao->checkAssessAllUserCheckingStatus($base_id);
                 }
+
+                if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealSuccess){
+                    $assessDao->checkAssessAllUserSuccessStatus($base_id);
+                }
+
             }
         }catch (Exception $e){
             throw new Exception('500');
@@ -242,4 +247,9 @@ if($_REQUEST['act']=='leadViewStaffDetail'){
     ));
     $tpl->render();
     die();
+}
+
+//批量复制待我创建
+if($_REQUEST['act']=='mulCopyCreateAssess'){
+
 }

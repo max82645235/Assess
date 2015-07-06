@@ -520,7 +520,8 @@ class AssessDao extends BaseDao{
         return $retList;
     }
 
-    public function checkAssessAllUserStatus($base_id){
+    //判断用户考核状态，全为 【考核中】时，需要更新主表
+    public function checkAssessAllUserCheckingStatus($base_id){
         $record = $this->getRelatedUserRecord($base_id);
         if($record){
             $allStatus = true;
@@ -534,6 +535,46 @@ class AssessDao extends BaseDao{
                 $updateBaseStatus = self::HrAssessChecking;
                 //将base表[已发布]状态改为[考核中]
                 $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =1";
+                $this->db->Execute($updateSql);
+            }
+        }
+    }
+
+    //判断用户考核状态，全为 【提报状态】，需要更新主表
+    public function checkAssessAllUserSubbingStatus($base_id){
+        $record = $this->getRelatedUserRecord($base_id);
+        if($record){
+            $allStatus = true;
+            foreach($record as $data){
+                if($data['user_assess_status']!=4){
+                    $allStatus = false;
+                    break;
+                }
+            }
+            if($allStatus){
+                $updateBaseStatus = self::HrAssessSubbing;
+                //将base表[考核中]状态改为[提报中]
+                $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =2";
+                $this->db->Execute($updateSql);
+            }
+        }
+    }
+
+    //判断用户考核状态，全为 【审核通过】时，需要更新主表
+    public function checkAssessAllUserSuccessStatus($base_id){
+        $record = $this->getRelatedUserRecord($base_id);
+        if($record){
+            $allStatus = true;
+            foreach($record as $data){
+                if($data['user_assess_status']!=6){
+                    $allStatus = false;
+                    break;
+                }
+            }
+            if($allStatus){
+                $updateBaseStatus = self::HrAssessOver;
+                //将base表[提报中]状态改为[考核结束]
+                $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =3";
                 $this->db->Execute($updateSql);
             }
         }

@@ -130,9 +130,11 @@ if($_REQUEST['act']=='staffViewStaffDetail'){
 
 if($_REQUEST['act']=='triggerStatusUpdate'){
     $assessFlowDao = new AssessFlowDao();
+    $assessDao = new AssessDao();
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
     $assessFlowDao->triggerStatusUpdate($base_id,$userId);
+    $assessDao->checkAssessAllUserSubbingStatus($base_id);
     $conditionUrl = $assessFlowDao->getConditionParamUrl(array('act'));
     $location = P_SYSPATH."index.php?act=myAssessList&$conditionUrl";
     header("Location: $location");
