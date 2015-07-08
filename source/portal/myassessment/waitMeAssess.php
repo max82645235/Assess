@@ -8,7 +8,7 @@
 */
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
-require_once BATH_PATH.'source/Util/ModificationValid.php';
+require_once BATH_PATH.'source/Util/btnValid/LeaderValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'waitMeList':$_REQUEST['act'];
 
 //¥˝Œ“…Û∫À¡–±Ì“≥
@@ -79,7 +79,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
     $base_id = $_REQUEST['base_id'];
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
-    $mValid = new ModificationValid($base_id);
+    $mValid = new LeaderValid($base_id,$userId);
     if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next','back','start'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
@@ -170,7 +170,7 @@ if($_REQUEST['act']=='mulAssessDiySet'){
     $jp = false;
     if(!is_array($_REQUEST['diyItemList'])){
         $jp = true;
-        $_REQUEST['diyItemList'] = array($_REQUEST['diyItemList']);
+        $_REQUEST['diyItemList'] = array($_REQUEST['base_id']);
     }
     $baseList = $_REQUEST['diyItemList'];
     $assessFlowDao = new AssessFlowDao();

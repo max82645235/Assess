@@ -12,7 +12,7 @@ function checkUserAuthority(){
     return true;
 }
 require_once BATH_PATH.'source/Dao/AssessDao.php';
-require_once BATH_PATH.'source/Util/ModificationValid.php';
+require_once BATH_PATH.'source/Util/btnValid/HrValid.php';
 
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
 if($_REQUEST['act']=='launchAssess'){
@@ -20,7 +20,7 @@ if($_REQUEST['act']=='launchAssess'){
     $user_id = getUserId();//当前用户身份Id
     $assessDao = new AssessDao();
     if(checkUserAuthority()){
-        $mValid = new ModificationValid($base_id);
+        $mValid = new HrValid($base_id);
         //ajax表单提交
         if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
             if(isset($_REQUEST['subFormData']['baseData'])){

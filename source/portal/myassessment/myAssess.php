@@ -7,7 +7,7 @@
  */
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
-require_once BATH_PATH.'source/Util/ModificationValid.php';
+require_once BATH_PATH.'source/Util/btnValid/StaffValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'myAssessList':$_REQUEST['act'];
 //我的考核列表页
 if($_REQUEST['act']=='myAssessList'){
@@ -48,7 +48,7 @@ if($_REQUEST['act']=='myAssessFlow'){
     $assessFlowDao = new AssessFlowDao();
     $userId = getUserId();
     $base_id = $_REQUEST['base_id'];
-    $mValid = new ModificationValid($base_id);
+    $mValid = new StaffValid($base_id,$userId);
     if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
