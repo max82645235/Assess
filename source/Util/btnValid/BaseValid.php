@@ -16,12 +16,14 @@ abstract class BaseValid{
             'uids','lead_direct_set_status','assess_attr_type'
         )
     );
+    public $baseId;
     public $record;
     protected $isLeadDirect;
     public function __construct($baseId){
         global $db;
         global $ADODB_FETCH_MODE;
         $this->db = $db;
+        $this->baseId = $baseId;
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
         $sql = "select * from sa_assess_base where base_id={$baseId}";
         $this->record = $this->db->GetRow($sql);
@@ -39,4 +41,8 @@ abstract class BaseValid{
     }
 
     abstract public function validElement();
+
+    public function getClassName(){
+        return get_class($this);
+    }
 }

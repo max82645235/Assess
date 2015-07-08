@@ -170,7 +170,9 @@ Assess.prototype = {
                     tmp.qz = $(this).find("input[tagname=qz]").val();
                     tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
                     tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
-                    c_data['table_data'].push(tmp);
+                    if(tmp.qz && tmp.indicator_child){
+                        c_data['table_data'].push(tmp);
+                    }
                 });
 
                 //工作任务类
@@ -183,7 +185,9 @@ Assess.prototype = {
                     tmp.qz = $(this).find("input[tagname=job_qz]").val();
                     tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
                     tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
-                    j_data['table_data'].push(tmp);
+                    if(tmp.qz &&tmp.job_name){
+                        j_data['table_data'].push(tmp);
+                    }
                 });
                 return {commission:c_data,job:j_data};
             },
@@ -233,7 +237,7 @@ Assess.prototype = {
         var itemContainer = jDom.parent().find('.kctjcon:eq(0) .sm_div table');
         var len = itemContainer.find('tr').length;
         if( len>0){
-            var clonedItemDom = itemContainer.find('tr:eq(0)');
+            var clonedItemDom = itemContainer.find('tr.tpl_tr');
             var cDom = $.extend(true,{}, clonedItemDom);
             var html  = cDom.html().replace(new RegExp(/(\[@\])/g),len);
             itemContainer.append("<tr>"+html+"</tr>");
@@ -437,6 +441,11 @@ Assess.prototype = {
     submitSelectValid:function(){
         var status = true;
         $("#bus_area_child,.commission_indicator_child").each(function(){
+            if($(this).attr('name')=='indicator_child'){
+                if($(this).parents('tr').find('input[tagname=qz]').val()==''){
+                    return true;
+                }
+            }
             if(Assess.prototype.selectChildValid(this)==false){
                 status = false;
             }

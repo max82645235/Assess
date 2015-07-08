@@ -67,6 +67,21 @@ $(function(){
         return (value>=0 && value<=100 && re.test(value));
     },'请输出0-100之内的整数');
 
+    $.validator.addMethod('cash',function(value,element,arg){
+        var re = /^[0-9]+.?[0-9]*$/;
+        return (value>=0 && value<=10000000 && re.test(value));
+    },'请输出合适的金额');
+
+
+    $.validator.addMethod('job_name',function(value,element,arg){
+        if(value==''){
+           if($(element).parents('tr').find('input[tagname=job_qz]').val()!=''){
+               return false;
+           }
+        }
+        return true;
+    },'必填字段');
+
     $.validator.addMethod('totalQz',function(value,element,arg){
         var cntQz = 0;
         var emptyStatus = false;
@@ -152,16 +167,6 @@ $(function(){
                 required: true
             },
             attr3_cash:{
-                required: true,
-                number:true
-            },
-
-            //target类型
-            tc_name:{
-                required: true,
-                percent:true
-            },
-            finishCash:{
                 required: true,
                 number:true
             }

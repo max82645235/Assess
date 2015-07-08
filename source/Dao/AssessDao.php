@@ -257,11 +257,30 @@ class AssessDao extends BaseDao{
         }
     }
 
+    public function clearDeleteUser($base_id,$uidArr){
+        $tbl =  "`".DB_PREFIX."assess_user_relation`";
+        $uids = implode(',',$uidArr);
+        $sql = "select count(*) from  {$tbl} where  base_id={$base_id} and userId not in($uids)";
+        $rs = $this->db->GetOne($sql);
+        if($rs>0){
+            $deleteSql = "delete from {$tbl} where base_id={$base_id} and userId not in($uids)";
+            $this->db->Execute($deleteSql);
+            return true;
+        }
+    }
+
+    public function clearDeleteUserItem($base_id,$uidArr){
+        $tbl =  "`".DB_PREFIX."assess_user_item`";
+        $uids = implode(',',$uidArr);
+        $deleteSql = "delete from {$tbl} where base_id={$base_id} and userId not in($uids)";
+        $this->db->Execute($deleteSql);
+    }
 
     public function setAssessUserRelation($uidArr,$baseRecord){
         $base_id = $baseRecord['base_id'];
         if($uidArr && $base_id){
             $tbl =  "`".DB_PREFIX."assess_user_relation`";
+
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 $tmpArr['userId'] = $userId;
@@ -277,6 +296,7 @@ class AssessDao extends BaseDao{
                     $sql = self::get_update_sql($tbl,$tmpArr,$where);
                     $this->db->Execute($sql);
                 }
+                $uids.=$userId.",";
             }
         }
     }

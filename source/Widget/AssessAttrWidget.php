@@ -92,4 +92,23 @@ class AssessAttrWidget{
         $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType));
         $this->tpl->render();
     }
+
+    public function getTrIsShow(){
+        $style = '';
+        $className = $this->mValid->getClassName();
+        $hidden = false;
+        if($className =='HrValid'&& $this->mValid->record && $this->mValid->record['assess_attr_type']){
+            $hidden = true;
+        }
+
+        if($className =='LeaderValid' ||$className =='StaffValid'){
+            if($this->mValid->userAssessData && $this->mValid->userAssessData['assess_attr_type']){
+                $hidden = true;
+            }
+        }
+        if($hidden){
+            $style = 'display:none;';
+        }
+        return $style;
+    }
 }

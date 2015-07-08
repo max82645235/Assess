@@ -14,14 +14,14 @@
                                 <td width="40%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>提成点： </span>
-                                        <input <?=$widget->disabled()?>  type="text" value="<?=$itemData['tc_name']?>" tagname="tc_name" class="width40 j-notnull {validate:{ required:true,percent:true}}" />&nbsp;%
+                                        <input <?=$widget->disabled()?>  type="text" value="<?=$itemData['tc_name']?>" tagname="tc_name" name="tc_name" class="width40 j-notnull {validate:{required:true,percent:true}}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 完成金额：</span>
-                                            <input  type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash"  class="width40 j-notnull  {validate:{ required:true,percent:true}}" />
+                                            <input  style="width: 100px;" type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash" name="finishCash"  class="width40 j-notnull  {validate:{required:true,cash:true}}" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -41,7 +41,7 @@
                             <td width="15%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span><em class="c-yel">*</em> 完成金额：</span>
-                                    <input type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash"  class="width40 j-notnull {validate:{ required:true,percent:true}}" />
+                                    <input type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash"  class="width40 j-notnull {validate:{required:true,cash:true}}" style="width: 100px;" />
                                 </div>
                             </td>
                         <?php }?>

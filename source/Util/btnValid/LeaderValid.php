@@ -5,7 +5,7 @@
  * Date: 15-7-8
 * Time: ÏÂÎç1:19
 */
-require_once './UserValid.php';
+require_once 'UserValid.php';
 class LeaderValid extends UserValid{
     public function validElement($element=''){
         $user_assess_status = $this->userAssessData['user_assess_status'];

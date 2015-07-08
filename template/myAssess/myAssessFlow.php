@@ -44,8 +44,6 @@
             });
 
             $('#saveBtn').click(function(){
-                $("#sub_form").submit();
-                console.log($("#sub_form").validate());return;
                 if($("#sub_form").valid()){
                     var formData = {
                         m:'myassessment',
@@ -72,31 +70,33 @@
             });
 
             $("#nextBtn").click(function(){
-                var formData = {
-                    m:'myassessment',
-                    a:'myAssess',
-                    act:'myAssessFlow',
-                    status:'next'
-                };
-                formData.attrData = AssessInstance.getAttrData();
-                formData.base_id = $("#hidden_base_id").val();
-                formData.userId = $("#hidden_user_id").val();
-                art.dialog.confirm('您确定提交考核审核申请么？',function(){
-                    $.ajax({
-                        type:'post',
-                        url:'/salary/index.php',
-                        data:formData,
-                        dataType:'json',
-                        success:function(retData){
-                            if(retData.status=='success'){
-                                art.dialog({lock:true});
-                                art.dialog.tips('保存成功',2);
-                                var url = "<?=P_SYSPATH."index.php?m=myassessment&a=myAssess&act=myAssessList&".$conditionUrl?>";
-                                AssessInstance.jump(url,2000);
+                if($("#sub_form").valid()){
+                    var formData = {
+                        m:'myassessment',
+                        a:'myAssess',
+                        act:'myAssessFlow',
+                        status:'next'
+                    };
+                    formData.attrData = AssessInstance.getAttrData();
+                    formData.base_id = $("#hidden_base_id").val();
+                    formData.userId = $("#hidden_user_id").val();
+                    art.dialog.confirm('您确定提交考核审核申请么？',function(){
+                        $.ajax({
+                            type:'post',
+                            url:'/salary/index.php',
+                            data:formData,
+                            dataType:'json',
+                            success:function(retData){
+                                if(retData.status=='success'){
+                                    art.dialog({lock:true});
+                                    art.dialog.tips('保存成功',2);
+                                    var url = "<?=P_SYSPATH."index.php?m=myassessment&a=myAssess&act=myAssessList&".$conditionUrl?>";
+                                    AssessInstance.jump(url,2000);
+                                }
                             }
-                        }
+                        });
                     });
-                });
+                }
             });
         });
 

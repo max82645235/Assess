@@ -6,9 +6,12 @@
  * Time: 下午6:44
  *  Hr考核发布页各元素修改权限验证
  */
-require_once './BaseValid.php';
+require_once 'BaseValid.php';
 class HrValid extends BaseValid{
     public function validElement($element=''){
+        if(!$this->record){
+            return true;
+        }
         $base_status = $this->record['base_status'];
         switch($base_status){
             case AssessDao::HrAssessWait:

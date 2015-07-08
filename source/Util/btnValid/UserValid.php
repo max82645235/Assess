@@ -5,7 +5,7 @@
  * Date: 15-7-8
  * Time: обнГ1:29
  */
-require_once './BaseValid.php';
+require_once 'BaseValid.php';
 abstract class UserValid extends BaseValid{
     public $userAssessData;
     public function __construct($baseId,$userId){

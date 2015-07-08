@@ -32,6 +32,7 @@ if($_REQUEST['act']=='launchAssess'){
                     $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                     $baseRecord = $assessDao->getAssessBaseRecord($base_id);
                     $assessDao->setAssessUserRelation($uids,$baseRecord);//考核用户关系表设置
+                    $clearTag = $assessDao->clearDeleteUser($base_id,$uids); //清除删除的用户
                     //如果不勾选领导设置时
                     if(isset($_REQUEST['subFormData']['attrData']) && $_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){
                         $attrRecord = array();
@@ -46,6 +47,9 @@ if($_REQUEST['act']=='launchAssess'){
                         }
                         //assess_attr表保存
                         if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
+                            if($clearTag){//当clearTag标识为true 清除残留的delete用户ITEM
+                                $assessDao->clearDeleteUserItem($base_id,$uids);
+                            }
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
                         }
                     }
