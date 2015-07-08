@@ -4,7 +4,7 @@
     $indicatorList = $ind_dao->getAllTypeList();
 ?>
 
-<div class="attr_form_1" flag="1" style="<?php if(!$renderData){?>display: none;<?php }?>">
+<div class="attr_form_1" flag="1" >
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">量化指标类</b></p>
     </div>
@@ -37,7 +37,7 @@
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width40 j-notnull {validate:{ required:true,percent:true,totalQz:true }}" />&nbsp;%
+                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true }}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -69,7 +69,7 @@
                     <?php }?>
                 <?php }?>
                 <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
-                    <tr style="display: none;">
+                    <tr >
                         <td width="25%">
                             <em class="c-yel">*</em>
                             <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
@@ -87,7 +87,7 @@
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 权重：</span>
-                                <input <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width40 j-notnull {validate:{ required:true,percent:true,totalQz:true}}" />&nbsp;%
+                                <input <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
                             </div>
                         </td>
                         <?php if(isset($scoreList['selfScore'])){?>

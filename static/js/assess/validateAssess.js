@@ -69,16 +69,22 @@ $(function(){
 
     $.validator.addMethod('totalQz',function(value,element,arg){
         var cntQz = 0;
+        var emptyStatus = false;
         $(".attr_form_1[flag=1] .sm_xsmbadd tr").each(function(){
-            cntQz+=parseInt($(this).find('td:eq(1) input[tagname=qz]').val());
-
+            if($(this).find('td:eq(1) input[tagname=qz]').val()!=''){
+                cntQz+=parseInt($(this).find('td:eq(1) input[tagname=qz]').val());
+                emptyStatus = true;
+            }
         });
 
         $(".attr_form_1[flag=2] .sm_xsmbadd tr").each(function(){
-            cntQz+=parseInt($(this).find('td:eq(1) input[tagname=job_qz]').val());
-        });
+            if($(this).find('td:eq(1) input[tagname=job_qz]').val()!=''){
+                cntQz+=parseInt($(this).find('td:eq(1) input[tagname=job_qz]').val());
+                emptyStatus = true;
+            }
 
-        if(cntQz==100){
+        });
+        if(cntQz==100 && emptyStatus){
             return true;
         }
         return false;

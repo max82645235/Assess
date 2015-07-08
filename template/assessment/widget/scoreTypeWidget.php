@@ -52,7 +52,7 @@
                     <?php }?>
                 <?php }?>
                 <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
-                    <tr style="display: none;">
+                    <tr>
                         <td width="40%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>¿¼ºËÏî£º </span>
