@@ -49,20 +49,22 @@
                         </td>
                     </tr>
                     <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
-                    <tr>
-                        <td align="right">考核类型选择：&nbsp;</td>
-                        <td id="attr_type_checkboxes_td">
-                            <?php
-                                $assessType = array(
-                                    '1'=>'任务/指标类',
-                                    '2'=>'打分类',
-                                    '3'=>'提成类'
-                                );
-                                $assessTypeInfo = @$assessType[$record_info['relation']['assess_attr_type']];
-                            ?>
-                            <span><?=$assessTypeInfo?></span>
-                        </td>
-                    </tr>
+                    <?php if($record_info['relation']['assess_attr_type']){?>
+                        <tr>
+                            <td align="right">考核类型选择：&nbsp;</td>
+                            <td id="attr_type_checkboxes_td">
+                                <?php
+                                    $assessType = array(
+                                        '1'=>'任务/指标类',
+                                        '2'=>'打分类',
+                                        '3'=>'提成类'
+                                    );
+                                    $assessTypeInfo = @$assessType[$record_info['relation']['assess_attr_type']];
+                                ?>
+                                <span><?=$assessTypeInfo?></span>
+                            </td>
+                        </tr>
+                    <?php }?>
                     <tr>
                         <td align="right">按月生成：&nbsp;</td>
                         <td id="attr_type_checkboxes_td">
