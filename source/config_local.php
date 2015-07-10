@@ -54,8 +54,8 @@ $cfg['POWER'] = array(
     ),
     'report' => array(
         'name' => "报表统计",
-        'detail' => array('report' => '绩效报表'),
-        'report' => array('edit' => '编辑'),
+        'detail' => array('assessReport' => '绩效报表'),
+        'assessReport' => array('assessReportList' => '绩效列表'),
     ),
     'auth' => array(
         'name' => "权限管理",

@@ -475,7 +475,27 @@ Assess.prototype = {
 
         return status;
     },
+    addRpItem:function(){
+        var tr = $("#reward_punish_form table tr:hidden");
+        var len = $("#reward_punish_form table tr").length;
+        var html  = tr.html().replace(new RegExp(/(\[@\])/g),len);
+        $("#reward_punish_form table").append("<tr>"+html+"</tr>");
+    },
     delRpItem:function(dom){
-
+        $(dom).parents('tr').remove();
+    },
+    getRpItems:function(){
+        var RpItems = [];
+        if($("#reward_punish_form").length>0){
+            $("#reward_punish_form table tr:visible").each(function(){
+                var item = {};
+                item.rpType = $(this).find("select[name=rpType]").val();
+                item.rpIntro = $(this).find("input[tagname=rpIntro]").val();
+                item.unitType = $(this).find("select[name=unitType]").val();
+                item.rpUnitValue = $(this).find("input[tagname=rpUnitValue]").val();
+                RpItems.push(item);
+            });
+        }
+        return RpItems;
     }
 };

@@ -83,6 +83,9 @@ if($_REQUEST['act']=='myAssessFlow'){
             }
             if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealLeadView){//当转给领导终审时，需要生成历史记录
                 $historyData = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+                if($_REQUEST['rpItem']){
+                    $userRelationRecord['rpData'] = serialize($assessFlowDao->formatRpItem($_REQUEST['rpItem']));
+                }
             }
             $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);//更新user_relation表 assess_attr_type状态
             $assessDao->setAssessUserItemRecord($uids,$attrRecord); //更新user_item表

@@ -44,6 +44,10 @@
                 AssessInstance.addItem($(this),type);
             });
 
+            $(".add_reward").click(function(){
+                AssessInstance.addRpItem();
+            });
+
             $('#saveBtn').click(function(){
                 if($("#sub_form").valid()){
                     var formData = {
@@ -55,6 +59,7 @@
                     formData.attrData = AssessInstance.getAttrData();
                     formData.base_id = $("#hidden_base_id").val();
                     formData.userId = $("#hidden_user_id").val();
+                    formData.rpItem = AssessInstance.getRpItems();
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -97,6 +102,7 @@
                     formData.attrData = AssessInstance.getAttrData();
                     formData.base_id = $("#hidden_base_id").val();
                     formData.userId = $("#hidden_user_id").val();
+                    formData.rpItem = AssessInstance.getRpItems();
                     art.dialog.confirm(confirmMsg[status],function(){
                         $.ajax({
                             type:'post',
@@ -199,6 +205,9 @@
                     <!--提成类-->
                     <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList,$mValid)?>
                 </div>
+                <?php if($record_info['relation']['user_assess_status']==5){?>
+                    <?=$assessAttrWidget->rewardPunish($record_info['relation'])?>
+                <?php }?>
             </div>
             <div class="kctjbot">
                 <input type="button" class="bluebtn" value="保存" id="saveBtn" tag="save" />

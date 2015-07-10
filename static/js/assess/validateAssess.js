@@ -105,6 +105,19 @@ $(function(){
         return false;
     },'请保证所有项权重之和为100');
 
+    $.validator.addMethod('rpUnit',function(value,element,arg){
+      var rs = false;
+      var unitType =   $(element).parents('tr').find('select[name=unitType]').val();
+      if(unitType==1){
+          if(value>0 && value<1000000){
+              rs = true;
+          }
+      }else if(unitType==2){
+          var re = /^[0-9]+.?[0-9]*$/;
+          rs =  (value>=0 && value<=100 && re.test(value));
+      }
+      return rs;
+    },'请输出正确的数值');
 
     $.myValidate = $("#sub_form").validate({
         debug:true,

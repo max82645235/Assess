@@ -907,7 +907,7 @@ input, textarea, select {
     border:1px dotted #9a9a9a;
     padding: 0 10px;
 }
-.sm_target{
+.sm_target,.add_reward{
     width: 80px;
     height: 26px;
     line-height: 26px;
@@ -917,6 +917,13 @@ input, textarea, select {
 
 }
 .sm_target a{
+    padding-left: 5px;
+    color: #fff;
+    padding-left: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+.add_reward a{
     padding-left: 5px;
     color: #fff;
     padding-left: 5px;

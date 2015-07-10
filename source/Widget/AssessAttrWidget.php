@@ -143,4 +143,12 @@ class AssessAttrWidget{
         return $style;
     }
 
+    public function rewardPunish($relationData){
+        $rpData = unserialize($relationData['rpData']);
+        $renderPath = BATH_PATH."template/assessment/widget/rewardPunishWidget.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('rpData'=>$rpData));
+        $this->tpl->render();
+    }
+
 }

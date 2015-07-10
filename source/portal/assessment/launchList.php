@@ -65,7 +65,7 @@ if($_REQUEST['act']=='cloneAssess'){
         $baseId = intval($_REQUEST['base_id']);
         $assessDao->copyAssessRecord($baseId,$auth);
         $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl(array('base_id','act'));
-        alertMsg('克隆成功',$jumpUrl);
+        alertMsg('复制成功',$jumpUrl);
         die();
     }
 

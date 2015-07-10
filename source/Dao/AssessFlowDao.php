@@ -323,4 +323,17 @@ class AssessFlowDao extends BaseDao{
         $retData = $this->db->GetAll($sql);
         return $retData;
     }
+
+    public function formatRpItem($rpItem){
+        $data = array();
+        foreach($rpItem as $k=>$item){
+            foreach($item as $attr=>$v){
+                if(mb_detect_encoding($v)=='UTF-8'){
+                    $v = iconv('UTF-8','GBK//IGNORE',$v);
+                }
+                $data[$k][$attr] = $v;
+            }
+        }
+        return $data;
+    }
 }

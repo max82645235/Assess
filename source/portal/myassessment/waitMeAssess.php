@@ -125,9 +125,12 @@ if($_REQUEST['act']=='leaderSetFlow'){
                         $userRelationRecord['user_assess_status'] = AssessFlowDao::AssessChecking;
                     }else{$changeStatus=false;}
 
-                    if($delStatus || $changeStatus){
-                        $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
+                    //½±³Í
+                    if($_REQUEST['rpItem']){
+                        $userRelationRecord['rpData'] = serialize($assessFlowDao->formatRpItem($_REQUEST['rpItem']));
                     }
+
+                    $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
                 }else{
                     $baseRecord = $assessDao->getAssessBaseRecord($base_id);
                     $baseRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];

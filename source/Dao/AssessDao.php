@@ -244,12 +244,13 @@ class AssessDao extends BaseDao{
     }
 
     //触发用户考核类型更新，删除user_item表旧的考核类型数据
-    public function triggerUserNewAttrTypeUpdate($userRelationRecord=false,$delStatus=false){
-
+    public function triggerUserNewAttrTypeUpdate($userRelationRecord=array(),$delStatus=false){
         $tbl = "`".DB_PREFIX."assess_user_relation`";
         $where = " rid={$userRelationRecord['rid']}";
         $sql = self::get_update_sql($tbl,$userRelationRecord,$where);
-        $this->db->Execute($sql);
+        if($userRelationRecord){
+            $this->db->Execute($sql);
+        }
 
         if($delStatus){
             $del_attr_sql = "delete from sa_assess_user_item where base_id = {$userRelationRecord['base_id']} and userId={$userRelationRecord['userId']}";
