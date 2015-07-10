@@ -178,6 +178,17 @@
                     $scoreList['leadScore'] = true;
                 }
                 ?>
+
+                <?php
+                    $diffData = unserialize($record_info['relation']['diffData']);
+                    $historyData = unserialize($diffData['history']);
+                ?>
+                <?php if($diffData && $diffData['same']==0){?>
+                    <p class="tjtip">提报前</p>
+                    <?=$assessAttrWidget->renderItemTable($historyData)?>
+                    <p class="tjtip">提报后</p>
+                    <?=$assessAttrWidget->renderItemTable($record_info,true)?>
+                <?php }?>
                 <div class="attr_content">
                     <!--任务/指标类-->
                     <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList,$mValid)?>

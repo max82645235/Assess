@@ -43,32 +43,33 @@
                 AssessInstance.addItem($(this),type);
             });
 
-            $('#saveBtn').click(function(){
-                if($("#sub_form").valid()){
-                    var formData = {
-                        m:'myassessment',
-                        a:'myAssess',
-                        act:'myAssessFlow',
-                        status:'save'
-                    };
-                    formData.attrData = AssessInstance.getAttrData();
-                    formData.base_id = $("#hidden_base_id").val();
-                    formData.userId = $("#hidden_user_id").val();
-                    $.ajax({
-                        type:'post',
-                        url:'/salary/index.php',
-                        data:formData,
-                        dataType:'json',
-                        success:function(retData){
-                            if(retData.status=='success'){
-                                art.dialog.tips('保存成功！');
+            <?php if($record_info['relation']['user_assess_status']!=4){?>
+                $('#saveBtn').click(function(){
+                    if($("#sub_form").valid()){
+                        var formData = {
+                            m:'myassessment',
+                            a:'myAssess',
+                            act:'myAssessFlow',
+                            status:'save'
+                        };
+                        formData.attrData = AssessInstance.getAttrData();
+                        formData.base_id = $("#hidden_base_id").val();
+                        formData.userId = $("#hidden_user_id").val();
+                        $.ajax({
+                            type:'post',
+                            url:'/salary/index.php',
+                            data:formData,
+                            dataType:'json',
+                            success:function(retData){
+                                if(retData.status=='success'){
+                                    art.dialog.tips('保存成功！');
 
+                                }
                             }
-                        }
-                    });
-                }
-            });
-
+                        });
+                    }
+                });
+            <?php }?>
             $("#nextBtn").click(function(){
                 if($("#sub_form").valid()){
                     var formData = {
@@ -171,7 +172,9 @@
                 </div>
             </div>
             <div class="kctjbot">
-                <input type="button" class="bluebtn" value="保存" name="saveBtn"  id="saveBtn" />
+                <?php if($record_info['relation']['user_assess_status']!=4){?>
+                     <input type="button" class="bluebtn" value="保存" name="saveBtn"  id="saveBtn" />
+                <?php }?>
                 <input type="button" class="bluebtn" value="提交审核" name="nextBtn" id="nextBtn" />
                 <input type="button" class="btn67" value="返回" name="backBtn" onclick="history.go(-1);"/>
             </div>

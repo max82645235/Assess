@@ -74,16 +74,19 @@ if($_REQUEST['act']=='myAssessFlow'){
         }
         $uids = array($userId);
         try{
-
+            $historyData = array();
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
             $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
             $nextStatus = $_REQUEST['status']=='next';
             if($_REQUEST['status']=='next'){
                 $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
             }
-            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);
-            $assessDao->setAssessUserItemRecord($uids,$attrRecord);
-
+            if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealLeadView){//当转给领导终审时，需要生成历史记录
+                $historyData = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+            }
+            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);//更新user_relation表 assess_attr_type状态
+            $assessDao->setAssessUserItemRecord($uids,$attrRecord); //更新user_item表
+            $assessDao->triggerUserItemHistoryWrite($historyData,$assessFlowDao);//当$historyData存在时需要触发对比逻辑，写入前后差异到更新user_relation表 diffData字段
         }catch (Exception $e){
             throw new Exception('500');
         }

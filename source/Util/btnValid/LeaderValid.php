@@ -23,9 +23,7 @@ class LeaderValid extends UserValid{
                 break;
 
             case AssessFlowDao::AssessRealLeadView://÷’…Û
-                        if(!$element){
-                            return true;
-                        }
+                        return true;
                 break;
         }
 

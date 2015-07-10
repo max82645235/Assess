@@ -474,5 +474,8 @@ Assess.prototype = {
         }
 
         return status;
+    },
+    delRpItem:function(dom){
+
     }
 };

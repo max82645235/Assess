@@ -6,24 +6,26 @@
     ?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th width="40%">考核类型</th>
-            <th>考核项</th>
-            <th>权重</th>
-            <th>自评分</th>
-            <th>实际得分</th>
-            <th>汇总得分</th>
+            <th width="20%">考核类型</th>
+            <th width="30%">考核项</th>
+            <th width="10%">权重</th>
+            <th width="15%">自评分</th>
+            <th width="15%">实际得分</th>
+            <th width="20%">汇总得分</th>
         </tr>
         <?php foreach($itemInfo as $item){?>
             <?php $itemList = unserialize($item['itemData']);?>
             <?php if($item['attr_type']==1){?>
                 <?php foreach($itemList as $key=>$data){?>
-                    <tr>
+                    <tr <?=$widget->getDifferShow(1);?>>
                          <?php if($key==0){?>
-                            <td rowspan="<?=count($itemList)?>">
+                            <td rowspan="<?=count($itemList)?>"
+                                <?=$widget->getDifferShow(1,array('attr'=>'attr_type'),false);?>
+                            >
                                 <?=($key==0)?AssessDao::$attrTypeMaps[$item['attr_type']]:'';?>
                             </td>
                          <?php }?>
-                        <td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'indicator_parent'));?>>
                             <?php
                             $pInfo = $ind_dao->getSingleType($data['indicator_parent']);
                             $cInfo = $ind_dao->getSingleIndicatorChild($data['indicator_child']);
@@ -31,8 +33,8 @@
                             echo $indicatorInfo;
                             ?>
                         </td>
-                        <td><?=($data['qz'])?$data['qz'].'%':'';?></td>
-                        <td><?=$data['selfScore']?></td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'selfScore'));?>><?=$data['selfScore']?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
@@ -48,15 +50,17 @@
                 <?php }?>
             <?php }elseif($item['attr_type']==2){?>
                 <?php foreach($itemList as $key=>$data){?>
-                    <tr>
+                    <tr <?=$widget->getDifferShow(2);?>>
                         <?php if($key==0){?>
-                            <td rowspan="<?=count($itemList)?>">
+                            <td rowspan="<?=count($itemList)?>"
+                                <?=$widget->getDifferShow(2,array('attr'=>'attr_type'),false);?>
+                            >
                                 <?=($key==0)?AssessDao::$attrTypeMaps[$item['attr_type']]:'';?>
                             </td>
                         <?php }?>
-                        <td><?=$data['job_name']?></td>
-                        <td><?=($data['qz'])?$data['qz'].'%':'';?></td>
-                        <td><?=$data['selfScore']?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'job_name'));?>><?=$data['job_name']?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'selfScore'));?>><?=$data['selfScore']?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
@@ -80,28 +84,30 @@
     <?php $itemList = unserialize($itemInfo[0]['itemData']);?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th>考核类型</th>
+            <th width="15%">考核类型</th>
             <th width="15%">分值金额转化率(元/分)</th>
-            <th>考核项</th>
-            <th>自评分</th>
-            <th>实际得分</th>
-            <th>汇总得分</th>
+            <th width="20%">考核项</th>
+            <th width="15%">自评分</th>
+            <th width="15%">实际得分</th>
+            <th width="20%">汇总得分</th>
         </tr>
         <?php foreach($itemList as $key=>$data){?>
-            <tr>
+            <tr <?=$widget->getDifferShow(3);?>>
                 <?php if($key==0){?>
-                    <td rowspan="<?=count($itemList)?>">
+                    <td rowspan="<?=count($itemList)?>"
+                        <?=$widget->getDifferShow(3,array('attr'=>'attr_type'),false);?>
+                    >
                         <?=($key==0)?AssessDao::$attrTypeMaps[$itemInfo[0]['attr_type']]:'';?>
                     </td>
                 <?php }?>
 
                 <?php if($key==0){?>
-                     <td    <td rowspan="<?=count($itemList)?>">
+                     <td rowspan="<?=count($itemList)?>"  <?=$widget->getDifferShow(3,array('attr'=>'cash'),false);?>>
                         <?=($key==0)?$itemInfo[0]['cash']:''?>
                     </td>
                 <?php }?>
-                <td><?=$data['score_name']?></td>
-                <td><?=$data['selfScore']?></td>
+                <td <?=$widget->getDifferShow(3,array('index'=>$key,'attr'=>'score_name'));?>><?=$data['score_name']?></td>
+                <td <?=$widget->getDifferShow(3,array('index'=>$key,'attr'=>'selfScore'));?>><?=$data['selfScore']?></td>
                 <td><?=$data['leadScore']?></td>
                 <td>
                     <?php
@@ -122,15 +128,15 @@
     <?php $itemList = unserialize($itemInfo[0]['itemData']);?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th>考核类型</th>
-            <th>提成点</th>
-            <th>完成金额</th>
-            <th>合计</th>
+            <th width="20%">考核类型</th>
+            <th width="10%">提成点</th>
+            <th width="30%">完成金额</th>
+            <th width="40%">合计</th>
         </tr>
-        <tr>
+        <tr  <?=$widget->getDifferShow(4);?>>
             <td>提成类 </td>
-            <td><?=$itemList[0]['tc_name']?></td>
-            <td><?=$itemList[0]['finishCash']?></td>
+            <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'tc_name'));?>><?=$itemList[0]['tc_name']?></td>
+            <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'finishCash'));?>><?=$itemList[0]['finishCash']?></td>
             <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']:''?></td>
         </tr>
     </table>

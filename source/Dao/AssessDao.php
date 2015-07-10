@@ -296,7 +296,6 @@ class AssessDao extends BaseDao{
                     $sql = self::get_update_sql($tbl,$tmpArr,$where);
                     $this->db->Execute($sql);
                 }
-                $uids.=$userId.",";
             }
         }
     }
@@ -623,4 +622,41 @@ class AssessDao extends BaseDao{
 
     }
 
+    //触发历史记录对比
+    public function triggerUserItemHistoryWrite($historyData,AssessFlowDao $assessFlowDao){
+        if($historyData){
+            $base_id = $historyData['relation']['base_id'];
+            $userId = $historyData['relation']['userId'];
+            $newData = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+            $diffData = array();
+            $diffData['history'] = serialize($historyData);
+            if($historyData['relation']['assess_attr_type']==$newData['relation']['assess_attr_type']){
+                $diffData['type_differ'] = 0;
+                $diffData['same'] = 1;
+                foreach($newData['item'] as $i=>$data){
+                    $newItemData = unserialize($data['itemData']);
+                    $historyItemData = unserialize($historyData['item'][$i]['itemData']);
+                    $itemDiffer = array();
+                    foreach($newItemData as $k=>$trList){
+                        foreach($trList as $attr=>$d){
+                            if($historyItemData[$k][$attr]!=$d){
+                                $itemDiffer[$k][$attr] = 1;
+                            }
+                        }
+                    }
+                    $diffData['compare_data'][$data['attr_type']]['itemData'] = $itemDiffer;
+                    if($data['cash'] && $data['cash']!=$historyData['item'][$data['attr_type']]['cash']){
+                        $diffData['compare_data'][$data['attr_id']]['cash'] = 1;
+                        $diffData['same'] = 0;
+                    }
+                }
+            }else{
+                $diffData['type_differ'] = 1;
+                $diffData['same'] = 0;
+            }
+            $newData['relation']['diffData'] = serialize($diffData);
+            unset($newData['relation']['username']);
+            $this->triggerUserNewAttrTypeUpdate($newData['relation']);
+        }
+    }
 }

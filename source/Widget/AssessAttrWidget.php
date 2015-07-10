@@ -63,21 +63,24 @@ class AssessAttrWidget{
         $this->tpl->render();
     }
 
-    public function disabled(){
+    public function disabled($element=''){
         if($this->mValid){
-            return $this->mValid->getDisableValid();
+            return $this->mValid->getDisableValid($element);
         }
     }
 
-    public function validElement(){
+    public function validElement($element=''){
         if($this->mValid){
-            return $this->mValid->validElement();
+            return $this->mValid->validElement($element);
         }
     }
 
-    public function renderItemTable($record_info){
+    static $compareStatus = false;
+    static $diffData;
+    public function renderItemTable($record_info,$compareStatus=false){
         $itemInfo = $record_info['item'];
         $assessAttrType = $record_info['relation']['assess_attr_type'];
+        self::$diffData = unserialize($record_info['relation']['diffData']);
         $prefixPathArr = explode(',',self::$renderPathMaps[$assessAttrType]);
         $itemList = array();
         foreach($itemInfo as $k=>$item){
@@ -86,11 +89,39 @@ class AssessAttrWidget{
                 $itemList[] = $item;
             }
         }
-
+        self::$compareStatus = $compareStatus;
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType));
         $this->tpl->render();
+    }
+
+
+    public function getDifferShow($attr_type='',$itemData=array(),$isItemData=true){
+        $sameStatus = true;
+        $style = '';
+        if(self::$compareStatus && self::$diffData){
+            if(self::$diffData['type_differ']==1){
+                $sameStatus = false;
+            }elseif(self::$diffData['same']==0){
+                if($itemData){
+                    $attr = @$itemData['attr'];
+                    $index = @$itemData['index'];
+                    if(!$isItemData && self::$diffData['compare_data'][$attr_type][$attr]){
+                        $sameStatus = false;
+                    }
+
+                    if($isItemData && self::$diffData['compare_data'][$attr_type]['itemData'][$index][$attr]){
+                        $sameStatus = false;
+                    }
+                }
+            }
+        }
+
+        if(!$sameStatus){
+            $style = 'style="background-color:#FFB6C1;"';
+        }
+        return $style;
     }
 
     public function getTrIsShow(){
@@ -111,4 +142,5 @@ class AssessAttrWidget{
         }
         return $style;
     }
+
 }

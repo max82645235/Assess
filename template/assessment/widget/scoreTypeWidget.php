@@ -5,7 +5,7 @@
     <div class="kctjcon1">
         <div class="sm_div mlr30"  style="padding:10px;">
             基本设置：<br /><br />
-            1分 ＝ <input type="text" <?=$widget->disabled()?> value="<?=@$renderData['cash']?>" name="attr3_cash"  class="width80 j-notnull" /> 元
+            1分 ＝ <input type="text" <?=$widget->disabled('valid_score_cash');?> value="<?=@$renderData['cash']?>" name="attr3_cash"  class="width80 j-notnull" /> 元
         </div>
     </div>
     <div class="kctjcon">
@@ -51,37 +51,35 @@
                         <?php }?>
                     <?php }?>
                 <?php }?>
-                <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
-                    <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
-                        <td width="40%">
-                            <div class="smfl">
-                                <span><em class="c-yel">*</em>考核项： </span>
-                                <input type="text" value="" tagname="score_name" name="score_name_new_[@]" class="{validate:{required:true}}" />
-                            </div>
-                        </td>
-                        <?php if(isset($scoreList['selfScore'])){?>
-                            <td width="15%" class="sm_xsmbadd_td2">
-                                <div class="smfl">
-                                    <span><em class="c-yel">*</em> 自评分：</span>
-                                    <input type="text" value="" tagname="selfScore"  name="selfScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true}}" />
-                                </div>
-                            </td>
-                        <?php }?>
-                        <?php if(isset($scoreList['leadScore'])){?>
-                            <td width="15%" class="sm_xsmbadd_td2">
-                                <div class="smfl">
-                                    <span><em class="c-yel">*</em> 领导评分：</span>
-                                    <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
-                                </div>
-                            </td>
-                        <?php }?>
+                <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
+                    <td width="40%">
+                        <div class="smfl">
+                            <span><em class="c-yel">*</em>考核项： </span>
+                            <input type="text" value="" tagname="score_name" name="score_name_new_[@]" class="{validate:{required:true}}" />
+                        </div>
+                    </td>
+                    <?php if(isset($scoreList['selfScore'])){?>
                         <td width="15%" class="sm_xsmbadd_td2">
-                            <div class="del_td" onclick="Assess.prototype.delItemDom(this,3)">
-                                <input type="button" class="btn67" name="del"  value="删除">
+                            <div class="smfl">
+                                <span><em class="c-yel">*</em> 自评分：</span>
+                                <input type="text" value="" tagname="selfScore"  name="selfScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true}}" />
                             </div>
                         </td>
-                    </tr>
-                <?php }?>
+                    <?php }?>
+                    <?php if(isset($scoreList['leadScore'])){?>
+                        <td width="15%" class="sm_xsmbadd_td2">
+                            <div class="smfl">
+                                <span><em class="c-yel">*</em> 领导评分：</span>
+                                <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
+                            </div>
+                        </td>
+                    <?php }?>
+                    <td width="15%" class="sm_xsmbadd_td2">
+                        <div class="del_td" onclick="Assess.prototype.delItemDom(this,3)">
+                            <input type="button" class="btn67" name="del"  value="删除">
+                        </div>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>

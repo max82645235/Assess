@@ -17,7 +17,7 @@ class StaffValid extends UserValid{
                 break;
 
             case AssessFlowDao::AssessPreReport://员工提报
-                        if(!$element){
+                        if(!$element ||$element!='valid_score_cash'){
                             return true;
                         }
                 break;
