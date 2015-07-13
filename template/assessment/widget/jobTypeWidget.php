@@ -28,7 +28,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
-                                            <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="selfScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
+                                            <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="job_selfScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -36,7 +36,7 @@
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
-                                            <input type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="leadScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
+                                            <input type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="job_leadScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -69,7 +69,7 @@
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 自评分：</span>
-                                <input type="text" value="" tagname="selfScore" name="selfScore_new_[@]"  class="width40 j-notnull required {validate:{required:true,percent:true}}" />
+                                <input type="text" value="" tagname="selfScore" name="job_selfScore_new_[@]"  class="width40 j-notnull required {validate:{required:true,percent:true}}" />
                             </div>
                         </td>
                     <?php }?>
@@ -77,7 +77,7 @@
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 领导评分：</span>
-                                <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull required {validate:{required:true,percent:true}}" />
+                                <input type="text" value="" tagname="leadScore" name="job_leadScore_new_[@]"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
                             </div>
                         </td>
                     <?php }?>

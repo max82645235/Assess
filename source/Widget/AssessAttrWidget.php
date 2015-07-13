@@ -78,7 +78,6 @@ class AssessAttrWidget{
     static $compareStatus = false;
     static $diffData;
     public function renderItemTable($record_info,$compareStatus=false){
-
         $itemInfo = $record_info['item'];
         $assessAttrType = $record_info['relation']['assess_attr_type'];
         self::$diffData = $record_info['relation']['diffData'];

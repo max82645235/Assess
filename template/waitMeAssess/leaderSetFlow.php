@@ -188,9 +188,7 @@
                 <?php
                     $diffData = unserialize($record_info['relation']['diffData']);
                     $historyData = unserialize($diffData['history']);
-                    $diffData['same'] = 0;
-                    $record_info[$record_info['relation']['diffData']]['diffData'] = $diffData;
-
+                    $record_info['relation']['diffData'] = $diffData;
                 ?>
                 <?php if(!empty($record_info['relation']['diffData']) && $diffData['same']==0){?>
                     <p class="tjtip">�ᱨǰ</p>

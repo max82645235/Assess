@@ -25,7 +25,13 @@
                                 <?=($key==0)?AssessDao::$attrTypeMaps[$item['attr_type']]:'';?>
                             </td>
                          <?php }?>
-                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'indicator_parent'));?>>
+                        <?php
+                            $pStyle = $widget->getDifferShow(1,array('index'=>$key,'attr'=>'indicator_parent'));
+                            if(!$pStyle){
+                                $pStyle = $widget->getDifferShow(1,array('index'=>$key,'attr'=>'indicator_child'));
+                            }
+                        ?>
+                        <td <?=$pStyle;?>>
                             <?php
                             $pInfo = $ind_dao->getSingleType($data['indicator_parent']);
                             $cInfo = $ind_dao->getSingleIndicatorChild($data['indicator_child']);

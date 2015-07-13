@@ -641,6 +641,7 @@ class AssessDao extends BaseDao{
                     foreach($newItemData as $k=>$trList){
                         foreach($trList as $attr=>$d){
                             if($historyItemData[$k][$attr]!=$d){
+                                $diffData['same'] = 0;
                                 $itemDiffer[$k][$attr] = 1;
                             }
                         }
