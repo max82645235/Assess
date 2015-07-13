@@ -17,7 +17,7 @@
                 <td width="26%">
                     <div class="smfl">
                         <span><em class="c-yel">*</em>说明：</span>
-                        <input type="text" tagname="rpIntro" name="rpIntro_new_[@]" class="{validate:{required:true}}">
+                        <input type="text" tagname="rpIntro" name="rpIntro_new_[@]" class="{validate:{required:true}} width160 j-notnull">
                     </div>
                 </td>
                 <td width="26%">
@@ -31,7 +31,7 @@
                 </td>
                 <td width="26%">
                     <div class="smfl">
-                        <input type="text" tagname="rpUnitValue" name="rpUnitValue_new_[@]" class="{validate:{required:true,rpUnit:true}}">
+                        <input type="text" tagname="rpUnitValue" name="rpUnitValue_new_[@]" class="{validate:{required:true,rpUnit:true}} width160 j-notnull">
                     </div>
                 </td>
                 <td width="15%" class="sm_xsmbadd_td2">
@@ -55,7 +55,7 @@
                         <td width="26%">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em>说明：</span>
-                                <input type="text" tagname="rpIntro" name="rpIntro_old_<?=$key?>" value="<?=$itemData['rpIntro']?>" class="{validate:{required:true}}">
+                                <input type="text" tagname="rpIntro" name="rpIntro_old_<?=$key?>" value="<?=$itemData['rpIntro']?>" class="{validate:{required:true}} width160 j-notnull">
                             </div>
                         </td>
                         <td width="20%">
@@ -69,7 +69,7 @@
                         </td>
                         <td width="20%">
                             <div class="smfl">
-                                <input type="text" tagname="rpUnitValue" name="rpUnitValue_old_<?=$key?>" value="<?=$itemData['rpUnitValue']?>" class="{validate:{required:true,rpUnit:true}}">
+                                <input type="text" tagname="rpUnitValue" name="rpUnitValue_old_<?=$key?>" value="<?=$itemData['rpUnitValue']?>" class="{validate:{required:true,rpUnit:true}} width160 j-notnull">
                             </div>
                         </td>
                         <td width="15%" class="sm_xsmbadd_td2">

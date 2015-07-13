@@ -253,5 +253,33 @@ if($_REQUEST['act']=='leadViewStaffDetail'){
 
 //批量复制待我创建
 if($_REQUEST['act']=='mulCopyCreateAssess'){
-
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    if(isset($_REQUEST['ajax']) && $_REQUEST['ajax']==1){
+        $base_id = $_REQUEST['base_id'];
+        $userId = $_REQUEST['userId'];
+        $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        $newUids = $_REQUEST['newUids'];
+        try{
+            if($record_info){
+                $baseRecord =  array(
+                    'base_id'=>$base_id,
+                    'assess_attr_type'=>$record_info['relation']['assess_attr_type']
+                );
+                $assessDao->setAssessUserRelation($newUids,$baseRecord);//考核用户关系表设置
+                $assessDao->setAssessUserItemRecord($newUids,$record_info['item']);
+            }
+        }catch (Exception $e){
+            throw new Exception('500');
+        }
+        echo json_encode(array('status'=>'success'));
+        die();
+    }
+    $userList = $assessFlowDao->getCreatingUserList($_REQUEST);
+    $tpl = new NewTpl('waitMeAssess/mulCopyCreateAssess.php',array(
+        'userList'=>$userList,
+        'conditionUrl'=>$assessFlowDao->getConditionParamUrl(array('a','m','act','userId'))
+    ));
+    $tpl->render();
+    die();
 }

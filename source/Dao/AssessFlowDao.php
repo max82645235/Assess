@@ -344,4 +344,16 @@ class AssessFlowDao extends BaseDao{
         }
         return $html;
     }
+
+    public function getCreatingUserList($request){
+        $status = $request['status'];
+        $base_id = $request['base_id'];
+        $userId = $request['userId'];
+        $curUserId = getUserId();
+        $sql = "select c.username,c.userId,c.deptlist from sa_user_relation as a
+                inner join  sa_assess_user_relation as b on a.super_userId={$curUserId} and a.status={$status} and a.low_userId = b.userId and b.user_assess_status=0 and b.base_id={$base_id} and a.low_userId!={$userId}
+                inner join sa_user as c on b.userId = c.userId order by c.deptlist asc";
+        $userList = $this->db->GetAll($sql);
+        return $userList;
+    }
 }

@@ -7,6 +7,10 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script type="text/javascript">
         var AssessInstance =  new Assess();
@@ -14,8 +18,9 @@
             $("#assess_user_diy_set").click(function(){
                 AssessInstance.tableBtnHandler($('#table_style'),
                     function(jInput){
-                        var status = jInput.parents('tr').find('td:eq(3)').text();
-                        if(status=='待我创建'){
+                        var status = jInput.parents('tr').attr('assess_status');
+                        console.log(status);
+                        if(status==0){
                             return true;
                         }else{
                             alert('请保证勾选项都为待我创建！');
@@ -124,7 +129,7 @@
                 ?>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
-                        <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
+                        <tr class="<?=($k%2)?'bgfff':'bgf0';?>" assess_status="<?=$data['user_assess_status']?>">
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
                             </td>
@@ -146,6 +151,8 @@
                                 <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking && $assessBaseRecord['lead_direct_set_status']==1){?>
                                  <a href="?m=myassessment&a=waitMeAssess&act=changeCheckingStatus&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333">变更状态</a>
                                 <?php }?>
+
+                                <a  class="bjwrt" onclick="Assess.prototype.copyUserAssess(<?=$data['base_id']?>,<?=$data['userId']?>)" >复制</a>
                             </td>
                         </tr>
                     <?php }?>
@@ -156,6 +163,7 @@
                 <?=$page_nav?>
             </p>
             <div>
+                <input type="hidden" id="syspath" value="<?=P_SYSPATH?>">
                 <input type="button" name=""  value="由员工自行设置" class="btn139" id="assess_user_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
             </div>
         </div>
