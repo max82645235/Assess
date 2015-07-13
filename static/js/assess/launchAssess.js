@@ -325,7 +325,7 @@ Assess.prototype = {
             $.ajax({
                 type:'get',
                 url:'/salary/index.php',
-                data:{m:'assessment',a:'launchAssess',act:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
+                data:{m:'api',a:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
                 dataType:'json',
                 success:function(ret){
                     if(ret.status=='success'){

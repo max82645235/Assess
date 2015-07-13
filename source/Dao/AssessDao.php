@@ -640,7 +640,7 @@ class AssessDao extends BaseDao{
                     $itemDiffer = array();
                     foreach($newItemData as $k=>$trList){
                         foreach($trList as $attr=>$d){
-                            if($historyItemData[$k][$attr]!=$d){
+                            if(!in_array($attr,array('finishCash','selfScore')) && $historyItemData[$k][$attr]!=$d){
                                 $diffData['same'] = 0;
                                 $itemDiffer[$k][$attr] = 1;
                             }

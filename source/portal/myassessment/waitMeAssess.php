@@ -131,10 +131,6 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     }
 
                     $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
-                }else{
-                    $baseRecord = $assessDao->getAssessBaseRecord($base_id);
-                    $baseRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
-                    $assessDao->setAssessUserRelation($uids,$baseRecord);
                 }
                 $assessDao->setAssessUserItemRecord($uids,$attrRecord);
                 //校验该考核下所有考核人状态，如果都已经设置为考核中（3） 需要变更base主表状态
@@ -145,7 +141,6 @@ if($_REQUEST['act']=='leaderSetFlow'){
                 if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealSuccess){
                     $assessDao->checkAssessAllUserSuccessStatus($base_id);
                 }
-
             }
         }catch (Exception $e){
             throw new Exception('500');

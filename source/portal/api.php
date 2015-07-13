@@ -86,4 +86,17 @@ if($a == 'del_user'){
 if($a == 'get_oa_msg'){
     halt("get_oa_msg {$uid}");
 }
+
+if($a =='ajaxIndicatorClassify'){
+    if(isset($_GET['indicator_parent'])){
+        $indicator_parent = $_GET['indicator_parent'];
+        $retData = array();
+        require_once BATH_PATH.'source/Dao/IndicatorDao.php';
+        $ind_dao = new IndicatorDao();
+        $retData['data'] = $ind_dao->getIndicatorChildList($indicator_parent);
+        $retData['status'] = 'success';
+        echo json_encode($retData);
+        die();
+    }
+}
 ?>

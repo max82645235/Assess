@@ -134,6 +134,7 @@ if($_REQUEST['act']=='staffViewStaffDetail'){
     die();
 }
 
+//更改到提报时
 if($_REQUEST['act']=='triggerStatusUpdate'){
     $assessFlowDao = new AssessFlowDao();
     $assessDao = new AssessDao();
