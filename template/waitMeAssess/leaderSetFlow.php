@@ -76,7 +76,38 @@
 
             });
 
-            $("#nextBtn,#startBtn,#backBtn").click(function(){
+            $("#backBtn").click(function(){
+                var status = $(this).attr('tag');
+                var formData = {
+                    m:'myassessment',
+                    a:'waitMeAssess',
+                    act:'leaderSetFlow',
+                    status:status
+                };
+                formData.attrData = AssessInstance.getAttrData();
+                formData.base_id = $("#hidden_base_id").val();
+                formData.userId = $("#hidden_user_id").val();
+                formData.rpItem = AssessInstance.getRpItems();
+                art.dialog.prompt('请输入驳回理由！',function(reject){
+                    formData.reject = reject;
+                    $.ajax({
+                        type:'post',
+                        url:'/salary/index.php',
+                        data:formData,
+                        dataType:'json',
+                        success:function(retData){
+                            if(retData.status=='success'){
+                                art.dialog({lock:true});
+                                art.dialog.tips('驳回成功',2);
+                                var url = "<?=P_SYSPATH."index.php?m=myassessment&a=waitMeAssess&act=myStaffList&".$conditionUrl?>";
+                                AssessInstance.jump(url,2000);
+                            }
+                        }
+                    });
+                });
+            });
+
+            $("#nextBtn,#startBtn").click(function(){
                 var valid = true;
                 if($(this).attr('id')!='backBtn'){
                      valid = $("#sub_form").valid();
@@ -92,8 +123,7 @@
                     };
                     var confirmMsg = {
                         next:'您确定此考核审核通过么?',
-                        start:'您确定直接开始此考核么?',
-                        back:'您确定驳回此考核审批申请么?'
+                        start:'您确定直接开始此考核么?'
                     };
 
                     if($(this).attr('sp')==1){
@@ -166,6 +196,14 @@
                         </td>
                     </tr>
                     <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
+                    <?php if($record_info['relation']['rejectText']){?>
+                        <tr>
+                            <td align="right">驳回理由：&nbsp;</td>
+                            <td>
+                                <span style="color: red;"><?=$record_info['relation']['rejectText']?></span>
+                            </td>
+                        </tr>
+                    <?php }?>
                     <tr>
                         <td align="right">考核类型选择：&nbsp;</td>
                         <td id="attr_type_checkboxes_td">
@@ -219,7 +257,7 @@
 
                 <?php if(in_array($record_info['relation']['user_assess_status'],array(2,5))){?>
                     <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
-                    <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" />
+                    <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" sp="3"/>
                 <?php }?>
                 <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
             </div>

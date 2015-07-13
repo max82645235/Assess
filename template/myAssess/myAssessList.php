@@ -61,7 +61,7 @@
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核周期</th>
-                    <th width="200" style="text-align: center;">流程状态</th>
+                    <th width="250" style="text-align: center;">流程状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
                     <th width="100" style="text-align: center;">得分</th>
                     <th width="200" style="text-align: center;">操作</th>
@@ -84,7 +84,9 @@
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
-                            <td><?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?></td>
+                            <td>
+                                <?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?>                                                       <?=AssessFlowDao::rejectTableMark($data['rejectText'],'被驳回');?>
+                            </td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">

@@ -59,7 +59,7 @@ if($_REQUEST['act']=='myStaffList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.*,b.user_assess_status,b.base_id,b.score";
+    $findSql = " a.*,b.user_assess_status,b.base_id,b.score,b.rejectText";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
@@ -113,16 +113,20 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
                     $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
                     $changeStatus = true;
+
                     if($_REQUEST['status']=='next'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+                        $userRelationRecord['rejectText'] = '';
                         //当为领导终审通过时,需要计算得分写入assess_user_relation表score字段
                         if($userRelationRecord['user_assess_status'] == AssessFlowDao::AssessRealSuccess){
                             $userRelationRecord['score'] = $assessFlowDao->getUserAssessScore($attrRecord);
                         }
                     }elseif($_REQUEST['status']=='back'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
+                        $userRelationRecord['rejectText'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['reject']);
                     }elseif($_REQUEST['status']=='start'){
                         $userRelationRecord['user_assess_status'] = AssessFlowDao::AssessChecking;
+                        $userRelationRecord['rejectText'] = '';
                     }else{$changeStatus=false;}
 
                     //奖惩

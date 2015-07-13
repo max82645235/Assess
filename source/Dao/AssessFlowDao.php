@@ -336,4 +336,12 @@ class AssessFlowDao extends BaseDao{
         }
         return $data;
     }
+
+    static function rejectTableMark($rejectText,$font){
+        $html = '';
+        if($rejectText){
+            $html = "<span style='color: red;'>&nbsp;[$font]</span>";
+        }
+        return $html;
+    }
 }

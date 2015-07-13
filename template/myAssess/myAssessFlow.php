@@ -148,6 +148,14 @@
                         </td>
                     </tr>
                     <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
+                    <?php if($record_info['relation']['rejectText']){?>
+                        <tr>
+                            <td align="right">驳回理由：&nbsp;</td>
+                            <td>
+                                <span style="color: red;"><?=$record_info['relation']['rejectText']?></span>
+                            </td>
+                        </tr>
+                    <?php }?>
                     <tr>
                         <td align="right">考核类型选择：&nbsp;</td>
                         <td id="attr_type_checkboxes_td">
@@ -156,6 +164,7 @@
                             <input type="checkbox" <?php if($record_info['relation']['user_assess_status']!=1){?> disabled="disabled" <?php }?> name="assess_attr_type" value="3" <?=($record_info['relation']['assess_attr_type']==3)?"checked=\"checked\"":"";?>>提成类&nbsp;
                         </td>
                     </tr>
+
                 </table>
             </div>
             <div class="pad25">

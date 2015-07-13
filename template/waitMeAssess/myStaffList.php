@@ -111,7 +111,7 @@
                     </th>
                     <th  width="100"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
-                    <th width="150" style="text-align: center;">流程状态</th>
+                    <th width="200" style="text-align: center;">流程状态</th>
                     <th width="150" style="text-align: center;">得分</th>
                     <th  width="150" style="text-align: center;">操作</th>
                 </tr>
@@ -130,7 +130,10 @@
                             </td>
                             <td ><?=$data['username']?></td>
                             <td class="left"><?=$data['deptlist']?></td>
-                            <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
+                            <td>
+                                <?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?>
+                                <?=AssessFlowDao::rejectTableMark($data['rejectText'],'已驳回');?>
+                            </td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
                                 <a href="?m=myassessment&a=waitMeAssess&act=leadViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
