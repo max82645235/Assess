@@ -42,6 +42,14 @@ class AssessFlowDao extends BaseDao{
         '7'=>'考核结束'
     );
 
+    static $UserAssessFontColorMaps = array(
+        '0'=>'#FF4500', //橙
+        '1'=>"#EEB422", //黄
+        '2'=>"#B3EE3A",  //绿
+        '4'=>'#B0E2FF', //青
+        '5'=>"#AB82FF", //紫
+    );
+
 
     const AssessCreate= 0;//待领导创建
     const AssessPreStaffWrite = 1;//待员工填写

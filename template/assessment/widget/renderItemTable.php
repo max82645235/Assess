@@ -141,7 +141,7 @@
         </tr>
         <tr  <?=$widget->getDifferShow(4);?>>
             <td>Ã·≥…¿‡ </td>
-            <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'tc_name'));?>><?=$itemList[0]['tc_name']?></td>
+            <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'tc_name'));?>><?=$itemList[0]['tc_name']?>%</td>
             <td ><?=$itemList[0]['finishCash']?></td>
             <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']:''?></td>
         </tr>
