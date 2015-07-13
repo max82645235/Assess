@@ -78,9 +78,11 @@ class AssessAttrWidget{
     static $compareStatus = false;
     static $diffData;
     public function renderItemTable($record_info,$compareStatus=false){
+
         $itemInfo = $record_info['item'];
         $assessAttrType = $record_info['relation']['assess_attr_type'];
-        self::$diffData = unserialize($record_info['relation']['diffData']);
+        self::$diffData = $record_info['relation']['diffData'];
+
         $prefixPathArr = explode(',',self::$renderPathMaps[$assessAttrType]);
         $itemList = array();
         foreach($itemInfo as $k=>$item){
@@ -107,6 +109,7 @@ class AssessAttrWidget{
                 if($itemData){
                     $attr = @$itemData['attr'];
                     $index = @$itemData['index'];
+
                     if(!$isItemData && self::$diffData['compare_data'][$attr_type][$attr]){
                         $sameStatus = false;
                     }

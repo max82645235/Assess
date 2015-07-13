@@ -34,7 +34,7 @@
                             ?>
                         </td>
                         <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
-                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'selfScore'));?>><?=$data['selfScore']?></td>
+                        <td ><?=$data['selfScore']?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
@@ -60,7 +60,7 @@
                         <?php }?>
                         <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'job_name'));?>><?=$data['job_name']?></td>
                         <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
-                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'selfScore'));?>><?=$data['selfScore']?></td>
+                        <td ><?=$data['selfScore']?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
@@ -107,7 +107,7 @@
                     </td>
                 <?php }?>
                 <td <?=$widget->getDifferShow(3,array('index'=>$key,'attr'=>'score_name'));?>><?=$data['score_name']?></td>
-                <td <?=$widget->getDifferShow(3,array('index'=>$key,'attr'=>'selfScore'));?>><?=$data['selfScore']?></td>
+                <td ><?=$data['selfScore']?></td>
                 <td><?=$data['leadScore']?></td>
                 <td>
                     <?php
@@ -136,7 +136,7 @@
         <tr  <?=$widget->getDifferShow(4);?>>
             <td>Ã·≥…¿‡ </td>
             <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'tc_name'));?>><?=$itemList[0]['tc_name']?></td>
-            <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'finishCash'));?>><?=$itemList[0]['finishCash']?></td>
+            <td ><?=$itemList[0]['finishCash']?></td>
             <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']:''?></td>
         </tr>
     </table>
