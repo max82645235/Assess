@@ -44,9 +44,9 @@ class AssessFlowDao extends BaseDao{
 
     static $UserAssessFontColorMaps = array(
         '0'=>'#FF4500', //橙
-        '1'=>"#EEB422", //黄
+        '1'=>"#CD8500", //黄
         '2'=>"#B3EE3A",  //绿
-        '4'=>'#B0E2FF', //青
+        '4'=>'#7EC0EE', //青
         '5'=>"#AB82FF", //紫
     );
 
@@ -333,16 +333,27 @@ class AssessFlowDao extends BaseDao{
     }
 
     public function formatRpItem($rpItem){
-        $data = array();
+        $rpData = array();
+        $resultData = array();
         foreach($rpItem as $k=>$item){
-            foreach($item as $attr=>$v){
-                if(mb_detect_encoding($v)=='UTF-8'){
-                    $v = iconv('UTF-8','GBK//IGNORE',$v);
-                }
-                $data[$k][$attr] = $v;
+            $rpData['itemDataList'][$k]['rpType'] = $item['rpType'];
+            $rpData['itemDataList'][$k]['rpIntro'] = iconv('UTF-8','GBK//IGNORE',$item['rpIntro']);;
+            $rpData['itemDataList'][$k]['unitType'] = $item['unitType'];
+            $curValue = $rpData['itemDataList'][$k]['rpUnitValue'] = $item['rpUnitValue'];
+            // unitType为1 ：金额 |   为2：百分比
+            if($item['unitType']==2){
+                $curValue = $curValue*0.01;
+            }
+
+            //rpType 为1：奖励  为2：惩罚
+            if($item['rpType']==1){
+                $resultData[$item['unitType']]['totalValue']+= $curValue;
+            }elseif($item['rpType']==2){
+                $resultData[$item['unitType']]['totalValue']-= $curValue;
             }
         }
-        return $data;
+        $rpData['total'] = $resultData;
+        return $rpData;
     }
 
     static function rejectTableMark($rejectText,$font){

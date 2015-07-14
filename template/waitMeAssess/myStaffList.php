@@ -143,8 +143,8 @@
                             <td class="left">
                                 <a href="?m=myassessment&a=waitMeAssess&act=leadViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">²é¿´</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <span style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>">
-                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
+                                    <span>
+                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color:<?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
                                 <?php }?>
 

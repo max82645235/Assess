@@ -112,8 +112,6 @@ if($_REQUEST['act']=='leaderSetFlow'){
                 if($userRelationRecord){
                     $delStatus = $_REQUEST['attrData']['fromData']['type']!=$userRelationRecord['assess_attr_type'];
                     $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
-                    $changeStatus = true;
-
                     if($_REQUEST['status']=='next'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
                         $userRelationRecord['rejectText'] = '';
@@ -127,7 +125,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     }elseif($_REQUEST['status']=='start'){
                         $userRelationRecord['user_assess_status'] = AssessFlowDao::AssessChecking;
                         $userRelationRecord['rejectText'] = '';
-                    }else{$changeStatus=false;}
+                    }
 
                     //½±³Í
                     if($_REQUEST['rpItem']){

@@ -25,6 +25,10 @@
                         newUids.push($(this).attr('userId'));
                     }
                 });
+                if(newUids.length==0){
+                    alert('«Îœ»—°‘Òøº∫À»À');
+                    return false;
+                }
                 $.ajax({
                     type:'get',
                     url:'/salary/index.php',

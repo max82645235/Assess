@@ -92,8 +92,8 @@
                             <td class="left">
                                 <a href="?m=myassessment&a=myAssess&act=staffViewStaffDetail&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">²é¿´</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <span style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>">
-                                             <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
+                                    <span>
+                                             <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
                                 <?php }?>
 
