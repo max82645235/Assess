@@ -504,7 +504,6 @@ Assess.prototype = {
         var syspath = $('#syspath').val();
         var openUrl  = syspath+'index.php?m=myassessment&a=waitMeAssess&act=mulCopyCreateAssess';
         openUrl+= "&status="+status+"&base_id="+base_id+"&userId="+userId;
-        console.log(openUrl);
         art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
     }
 };
