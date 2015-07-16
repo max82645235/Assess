@@ -270,10 +270,15 @@ class AssessDao extends BaseDao{
         }
     }
 
-    public function clearDeleteUserItem($base_id,$uidArr){
+    public function clearDeleteUserItem($base_id,$uidArr,$not = true){
         $tbl =  "`".DB_PREFIX."assess_user_item`";
         $uids = implode(',',$uidArr);
-        $deleteSql = "delete from {$tbl} where base_id={$base_id} and userId not in($uids)";
+        if($not){
+            $notSql = 'not';
+        }else{
+            $notSql = '';
+        }
+        $deleteSql = "delete from {$tbl} where base_id={$base_id} and userId {$notSql} in($uids)";
         $this->db->Execute($deleteSql);
     }
 
@@ -647,7 +652,7 @@ class AssessDao extends BaseDao{
                         }
                     }
                     $diffData['compare_data'][$data['attr_type']]['itemData'] = $itemDiffer;
-                    if($data['cash'] && $data['cash']!=$historyData['item'][$data['attr_type']]['cash']){
+                    if($data['cash'] && $data['cash']!=$historyData['item'][$i]['cash']){
                         $diffData['compare_data'][$data['attr_id']]['cash'] = 1;
                         $diffData['same'] = 0;
                     }

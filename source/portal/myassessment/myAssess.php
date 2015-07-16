@@ -80,7 +80,9 @@ if($_REQUEST['act']=='myAssessFlow'){
             $nextStatus = $_REQUEST['status']=='next';
             if($_REQUEST['status']=='next'){
                 $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
-                $userRelationRecord['rejectText'] = '';
+                //对于被驳回的状态,修改状态
+                if($userRelationRecord['rejectStatus']==1)
+                    $userRelationRecord['rejectStatus'] = 2;
             }
             if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealLeadView){//当转给领导终审时，需要生成历史记录
                 $historyData = $assessFlowDao->getUserAssessRecord($base_id,$userId);

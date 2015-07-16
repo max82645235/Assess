@@ -85,7 +85,7 @@
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
                             <td>
-                                <?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?>                                                       <?=AssessFlowDao::rejectTableMark($data['rejectText'],'±»²µ»Ø');?>
+                                <?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?>                                                             <?=AssessFlowDao::rejectTableMarkForStaff($data['rejectStatus']);?>
                             </td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
                             <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>

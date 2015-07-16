@@ -136,7 +136,7 @@
                             <td class="left"><?=$data['deptlist']?></td>
                             <td>
                                 <?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?>
-                                <?=AssessFlowDao::rejectTableMark($data['rejectText'],'ÒÑ²µ»Ø');?>
+                                <?=AssessFlowDao::rejectTableMarkForLead($data['rejectStatus']);?>
                             </td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">

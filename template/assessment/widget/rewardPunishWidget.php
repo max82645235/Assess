@@ -41,7 +41,7 @@
                 </td>
             </tr>
             <?php if($rpData){?>
-                <?php foreach($rpData as $key=>$itemData){?>
+                <?php foreach($rpData['itemDataList'] as $key=>$itemData){?>
                     <tr>
                         <td width="26%">
                             <div class="smfl">

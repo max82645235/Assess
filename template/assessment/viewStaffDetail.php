@@ -105,6 +105,14 @@
                             <span><?=($record_info['relation']['score'])?$record_info['relation']['score']:'';?></span>
                         </td>
                     </tr>
+                    <?php if($record_info['relation']['rejectText']){?>
+                        <tr>
+                            <td align="right">≤µªÿ¿Ì”…£∫&nbsp;</td>
+                            <td>
+                                <span style="color: red;"><?=$record_info['relation']['rejectText']?></span>
+                            </td>
+                        </tr>
+                    <?php }?>
                 </table>
             </div>
             <div class="pad25">

@@ -356,9 +356,27 @@ class AssessFlowDao extends BaseDao{
         return $rpData;
     }
 
-    static function rejectTableMark($rejectText,$font){
+    static function rejectTableMarkForLead($rejectStatus){
         $html = '';
-        if($rejectText){
+        if($rejectStatus>0){
+            $textMaps = array(
+                '1'=>'已驳回',
+                '2'=>'重审'
+            );
+            $font = $textMaps[$rejectStatus];
+            $html = "<span style='color: red;'>&nbsp;[$font]</span>";
+        }
+        return $html;
+    }
+
+    static function rejectTableMarkForStaff($rejectStatus){
+        $html = '';
+        if($rejectStatus>0){
+            $textMaps = array(
+                '1'=>'被驳回',
+                '2'=>'待重审'
+            );
+            $font = $textMaps[$rejectStatus];
             $html = "<span style='color: red;'>&nbsp;[$font]</span>";
         }
         return $html;

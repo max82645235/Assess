@@ -115,6 +115,7 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     if($_REQUEST['status']=='next'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
                         $userRelationRecord['rejectText'] = '';
+                        $userRelationRecord['rejectStatus'] = 0;
                         //当为领导终审通过时,需要计算得分写入assess_user_relation表score字段
                         if($userRelationRecord['user_assess_status'] == AssessFlowDao::AssessRealSuccess){
                             $userRelationRecord['score'] = $assessFlowDao->getUserAssessScore($attrRecord);
@@ -122,9 +123,11 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     }elseif($_REQUEST['status']=='back'){
                         $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']-1;
                         $userRelationRecord['rejectText'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['reject']);
+                        $userRelationRecord['rejectStatus'] = 1;
                     }elseif($_REQUEST['status']=='start'){
                         $userRelationRecord['user_assess_status'] = AssessFlowDao::AssessChecking;
                         $userRelationRecord['rejectText'] = '';
+                        $userRelationRecord['rejectStatus'] = 0;
                     }
 
                     //奖惩
@@ -155,6 +158,9 @@ if($_REQUEST['act']=='leaderSetFlow'){
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }
+
+
+
     $tpl = new NewTpl('waitMeAssess/leaderSetFlow.php',array(
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,
@@ -264,6 +270,7 @@ if($_REQUEST['act']=='mulCopyCreateAssess'){
                     'base_id'=>$base_id,
                     'assess_attr_type'=>$record_info['relation']['assess_attr_type']
                 );
+                $assessDao->clearDeleteUserItem($base_id,$newUids,false);
                 $assessDao->setAssessUserRelation($newUids,$baseRecord);//考核用户关系表设置
                 $assessDao->setAssessUserItemRecord($newUids,$record_info['item']);
             }

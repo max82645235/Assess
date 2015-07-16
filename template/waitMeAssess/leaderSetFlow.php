@@ -89,6 +89,10 @@
                 formData.userId = $("#hidden_user_id").val();
                 formData.rpItem = AssessInstance.getRpItems();
                 art.dialog.prompt('请输入驳回理由！',function(reject){
+                    if(!reject){
+                        alert('驳回理由必填');
+                        return false;
+                    }
                     formData.reject = reject;
                     $.ajax({
                         type:'post',
