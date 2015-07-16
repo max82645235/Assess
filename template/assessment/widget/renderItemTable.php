@@ -1,4 +1,5 @@
 <?php $totalScore = 0;?>
+<p class="tjtip">评分</p>
 <?php if($assessAttrType==1){?>
     <?php
         require_once BATH_PATH.'source/Dao/IndicatorDao.php';
@@ -149,6 +150,30 @@
 
 <?php }?>
 
+<?php $rpData = unserialize($relation['rpData']);?>
+<?php if($rpData['itemDataList']){?>
+<p class="tjtip">奖惩</p>
+<table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
+    <tr>
+        <th width="20%">奖惩类型</th>
+        <th width="50%">说明</th>
+        <th width="10%">数值</th>
+        <th width="20%">金额/百分比</th>
 
+    </tr>
+    <?php foreach($rpData['itemDataList'] as $key=>$itemData){?>
+        <tr>
+            <td><?=($itemData['rpType']==1)?'奖励':'惩罚';?> </td>
+            <td ><?=$itemData['rpIntro']?></td>
+            <td><?=$itemData['rpUnitValue']?></td>
+            <td><?=($itemData['unitType']==1)?'元':'%';?> </td>
+        </tr>
+    <?php }?>
+    <tr>
+        <td colspan="2">金额合计：<?=$rpData['total'][1]['totalValue']?>元</td>
+        <td colspan="2">百分比合计：&nbsp;<?=$rpData['total'][2]['totalValue']*100?>%</td>
+    </tr>
+</table>
+<?php }?>
 
 

@@ -59,7 +59,7 @@ if($_REQUEST['act']=='myStaffList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.*,b.user_assess_status,b.base_id,b.score,b.rejectText";
+    $findSql = " a.*,b.user_assess_status,b.base_id,b.score,b.rejectText,b.rpData";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(

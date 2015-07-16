@@ -117,6 +117,7 @@
                     <th style="text-align: center;">部门</th>
                     <th width="200" style="text-align: center;">流程状态</th>
                     <th width="150" style="text-align: center;">得分</th>
+                    <th width="200" style="text-align: center;">奖惩</th>
                     <th  width="150" style="text-align: center;">操作</th>
                 </tr>
                 <?php
@@ -139,6 +140,17 @@
                                 <?=AssessFlowDao::rejectTableMarkForLead($data['rejectStatus']);?>
                             </td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
+                            <td>
+                                <?php $rpData = unserialize($data['rpData']);?>
+                                 <?php if($rpData){?>
+                                     <?php if(isset($rpData['total'][1]['totalValue'])){?>
+                                             金额合计：<?=$rpData['total'][1]['totalValue']?></br>
+                                     <?php }?>
+                                     <?php if(isset($rpData['total'][2]['totalValue'])){?>
+                                             比例合计：<?=$rpData['total'][2]['totalValue']?></br>
+                                     <?php }?>
+                                 <?php }?>
+                            </td>
                             <td class="left">
                                 <a href="?m=myassessment&a=waitMeAssess&act=leadViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>

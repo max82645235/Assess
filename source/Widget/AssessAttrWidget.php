@@ -93,7 +93,7 @@ class AssessAttrWidget{
         self::$compareStatus = $compareStatus;
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);
-        $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType));
+        $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType,'relation'=>$record_info['relation']));
         $this->tpl->render();
     }
 
