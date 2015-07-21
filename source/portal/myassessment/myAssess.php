@@ -29,7 +29,7 @@ if($_REQUEST['act']=='myAssessList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,a.rejectText,b.*";
+    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,a.rejectStatus,b.*";
     $findSql = str_replace('[*]',$findSql,$sql);
     $findSql.= " order by b.base_id desc limit {$offset},{$limit}";
     $tableData = $db->GetAll($findSql);

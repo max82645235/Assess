@@ -144,15 +144,18 @@
                                 <?php $rpData = unserialize($data['rpData']);?>
                                  <?php if($rpData){?>
                                      <?php if(isset($rpData['total'][1]['totalValue'])){?>
-                                             金额合计：<?=$rpData['total'][1]['totalValue']?></br>
+                                             <?=$rpData['total'][1]['totalValue']?>元</br>
                                      <?php }?>
                                      <?php if(isset($rpData['total'][2]['totalValue'])){?>
-                                             比例合计：<?=$rpData['total'][2]['totalValue']?></br>
+                                             <?=$rpData['total'][2]['totalValue']*100?>%</br>
                                      <?php }?>
-                                 <?php }?>
+                                 <?php }elseif($data['user_assess_status']==AssessFlowDao::AssessRealSuccess){echo "-";}?>
                             </td>
                             <td class="left">
                                 <a href="?m=myassessment&a=waitMeAssess&act=leadViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
+                                <?php if( $assessBaseRecord['lead_direct_set_status']==1){?>
+                                    <a  class="bjwrt" onclick="Assess.prototype.copyUserAssess(<?=$data['base_id']?>,<?=$data['userId']?>)" >复制</a>
+                                <?php }?>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                     <span>
                                              <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color:<?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
@@ -162,9 +165,7 @@
                                 <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking && $assessBaseRecord['lead_direct_set_status']==1){?>
                                  <a href="?m=myassessment&a=waitMeAssess&act=changeCheckingStatus&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333">变更状态</a>
                                 <?php }?>
-                        <?php if( $assessBaseRecord['lead_direct_set_status']==1){?>
-                                <a  class="bjwrt" onclick="Assess.prototype.copyUserAssess(<?=$data['base_id']?>,<?=$data['userId']?>)" >复制</a>
-                        <?php }?>
+
                             </td>
                         </tr>
                     <?php }?>

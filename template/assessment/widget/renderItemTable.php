@@ -170,8 +170,16 @@
         </tr>
     <?php }?>
     <tr>
-        <td colspan="2">金额合计：<?=$rpData['total'][1]['totalValue']?>元</td>
-        <td colspan="2">百分比合计：&nbsp;<?=$rpData['total'][2]['totalValue']*100?>%</td>
+        <td colspan="2">
+            金额合计：
+            <?php if($rpData['total'][1]['totalValue']){?>
+                 <?=$rpData['total'][1]['totalValue']?>元
+            <?php }?>
+        </td>
+        <td colspan="2">百分比合计：&nbsp;
+            <?php if($rpData['total'][2]['totalValue']){?>
+            <?=$rpData['total'][2]['totalValue']*100?>%</td>
+             <?php }?>
     </tr>
 </table>
 <?php }?>
