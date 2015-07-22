@@ -63,22 +63,102 @@ class AssessAttrWidget{
         $this->tpl->render();
     }
 
-    public function disabled(){
+    public function disabled($element=''){
         if($this->mValid){
-            return $this->mValid->getDisableValid();
+            return $this->mValid->getDisableValid($element);
         }
     }
 
-    public function validElement(){
+    public function validElement($element=''){
         if($this->mValid){
-            return $this->mValid->validElement();
+            return $this->mValid->validElement($element);
         }
     }
 
-    public function renderItemTable($itemInfo){
+    static $compareStatus = false;
+    static $diffData;
+    public function renderItemTable($record_info,$compareStatus=false){
+        $itemInfo = $record_info['item'];
+        $assessAttrType = $record_info['relation']['assess_attr_type'];
+        self::$diffData = $record_info['relation']['diffData'];
+
+        $prefixPathArr = explode(',',self::$renderPathMaps[$assessAttrType]);
+        $itemList = array();
+        foreach($itemInfo as $k=>$item){
+            $t = AssessDao::$AttrRecordTypeMaps[$item['attr_type']];
+            if(in_array($t,$prefixPathArr)){
+                $itemList[] = $item;
+            }
+        }
+        self::$compareStatus = $compareStatus;
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);
-        $this->tpl->set_data(array('itemInfo'=>$itemInfo,'widget'=>$this));
+        $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType,'relation'=>$record_info['relation']));
+        $this->tpl->render();
+    }
+
+
+    public function getDifferShow($attr_type='',$itemData=array(),$isItemData=true){
+        $sameStatus = true;
+        $style = '';
+        if(self::$compareStatus && self::$diffData){
+            if(self::$diffData['type_differ']==1){
+                $sameStatus = false;
+            }elseif(self::$diffData['same']==0){
+                if($itemData){
+                    $attr = @$itemData['attr'];
+                    $index = @$itemData['index'];
+
+                    if(!$isItemData && self::$diffData['compare_data'][$attr_type][$attr]){
+                        $sameStatus = false;
+                    }
+
+                    if($isItemData && self::$diffData['compare_data'][$attr_type]['itemData'][$index][$attr]){
+                        $sameStatus = false;
+                    }
+                }
+            }
+        }
+
+        if(!$sameStatus){
+            $style = 'style="background-color:#FFB6C1;"';
+        }
+        return $style;
+    }
+
+    public function getTrIsShow(){
+        $style = '';
+        $className = $this->mValid->getClassName();
+        $hidden = false;
+        if($className =='HrValid'&& $this->mValid->record && $this->mValid->record['assess_attr_type']){
+            $hidden = true;
+        }
+
+        if($className =='LeaderValid' ||$className =='StaffValid'){
+            if($this->mValid->userAssessData && $this->mValid->userAssessData['assess_attr_type']){
+                $hidden = true;
+            }
+        }
+        if($hidden){
+            $style = 'display:none;';
+        }
+        return $style;
+    }
+
+    //奖惩table
+    public function rewardPunish($relationData){
+        $rpData = unserialize($relationData['rpData']);
+        $renderPath = BATH_PATH."template/assessment/widget/rewardPunishWidget.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('rpData'=>$rpData));
+        $this->tpl->render();
+    }
+
+    //历史记录对比
+    public function compareHistory($record_info){
+        $renderPath = BATH_PATH."template/assessment/widget/compareHistory.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('record_info'=>$record_info));
         $this->tpl->render();
     }
 }

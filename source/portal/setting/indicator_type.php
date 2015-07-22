@@ -62,6 +62,12 @@ if($_POST['act'] == "del" && $_POST['id']){
     $sql = get_update_sql($tbl,$info,"typeid=".intval($_POST['id']));
     $db->Execute($sql);
 
+    $tbl = "`".DB_PREFIX."indicator`";;
+    $info = array();
+    $info['status'] = 0;
+    $sql = get_update_sql($tbl,$info,"typeid=".intval($_POST['id']));
+    $db->Execute($sql);
+
     admin_log('量化指标分类删除','bindid',intval($_POST['id']));
 
     echo("true");

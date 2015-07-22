@@ -71,7 +71,24 @@ class AssessDao extends BaseDao{
 
     //根据考核周期，开始时间获取考核结束时间
     static function getAssessBaseEndDate($periodType,$startDate){
-        return date('Y-m-d',strtotime('+'.$periodType.' month',strtotime($startDate)));
+        return date('Y-m-d',strtotime('+'.$periodType.' month',strtotime($startDate))-1);
+    }
+
+    protected function getAssessYearMonth($base_start_date){
+        if(preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/",$base_start_date)){
+            $tmpArr = explode('-',$base_start_date);
+            $ret = array();
+            if($tmpArr[2]>15){
+                $tmpArr[1]++;
+                if($tmpArr[1]>12){
+                    $tmpArr[0]++;
+                    $tmpArr[1] = $tmpArr[1]-12;
+                }
+            }
+            $ret['assess_year'] = $tmpArr[0];
+            $ret['assess_month'] = $tmpArr[1];
+            return $ret;
+        }
     }
 
     //设置考核基础表信息
@@ -79,10 +96,15 @@ class AssessDao extends BaseDao{
         global $p_uid;
         try{
             $tableSafeAttr = array(
-                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status'
+                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status','assess_year','assess_month'
             );
             $tbl = "`".DB_PREFIX."assess_base`";
             $baseRecord['base_end_date'] = self::getAssessBaseEndDate($baseRecord['assess_period_type'],$baseRecord['base_start_date']);
+            $yearMonthArr = $this->getAssessYearMonth($baseRecord['base_start_date']);
+            if($yearMonthArr){
+                $baseRecord = array_merge($baseRecord,$yearMonthArr);
+            }
+
             foreach($baseRecord as $key=>$attr){
                 if(!in_array($key,$tableSafeAttr)){
                     unset($baseRecord[$key]);
@@ -222,12 +244,13 @@ class AssessDao extends BaseDao{
     }
 
     //触发用户考核类型更新，删除user_item表旧的考核类型数据
-    public function triggerUserNewAttrTypeUpdate($userRelationRecord=false,$delStatus=false){
-
+    public function triggerUserNewAttrTypeUpdate($userRelationRecord=array(),$delStatus=false){
         $tbl = "`".DB_PREFIX."assess_user_relation`";
         $where = " rid={$userRelationRecord['rid']}";
         $sql = self::get_update_sql($tbl,$userRelationRecord,$where);
-        $this->db->Execute($sql);
+        if($userRelationRecord){
+            $this->db->Execute($sql);
+        }
 
         if($delStatus){
             $del_attr_sql = "delete from sa_assess_user_item where base_id = {$userRelationRecord['base_id']} and userId={$userRelationRecord['userId']}";
@@ -235,11 +258,35 @@ class AssessDao extends BaseDao{
         }
     }
 
+    public function clearDeleteUser($base_id,$uidArr){
+        $tbl =  "`".DB_PREFIX."assess_user_relation`";
+        $uids = implode(',',$uidArr);
+        $sql = "select count(*) from  {$tbl} where  base_id={$base_id} and userId not in($uids)";
+        $rs = $this->db->GetOne($sql);
+        if($rs>0){
+            $deleteSql = "delete from {$tbl} where base_id={$base_id} and userId not in($uids)";
+            $this->db->Execute($deleteSql);
+            return true;
+        }
+    }
+
+    public function clearDeleteUserItem($base_id,$uidArr,$not = true){
+        $tbl =  "`".DB_PREFIX."assess_user_item`";
+        $uids = implode(',',$uidArr);
+        if($not){
+            $notSql = 'not';
+        }else{
+            $notSql = '';
+        }
+        $deleteSql = "delete from {$tbl} where base_id={$base_id} and userId {$notSql} in($uids)";
+        $this->db->Execute($deleteSql);
+    }
 
     public function setAssessUserRelation($uidArr,$baseRecord){
         $base_id = $baseRecord['base_id'];
         if($uidArr && $base_id){
             $tbl =  "`".DB_PREFIX."assess_user_relation`";
+
             foreach($uidArr as $userId){
                 $tmpArr = array();
                 $tmpArr['userId'] = $userId;
@@ -249,6 +296,10 @@ class AssessDao extends BaseDao{
                 if(!$findRecord = $this->db->GetRow($findRecordSql)){
                     $tmpArr['user_assess_status'] = 0;
                     $sql = self::get_insert_sql($tbl,$tmpArr);
+                    $this->db->Execute($sql);
+                }else{
+                    $where = ' rid='.$findRecord['rid'];
+                    $sql = self::get_update_sql($tbl,$tmpArr,$where);
                     $this->db->Execute($sql);
                 }
             }
@@ -321,6 +372,9 @@ class AssessDao extends BaseDao{
         if($findRecord = $this->db->GetRow($findRecordSql)){
             $isMy = $findRecord['userId'] == getUserId();
             if($auth->setIsMy($isMy)->validIsAuth('publishAssess')){
+                $findRecord['base_status'] = self::HrAssessPublish;//已发布
+                $findRecord['publish_date'] = date("Y-m-d");
+                $where = " base_id={$findRecord['base_id']}";
                 //如果不是由领导直接设置，需要把该base_id对应的考核人考核状态改为待考核
                 if($findRecord['lead_direct_set_status']==0){
                     $findRecord['base_status'] = self::HrAssessChecking;//考核中
@@ -329,9 +383,6 @@ class AssessDao extends BaseDao{
                     $sql = self::get_update_sql(" sa_assess_user_relation ",$data,$where);
                     $this->db->Execute($sql);
                 }
-                $findRecord['base_status'] = self::HrAssessPublish;//已发布
-                $findRecord['publish_date'] = date("Y-m-d");
-                $where = " base_id={$findRecord['base_id']}";
                 $sql = self::get_update_sql($tbl,$findRecord,$where);
                 $this->db->Execute($sql);
                 if($findRecord['lead_direct_set_status']==1){
@@ -494,7 +545,8 @@ class AssessDao extends BaseDao{
         return $retList;
     }
 
-    public function checkAssessAllUserStatus($base_id){
+    //判断用户考核状态，全为 【考核中】时，需要更新主表
+    public function checkAssessAllUserCheckingStatus($base_id){
         $record = $this->getRelatedUserRecord($base_id);
         if($record){
             $allStatus = true;
@@ -508,6 +560,46 @@ class AssessDao extends BaseDao{
                 $updateBaseStatus = self::HrAssessChecking;
                 //将base表[已发布]状态改为[考核中]
                 $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =1";
+                $this->db->Execute($updateSql);
+            }
+        }
+    }
+
+    //判断用户考核状态，全为 【提报状态】，需要更新主表
+    public function checkAssessAllUserSubbingStatus($base_id){
+        $record = $this->getRelatedUserRecord($base_id);
+        if($record){
+            $allStatus = true;
+            foreach($record as $data){
+                if($data['user_assess_status']!=4){
+                    $allStatus = false;
+                    break;
+                }
+            }
+            if($allStatus){
+                $updateBaseStatus = self::HrAssessSubbing;
+                //将base表[考核中]状态改为[提报中]
+                $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =2";
+                $this->db->Execute($updateSql);
+            }
+        }
+    }
+
+    //判断用户考核状态，全为 【审核通过】时，需要更新主表
+    public function checkAssessAllUserSuccessStatus($base_id){
+        $record = $this->getRelatedUserRecord($base_id);
+        if($record){
+            $allStatus = true;
+            foreach($record as $data){
+                if($data['user_assess_status']!=6){
+                    $allStatus = false;
+                    break;
+                }
+            }
+            if($allStatus){
+                $updateBaseStatus = self::HrAssessOver;
+                //将base表[提报中]状态改为[考核结束]
+                $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =3";
                 $this->db->Execute($updateSql);
             }
         }
@@ -536,4 +628,42 @@ class AssessDao extends BaseDao{
 
     }
 
+    //触发历史记录对比
+    public function triggerUserItemHistoryWrite($historyData,AssessFlowDao $assessFlowDao){
+        if($historyData){
+            $base_id = $historyData['relation']['base_id'];
+            $userId = $historyData['relation']['userId'];
+            $newData = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+            $diffData = array();
+            $diffData['history'] = serialize($historyData);
+            if($historyData['relation']['assess_attr_type']==$newData['relation']['assess_attr_type']){
+                $diffData['type_differ'] = 0;
+                $diffData['same'] = 1;
+                foreach($newData['item'] as $i=>$data){
+                    $newItemData = unserialize($data['itemData']);
+                    $historyItemData = unserialize($historyData['item'][$i]['itemData']);
+                    $itemDiffer = array();
+                    foreach($newItemData as $k=>$trList){
+                        foreach($trList as $attr=>$d){
+                            if(!in_array($attr,array('finishCash','selfScore')) && $historyItemData[$k][$attr]!=$d){
+                                $diffData['same'] = 0;
+                                $itemDiffer[$k][$attr] = 1;
+                            }
+                        }
+                    }
+                    $diffData['compare_data'][$data['attr_type']]['itemData'] = $itemDiffer;
+                    if($data['cash'] && $data['cash']!=$historyData['item'][$i]['cash']){
+                        $diffData['compare_data'][$data['attr_id']]['cash'] = 1;
+                        $diffData['same'] = 0;
+                    }
+                }
+            }else{
+                $diffData['type_differ'] = 1;
+                $diffData['same'] = 0;
+            }
+            $newData['relation']['diffData'] = serialize($diffData);
+            unset($newData['relation']['username']);
+            $this->triggerUserNewAttrTypeUpdate($newData['relation']);
+        }
+    }
 }

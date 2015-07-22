@@ -32,7 +32,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">考核管理 > 被考核人列表 > <?=$assessBaseRecord['base_name']?></p>
+        <p class="icon1">HR考核管理 > 被考核人列表 > <?=$assessBaseRecord['base_name']?></p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
@@ -46,7 +46,7 @@
                     &nbsp;&nbsp;&nbsp;流程状态：
                     <select name="user_assess_status" style="width: 150px;">
                         <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>请选择</option>
-                        <?php foreach(AssessFlowDao::$UserAssessStatusByLeader as $k=>$val){?>
+                        <?php foreach(AssessFlowDao::$UserAssessStatusByHr as $k=>$val){?>
                             <option value="<?=$k?>"  <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']!=='' && $_REQUEST['user_assess_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
                         <?php }?>
                     </select>
@@ -68,11 +68,11 @@
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
-                    <th class="left" width="200"  style="text-align: center;">被考核人</th>
+                    <th class="left" width="100"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
-                    <th width="150" style="text-align: center;">考核状态</th>
-                    <th width="150" style="text-align: center;">得分</th>
-                    <th  width="300" style="text-align: center;">操作</th>
+                    <th width="150" style="text-align: center;">流程状态</th>
+                    <th width="150" style="text-align: center;">绩效评分</th>
+                    <th  width="100" style="text-align: center;">操作</th>
                 </tr>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
@@ -80,9 +80,9 @@
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
                             </td>
-                            <td class="left"><?=$data['username']?></td>
+                            <td ><?=$data['username']?></td>
                             <td class="left"><?=$data['deptlist']?></td>
-                            <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
+                            <td><?=AssessFlowDao::$UserAssessStatusByHr[$data['user_assess_status']]?></td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
                                 <a href="?m=assessment&a=launchList&act=hrViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>

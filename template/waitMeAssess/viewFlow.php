@@ -55,6 +55,7 @@
                     </table>
                 </div>
                 <div class="pad25">
+                    <?=$assessAttrWidget->compareHistory($record_info);?>
                     <div class="attr_content">
                         <!--任务/指标类-->
                         <?=$assessAttrWidget->renderAttr($record_info['item'],1)?>

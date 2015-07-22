@@ -168,6 +168,7 @@
             data = $.validator.normalizeRules(
                 $.extend(
                     {},
+                    $.validator.metadataRules( element ),
                     $.validator.classRules( element ),
                     $.validator.attributeRules( element ),
                     $.validator.dataRules( element ),
@@ -1011,6 +1012,20 @@
                 }
             }
             return rules;
+        },
+
+        metadataRules: function(element) {
+
+            if (!$.metadata) return {};
+
+            var meta = $.data(element.form, "validator").settings.meta;
+
+            return meta ?
+
+                $(element).metadata()[meta] :
+
+                $(element).metadata();
+
         },
 
         staticRules: function( element ) {

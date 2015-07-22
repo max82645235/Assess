@@ -12,7 +12,7 @@ function checkUserAuthority(){
     return true;
 }
 require_once BATH_PATH.'source/Dao/AssessDao.php';
-require_once BATH_PATH.'source/Util/ModificationValid.php';
+require_once BATH_PATH.'source/Util/btnValid/HrValid.php';
 
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
 if($_REQUEST['act']=='launchAssess'){
@@ -20,7 +20,7 @@ if($_REQUEST['act']=='launchAssess'){
     $user_id = getUserId();//当前用户身份Id
     $assessDao = new AssessDao();
     if(checkUserAuthority()){
-        $mValid = new ModificationValid($base_id);
+        $mValid = new HrValid($base_id);
         //ajax表单提交
         if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
             if(isset($_REQUEST['subFormData']['baseData'])){
@@ -32,6 +32,7 @@ if($_REQUEST['act']=='launchAssess'){
                     $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
                     $baseRecord = $assessDao->getAssessBaseRecord($base_id);
                     $assessDao->setAssessUserRelation($uids,$baseRecord);//考核用户关系表设置
+                    $clearTag = $assessDao->clearDeleteUser($base_id,$uids); //清除删除的用户
                     //如果不勾选领导设置时
                     if(isset($_REQUEST['subFormData']['attrData']) && $_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){
                         $attrRecord = array();
@@ -46,10 +47,13 @@ if($_REQUEST['act']=='launchAssess'){
                         }
                         //assess_attr表保存
                         if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
+                            if($clearTag){//当clearTag标识为true 清除残留的delete用户ITEM
+                                $assessDao->clearDeleteUserItem($base_id,$uids);
+                            }
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
                         }
                     }
-                    echo json_encode(array('status'=>'success'));
+                    echo json_encode(array('status'=>'success','base_id'=>$base_id));
                 }
             }
             die();
@@ -84,10 +88,11 @@ if($_REQUEST['act']=='launchAssess'){
 
 //部门二级分类
 if($_REQUEST['act']=='ajaxBusClassify'){
+    global $cfg;
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $validAuth = $_REQUEST['validAuth'];
-        $retData = array();
+        $retData = array('data'=>array());
         $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
@@ -128,7 +133,7 @@ if($_REQUEST['act']=='selectUserList'){
     $cid = $_REQUEST['cid'];
     $uids = explode(',',$_REQUEST['uids']);
     $assessDao = new AssessDao();
-    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid}";
+    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid} order by deptlist desc";
     $userList = $assessDao->db->GetAll($sql);
     $tpl = new NewTpl('assessment/selectUserList.php',array(
         'userList'=>$userList,

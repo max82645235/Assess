@@ -7,6 +7,10 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script type="text/javascript">
         var AssessInstance =  new Assess();
@@ -14,8 +18,8 @@
             $("#assess_user_diy_set").click(function(){
                 AssessInstance.tableBtnHandler($('#table_style'),
                     function(jInput){
-                        var status = jInput.parents('tr').find('td:eq(3)').text();
-                        if(status=='待我创建'){
+                        var status = jInput.parents('tr').attr('assess_status');
+                        if(status==0){
                             return true;
                         }else{
                             alert('请保证勾选项都为待我创建！');
@@ -66,7 +70,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">待我考核 > 员工列表 ><?=$assessBaseRecord['base_name']?></p>
+        <p class="icon1">待我考核 > 员工列表 > <?=$assessBaseRecord['base_name']?></p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
@@ -83,6 +87,13 @@
                         <?php foreach(AssessFlowDao::$UserAssessStatusByLeader as $k=>$val){?>
                             <option value="<?=$k?>"  <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']!=='' && $_REQUEST['user_assess_status']==$k){?> selected="selected"<?php }?>><?=$val?></option>
                         <?php }?>
+                    </select>
+                </div>
+                <div class="jssel" style="z-index:98">
+                    &nbsp;&nbsp;&nbsp;下属状态：
+                    <select name="status">
+                        <option value="1" <?php if(isset($_REQUEST['status']) && $_REQUEST['status']==1){?> selected="selected"<?php }?>>直属</option>
+                        <option value="2"<?php if(isset($_REQUEST['status']) && $_REQUEST['status']==2){?> selected="selected"<?php }?>>非直属</option>
                     </select>
                 </div>
                 <div  class="jssel" style="z-index:98">
@@ -102,40 +113,59 @@
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
-                    <th class="left" width="200"  style="text-align: center;">被考核人</th>
+                    <th  width="100"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
-                    <th width="150" style="text-align: center;">考核状态</th>
-                    <th width="150" style="text-align: center;">得分</th>
-                    <th  width="300" style="text-align: center;">操作</th>
+                    <th width="200" style="text-align: center;">流程状态</th>
+                    <th width="150" style="text-align: center;">绩效评分</th>
+                    <th width="200" style="text-align: center;">奖惩</th>
+                    <th  width="150" style="text-align: center;">操作</th>
                 </tr>
                 <?php
                 $btnArr = array(
-                    '0'=>'创建',
-                    '2'=>'初审',
-                    '5'=>'终审',
+                    '0'=>'创建计划',
+                    '2'=>'审核计划',
+                    '5'=>'绩效评估',
                 );
                 ?>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
-                        <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
+                        <tr class="<?=($k%2)?'bgfff':'bgf0';?>" assess_status="<?=$data['user_assess_status']?>">
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
                             </td>
-                            <td class="left"><?=$data['username']?></td>
+                            <td ><?=$data['username']?></td>
                             <td class="left"><?=$data['deptlist']?></td>
-                            <td><?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?></td>
+                            <td>
+                                <?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?>
+                                <?=AssessFlowDao::rejectTableMarkForLead($data['rejectStatus']);?>
+                            </td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
+                            <td>
+                                <?php $rpData = unserialize($data['rpData']);?>
+                                 <?php if($rpData){?>
+                                     <?php if(isset($rpData['total'][1]['totalValue'])){?>
+                                             <?=$rpData['total'][1]['totalValue']?>元</br>
+                                     <?php }?>
+                                     <?php if(isset($rpData['total'][2]['totalValue'])){?>
+                                             <?=$rpData['total'][2]['totalValue']*100?>%</br>
+                                     <?php }?>
+                                 <?php }elseif($data['user_assess_status']==AssessFlowDao::AssessRealSuccess){echo "-";}?>
+                            </td>
                             <td class="left">
                                 <a href="?m=myassessment&a=waitMeAssess&act=leadViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
+                                <?php if( $assessBaseRecord['lead_direct_set_status']==1){?>
+                                    <a  class="bjwrt" onclick="Assess.prototype.copyUserAssess(<?=$data['base_id']?>,<?=$data['userId']?>)" >复制</a>
+                                <?php }?>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <span >
-                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
+                                    <span>
+                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color:<?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
                                 <?php }?>
 
                                 <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking && $assessBaseRecord['lead_direct_set_status']==1){?>
                                  <a href="?m=myassessment&a=waitMeAssess&act=changeCheckingStatus&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333">变更状态</a>
                                 <?php }?>
+
                             </td>
                         </tr>
                     <?php }?>
@@ -146,7 +176,8 @@
                 <?=$page_nav?>
             </p>
             <div>
-                <input type="button" name="" value="自行设置" class="btn139" id="assess_user_diy_set" style="cursor:pointer;">
+                <input type="hidden" id="syspath" value="<?=P_SYSPATH?>">
+                <input type="button" name=""  value="由员工创建计划" class="btn139" id="assess_user_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
             </div>
         </div>
     </div>

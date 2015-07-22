@@ -3,7 +3,7 @@
  */
 $(function(){
     jQuery.extend(jQuery.validator.messages, {
-        required: "必选字段",
+        required: "必填字段",
         remote: "请修正该字段",
         email: "请输入正确格式的电子邮件",
         url: "请输入合法的网址",
@@ -67,8 +67,61 @@ $(function(){
         return (value>=0 && value<=100 && re.test(value));
     },'请输出0-100之内的整数');
 
+    $.validator.addMethod('cash',function(value,element,arg){
+        var re = /^[0-9]+.?[0-9]*$/;
+        return (value>=0 && value<=10000000 && re.test(value));
+    },'请输出合适的金额');
+
+
+    $.validator.addMethod('job_name',function(value,element,arg){
+        if(value==''){
+           if($(element).parents('tr').find('input[tagname=job_qz]').val()!=''){
+               return false;
+           }
+        }
+        return true;
+    },'必填字段');
+
+    $.validator.addMethod('totalQz',function(value,element,arg){
+        var cntQz = 0;
+        var emptyStatus = false;
+        $(".attr_form_1[flag=1] .sm_xsmbadd tr").each(function(){
+            if($(this).find('td:eq(1) input[tagname=qz]').val()!=''){
+                cntQz+=parseInt($(this).find('td:eq(1) input[tagname=qz]').val());
+                emptyStatus = true;
+            }
+        });
+
+        $(".attr_form_1[flag=2] .sm_xsmbadd tr").each(function(){
+            if($(this).find('td:eq(1) input[tagname=job_qz]').val()!=''){
+                cntQz+=parseInt($(this).find('td:eq(1) input[tagname=job_qz]').val());
+                emptyStatus = true;
+            }
+
+        });
+        if(cntQz==100 && emptyStatus){
+            return true;
+        }
+        return false;
+    },'请保证所有项权重之和为100');
+
+    $.validator.addMethod('rpUnit',function(value,element,arg){
+      var rs = false;
+      var unitType =   $(element).parents('tr').find('select[name=unitType]').val();
+      if(unitType==1){
+          if(value>0 && value<1000000){
+              rs = true;
+          }
+      }else if(unitType==2){
+          var re = /^[0-9]+.?[0-9]*$/;
+          rs =  (value>=0 && value<=100 && re.test(value));
+      }
+      return rs;
+    },'请输出正确的数值');
+
     $.myValidate = $("#sub_form").validate({
         debug:true,
+        meta:"validate",
         rules:{
             base_name:{
                 required: true
@@ -82,7 +135,9 @@ $(function(){
             lead_sub_start_date:{
                 dateFormat:true
             },
-
+            staff_sub_start_date:{
+                dateFormat:true
+            },
             //commission类型
             attr1_weight:{
                 required: true,
@@ -94,7 +149,8 @@ $(function(){
             },
             qz:{
                 required: true,
-                percent:true
+                percent:true,
+                totalQz:true
             },
 
             //评分
@@ -113,7 +169,8 @@ $(function(){
             },
             job_qz:{
                 required: true,
-                percent:true
+                percent:true,
+                totalQz:true
             },
             attr2_weight:{
                 required: true
@@ -123,16 +180,6 @@ $(function(){
                 required: true
             },
             attr3_cash:{
-                required: true,
-                number:true
-            },
-
-            //target类型
-            tc_name:{
-                required: true,
-                percent:true
-            },
-            finishCash:{
                 required: true,
                 number:true
             }

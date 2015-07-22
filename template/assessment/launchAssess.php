@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
-    <title>发起考核</title>
+    <title>创建考核计划</title>
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>calendar-new.css" rel="stylesheet" type="text/css" />
@@ -25,13 +25,14 @@
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.js"></script>
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.validate.js"></script>
     <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery-ui.min.js"></script>
+    <script src="<?=P_SYSPATH?>static/js/jqueryui/jquery.metadata.js"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/validateAssess.js" type="text/javascript"></script>
     <script>
         var AssessInstance =  new Assess();
         $(function(){
             AssessInstance.initHide();
-            AssessInstance.triggerBusSelect(false); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(0); //刚进页面时触发一次部门二级联动ajax查询
             $(".commission_indicator_parent").each(function(){
                 AssessInstance.triggerIndicatorSelect($(this));//刚进页面时触发一次指标分类二级联动ajax查询
             });
@@ -56,10 +57,19 @@
             $("#sub_form").submit(function(e){
                 if($.myValidate.errorList.length==0 && AssessInstance.submitSelectValid()){
                     var jumpUrl = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
-                    AssessInstance.formSubHandle(jumpUrl);
+                    AssessInstance.formSubHandle(jumpUrl,1);
                 }
                 return false;
                 e.preventDefault();
+            });
+
+            //发布
+            $("#pubBtb").click(function(){
+                $("#sub_form").valid();
+                if($.myValidate.errorList.length==0 && AssessInstance.submitSelectValid()){
+                    var jumpUrl = $("#pubBtb").attr('pubUrl');
+                    AssessInstance.formSubHandle(jumpUrl,2);
+                }
             });
 
             //追加属性节点
@@ -70,7 +80,7 @@
 
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect(false);
+                AssessInstance.triggerBusSelect(0);
             });
 
             //考核人模糊搜索
@@ -117,10 +127,12 @@
             //添加考核人
             $("#adduser").click(function(){
                 var userId = $("#username_userId").val();
-                var t = $("#username").val().split('_');
-                var index = t.length-1;
-                var username = t[index];
-                AssessInstance.adduser(userId,username);
+                if(userId){
+                    var t = $("#username").val().split('_');
+                    var index = t.length-1;
+                    var username = t[index];
+                    AssessInstance.adduser(userId,username);
+                }
                 $.myValidate.element('#username');
             });
 
@@ -178,7 +190,7 @@ EOF;
 <body>
 <div class="bg baseInfo_content">
     <div class="rtop">
-        <p class="icon1">考核管理 > 发起考核</p>
+        <p class="icon1">HR考核管理 > 创建考核计划</p>
     </div>
     <div class="kctjcon">
         <p class="tjtip">注：*为必填项</p>
@@ -216,9 +228,18 @@ EOF;
                     <!--  @todo 被考核人列表选择-->
                     <td align="right" valign="top"><em class="c-yel">*</em> 被考核人：&nbsp;</td>
                     <td>
+                        <?php
+                            if($relationUsers){
+                                $uidsStr = '';
+                                foreach($relationUsers as $k=>$user){
+                                    $uidsStr.=$user['userId'].",";
+                                }
+                                $uidsStr = substr($uidsStr,0,-1);
+                            }
+                        ?>
                         <input <?=$mValid->getDisableValid('username');?>  type="text" value=""  placeholder="请输入" name="username" id="username" class="width190"  />
                         <input type="hidden" id="username_userId" value=""/>
-                        <input <?=$mValid->getDisableValid('uids');?>  type="hidden" name="uids" id="uids" value="" />
+                        <input <?=$mValid->getDisableValid('uids');?>  type="hidden" name="uids" id="uids" value="<?=$uidsStr?>" />
                         <input <?=$mValid->getDisableValid('adduser');?>  type="button" class="btn48 adduser" value="添加" id="adduser" name="adduser"/>
                         <input <?=$mValid->getDisableValid('selectUserList');?>  type="button" class="btn74 getuserlist"  id="selectUserList"  name="selectUserList" style="margin:0;" value="选择用户" />
                         <div class="shcon div_userlist" style="width: 500px;<?php if(!$relationUsers){?>display: none;<?php }?>">
@@ -237,17 +258,29 @@ EOF;
                         </div>
                     </td>
                 </tr>
+
                 <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核周期：&nbsp;</td>
+                    <td align="right"><em class="c-yel">*</em> 考核周期开始时间：&nbsp;</td>
                     <td class="jsline">
-                        <select name="assess_period_type" id="assess_period_type" <?=$mValid->getDisableValid('assess_period_type');?>>
-                            <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
-                                <option value="<?=$k?>"
-                                    <?php if($record_info['base_info']['assess_period_type']==$k){?> selected="selected"<?php }?>>
-                                    <?=$v?>
-                                </option>
-                            <?php }?>
-                        </select>
+                        <div style="float: left;">
+                            <select name="assess_period_type" id="assess_period_type" <?=$mValid->getDisableValid('assess_period_type');?>>
+                                <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
+                                    <option value="<?=$k?>"
+                                        <?php if($record_info['base_info']['assess_period_type']==$k){?> selected="selected"<?php }?>>
+                                        <?=$v?>
+                                    </option>
+                                <?php }?>
+                            </select>&nbsp;&nbsp;
+                        </div>
+                        <?=dateHtml($record_info['base_info'],'base_start_date',$mValid->getDisableValid('base_start_date'));?>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="right"><em class="c-yel">*</em> 员工自评开始时间：&nbsp;</td>
+                    <td class="jsline">
+                        <?=dateHtml($record_info['base_info'],'staff_sub_start_date',$mValid->getDisableValid('staff_sub_start_date'));?>
                     </td>
                 </tr>
 
@@ -255,20 +288,6 @@ EOF;
                     <td align="right">按月生成：&nbsp;</td>
                     <td>
                         <input <?=$mValid->getDisableValid('create_on_month_status');?>  type="checkbox" name="create_on_month_status"  value="1" id="create_on_month_status" <?php if(isset($record_info['base_info']['create_on_month_status']) && $record_info['base_info']['create_on_month_status']==1){?>checked="checked" <?php }?>>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 考核开始时间：&nbsp;</td>
-                    <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'base_start_date',$mValid->getDisableValid('base_start_date'));?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td align="right"><em class="c-yel">*</em> 员工填写提报时间：&nbsp;</td>
-                    <td class="jsline">
-                        <?=dateHtml($record_info['base_info'],'staff_sub_start_date',$mValid->getDisableValid('staff_sub_start_date'));?>
                     </td>
                 </tr>
 
@@ -303,6 +322,10 @@ EOF;
             <div class="kctjbot">
                 <?php if(!isset($record_info['base_info']) ||$record_info['base_info']!=AssessDao::HrAssessOver){?>
                     <input type="submit" class="bluebtn" value="确定" />
+                <?php }?>
+
+                <?php if(!isset($record_info['base_info']) || $record_info['base_info']['base_status']==AssessDao::HrAssessWait){?>
+                    <input type="button" id="pubBtb" class="bluebtn" value="发布" pubUrl="<?=P_SYSPATH?>index.php?m=assessment&a=launchList&act=publishAssess&base_status=1&base_id=" />
                 <?php }?>
                 <input type="button" class="btn67" value="返回"  name="backBtn" onclick="history.go(-1);"/>
             </div>

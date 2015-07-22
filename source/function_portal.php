@@ -284,13 +284,18 @@ function tbl_check_auth($m,$a,$act,$tbl,$inajax=0,$id=0,$authfield="deal_userid"
 
 function getUserId(){
     if(defined("LOCAL_EV")){
+        //return 381;
         return 22;
+        //return 877;
     }
     return (isset($_SESSION[DB_PREFIX.'user_id']))?$_SESSION[DB_PREFIX.'user_id']:'';
 }
 
 function getIsRootGroup(){
-    return true;
+    if(defined("LOCAL_EV")){
+        return true;
+    }
+    return false;
 }
 
 //获取用户的业务部门id
@@ -313,5 +318,110 @@ function utfToGbk($str){
         $str =  iconv('UTF-8','GBK//IGNORE',$str);
     }
     return $str;
+}
+
+function refresh_relation($uid){
+    global $db;
+
+    $tbl_user = "`".DB_PREFIX."user`";
+    $tbl_relation = "`".DB_PREFIX."user_relation`";
+
+    $post = "&a=get_relation";
+    $post .= "&uid=".$uid;
+
+    $api_url = P_OA_API.$post;
+    $info = get_api_content($api_url,0);
+
+    if(is_array($info) && sizeof($info) > 0){
+        $user = array();
+        $sql = "SELECT `uid`, `userId` FROM $tbl_user";
+        $rs = $db->Execute($sql);
+        while($r = $rs->FetchRow()){
+            $user[$r['uid']] = $r['userId'];
+        }
+
+        if($uid != 'all'){
+            $_userId = $user[$uid];
+            $sql = "DELETE FROM $tbl_relation WHERE `super_userId`='$_userId' or `low_userId`='$_userId'";
+            $db->Execute($sql);
+
+            // echo($sql."<br />");
+            // flush();
+
+            $user_relation['user'][$uid] = $info['user'][$uid];
+            $user_relation['leader'][$uid] = $info['leader'][$uid];
+
+            $info = $user_relation;
+        }
+        else{
+            $sql = "TRUNCATE TABLE $tbl_relation";
+            $db->Execute($sql);
+
+            // echo($sql."<br />");
+            // flush();
+        }
+
+        if(is_array($info['user'])){
+            foreach($info['user'] as $_uid => $_arr_leader){
+                if(!$_userId = $user[$_uid]){
+                    continue;
+                }
+
+                if(is_array($_arr_leader)){
+                    foreach($_arr_leader as $_leader => $_relation){
+                        if(!$_leader_userId = $user[$_leader]){
+                            continue;
+                        }
+
+                        $data_info = array();
+                        $data_info['super_userId'] = $_leader;
+                        $data_info['low_userId'] = $_uid;
+                        $data_info['status'] = $_relation;
+
+                        // $sql = get_insert_sql($tbl_relation,$data_info);
+                        // echo($sql."<br />");
+                        // flush();
+
+                        $data_info['super_userId'] = $_leader_userId;
+                        $data_info['low_userId'] = $_userId;
+
+                        $sql = get_insert_sql($tbl_relation,$data_info);
+                        $db->Execute($sql);
+                    }
+                }
+            }
+        }
+
+        if(is_array($info['leader'])){
+            foreach($info['leader'] as $_leader => $_arr_user){
+                if(!$_leader_userId = $user[$_leader]){
+                    continue;
+                }
+
+                if(is_array($_arr_user)){
+                    foreach($_arr_user as $_uid => $_relation){
+                        if(!$_userId = $user[$_uid]){
+                            continue;
+                        }
+
+                        $data_info = array();
+                        $data_info['super_userId'] = $_leader;
+                        $data_info['low_userId'] = $_uid;
+                        $data_info['status'] = $_relation;
+
+                        // $sql = get_insert_sql($tbl_relation,$data_info);
+                        // echo($sql."<br />");
+                        // flush();
+
+                        $data_info['super_userId'] = $_leader_userId;
+                        $data_info['low_userId'] = $_userId;
+
+                        $sql = get_insert_sql($tbl_relation,$data_info);
+                        $db->Execute($sql);
+                    }
+                }
+            }
+        }
+    }
 }
 ?>

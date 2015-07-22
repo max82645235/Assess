@@ -50,7 +50,7 @@ class NewTpl{
     public function render(){
         extract($this->_data);
         try {
-            require_once($this->_tpl);
+            require($this->_tpl);
         }catch (Exception $ex){
            echo "Ä£°å²»´æÔÚ";
             die();
@@ -65,7 +65,7 @@ class NewTpl{
     public function getRender(){
         ob_start();
         extract($this->_data);
-        require_once($this->_tpl);
+        require($this->_tpl);
         return ob_get_clean();
     }
 

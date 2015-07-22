@@ -4,7 +4,7 @@
     $indicatorList = $ind_dao->getAllTypeList();
 ?>
 
-<div class="attr_form_1" flag="1" style="<?php if(!$renderData){?>display: none;<?php }?>">
+<div class="attr_form_1" flag="1" >
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">量化指标类</b></p>
     </div>
@@ -16,7 +16,7 @@
                     $itemDataList = unserialize($renderData['itemData']);
                     ?>
                     <?php if($itemDataList){?>
-                        <?php foreach($itemDataList as $itemData){?>
+                        <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
                                 <td width="26%">
                                     <em class="c-yel">*</em>
@@ -37,22 +37,22 @@
                                 <td width="15%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" name="qz"  class="width40 j-notnull" />&nbsp;%
+                                        <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true }}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
-                                            <input  type="text" value="<?=$itemData['selfScore']?>" name="selfScore"  class="width40 j-notnull" />
+                                            <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="selfScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
                                         </div>
                                     </td>
                                 <?php }?>
                                 <?php if(isset($scoreList['leadScore'])){?>
                                     <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
-                                            <span><em class="c-yel">*</em> 领导打分：</span>
-                                            <input  type="text" value="<?=$itemData['leadScore']?>" name="leadScore"  class="width40 j-notnull" />
+                                            <span><em class="c-yel">*</em> 领导评分：</span>
+                                            <input  type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="leadScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -68,51 +68,49 @@
                         <?php }?>
                     <?php }?>
                 <?php }?>
-                <?php if($widget->validElement() && (!isset($itemDataList) || empty($itemDataList))){?>
-                    <tr>
-                        <td width="25%">
-                            <em class="c-yel">*</em>
-                            <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
-                                <?php if($indicatorList){?>
-                                    <?php foreach($indicatorList as $k=>$data){?>
-                                        <option value="<?=$data['id']?>"><?=$data['name']?></option>
-                                    <?php }?>
+                <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
+                    <td width="25%">
+                        <em class="c-yel">*</em>
+                        <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
+                            <?php if($indicatorList){?>
+                                <?php foreach($indicatorList as $k=>$data){?>
+                                    <option value="<?=$data['id']?>"><?=$data['name']?></option>
                                 <?php }?>
-                            </select>
-                            <select name="indicator_child" class="commission_indicator_child">
-                                <option value="">请选择</option>
-                            </select>
-                        </td>
+                            <?php }?>
+                        </select>
+                        <select name="indicator_child" class="commission_indicator_child">
+                            <option value="">请选择</option>
+                        </select>
+                    </td>
 
+                    <td width="15%" class="sm_xsmbadd_td2">
+                        <div class="smfl">
+                            <span><em class="c-yel">*</em> 权重：</span>
+                            <input <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
+                        </div>
+                    </td>
+                    <?php if(isset($scoreList['selfScore'])){?>
                         <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
-                                <span><em class="c-yel">*</em> 权重：</span>
-                                <input <?=$widget->disabled()?>  type="text" value="" name="qz"  class="width40 j-notnull percent" />&nbsp;%
+                                <span><em class="c-yel">*</em> 自评分：</span>
+                                <input type="text" value=""  tagname="selfScore" name="selfScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
                             </div>
                         </td>
-                        <?php if(isset($scoreList['selfScore'])){?>
-                            <td width="15%" class="sm_xsmbadd_td2">
-                                <div class="smfl">
-                                    <span><em class="c-yel">*</em> 自评分：</span>
-                                    <input type="text" value="" name="selfScore"  class="width40 j-notnull" />
-                                </div>
-                            </td>
-                        <?php }?>
-                        <?php if(isset($scoreList['leadScore'])){?>
-                            <td width="15%" class="sm_xsmbadd_td2">
-                                <div class="smfl">
-                                    <span><em class="c-yel">*</em> 领导打分：</span>
-                                    <input type="text" value="" name="leadScore"  class="width40 j-notnull" />
-                                </div>
-                            </td>
-                        <?php }?>
+                    <?php }?>
+                    <?php if(isset($scoreList['leadScore'])){?>
                         <td width="15%" class="sm_xsmbadd_td2">
-                            <div class="del_td" onclick="Assess.prototype.delItemDom(this,1)">
-                                <input  <?=$widget->disabled()?> type="button" class="btn67" name="del" value="删除">
+                            <div class="smfl">
+                                <span><em class="c-yel">*</em> 领导评分：</span>
+                                <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true}}" />
                             </div>
                         </td>
-                    </tr>
-                <?php }?>
+                    <?php }?>
+                    <td width="15%" class="sm_xsmbadd_td2">
+                        <div class="del_td" onclick="Assess.prototype.delItemDom(this,1)">
+                            <input  <?=$widget->disabled()?> type="button" class="btn67" name="del" value="删除">
+                        </div>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>

@@ -38,10 +38,10 @@ if($_REQUEST['act']=='launchList'){
 
     //建立权限验证类
     $auth = new Auth();
-    $auth->addAuthItem('launchAssess',array('m'=>$m,'a'=>'launchAssess','act'=>'launchAssess'));
+    $auth->addAuthItem('launchAssess',array('m'=>$m,'a'=>$a,'act'=>'launchAssess'));
     $auth->addAuthItem('cloneAssess',array('m'=>$m,'a'=>$a,'act'=>'cloneAssess'));
     $auth->addAuthItem('publishAssess',array('m'=>$m,'a'=>$a,'act'=>'publishAssess'));
-    $auth->addAuthItem('hrViewPublish',array('m'=>$m,'a'=>$a,'act'=>'hrViewPublish'));
+    $auth->addAuthItem('hrViewPublish',array('m'=>$m,'a'=>$a,'act'=>'hrViewStaffList'));
 
     $tpl = new NewTpl('assessment/launchList.php',array(
         'tableData'=>$tableData,
@@ -65,7 +65,7 @@ if($_REQUEST['act']=='cloneAssess'){
         $baseId = intval($_REQUEST['base_id']);
         $assessDao->copyAssessRecord($baseId,$auth);
         $jumpUrl = P_SYSPATH."index.php?".$assessDao->getConditionParamUrl(array('base_id','act'));
-        alertMsg('克隆成功',$jumpUrl);
+        alertMsg('复制成功',$jumpUrl);
         die();
     }
 
@@ -155,18 +155,42 @@ if($_REQUEST['act']=='hrViewStaffList'){
 if($_REQUEST['act']=='hrViewStaffDetail'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
+    $auth = new Auth();
+    $auth->addAuthItem('hrAssessReject',array('m'=>$m,'a'=>$a,'act'=>'hrAssessReject'));
     $base_id = $_REQUEST['base_id'];
     $userId = $_REQUEST['userId'];
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+
     $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
     require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
     $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     $tpl = new NewTpl('assessment/viewStaffDetail.php',array(
+        'auth'=>$auth,
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,
         'conditionUrl'=>$assessFlowDao->getConditionParamUrl(array('a','m','act','userId'))
     ));
     $tpl->render();
+    die();
+}
+
+//hr驳回审核完成的考核
+if($_REQUEST['act']=='hrAssessReject'){
+    $base_id = $_REQUEST['base_id'];
+    $userId = $_REQUEST['userId'];
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    $record_info = $assessFlowDao->getUserRelationRecord($base_id,$userId);
+    $result = array();
+    if($record_info && $record_info['user_assess_status']>=AssessFlowDao::AssessRealSuccess){
+        unset($record_info['username']);
+        $record_info['user_assess_status'] = AssessFlowDao::AssessRealLeadView;
+        $record_info['rejectText'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['reject']);
+        $record_info['rejectStatus'] = 2;
+        $assessDao->triggerUserNewAttrTypeUpdate($record_info,false);
+        $result['status'] = 'success';
+    }
+    echo json_encode($result);
     die();
 }
 

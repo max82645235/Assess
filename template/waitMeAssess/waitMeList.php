@@ -11,10 +11,10 @@
     <script type="text/javascript">
         var AssessInstance =  new Assess();
         $(function(){
-            AssessInstance.triggerBusSelect(true); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(1); //刚进页面时触发一次部门二级联动ajax查询
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect(true);
+                AssessInstance.triggerBusSelect(1);
             });
 
             $("#assess_diy_set").click(function(){
@@ -43,7 +43,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">待我考核 >考核列表</p>
+        <p class="icon1">待我考核 > 考核列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 50px;">
@@ -51,7 +51,7 @@
                 <input type="hidden" name="m" value="myassessment">
                 <input type="hidden" name="a" value="waitMeAssess">
                 <div class="jssel" style="z-index:98">
-                    业务部门：
+                    业务单元：
                     <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
                         <option value="">请选择</option>
                         <?php foreach($bus_parent_list as $k=>$v){?>
@@ -95,8 +95,8 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;考核周期：
+                <div class="jssel" style="z-index:98;margin-top: 5px;">
+                    考核频率：
                     <select name="assess_period_type">
                         <option value="">请选择</option>
                         <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
@@ -108,7 +108,7 @@
                     </select>
                 </div>
 
-                <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
+                <div class="jssel" style="z-index:98;margin-left: 20px;margin-top: 5px;">
                     考核名称：
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
                 </div>
@@ -128,7 +128,7 @@
                     </th>
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
-                    <th width="200" style="text-align: center;">考核周期</th>
+                    <th width="200" style="text-align: center;">考核时间</th>
                     <th width="100" style="text-align: center;">发布日期</th>
                     <th width="100" style="text-align: center;">考核状态</th>
                     <th width="250" style="text-align: center;">操作</th>
@@ -150,7 +150,7 @@
                             <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>
-                                <a href="?m=myassessment&a=waitMeAssess&act=staffDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">员工自行设置</a>
+                                <a href="?m=myassessment&a=waitMeAssess&act=mulAssessDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">由员工创建计划</a>
                             </td>
                         </tr>
                     <?php }?>
@@ -161,7 +161,7 @@
                 <?=$page_nav?>
             </p>
             <div>
-                     <input type="button" name="" value="自行设置" class="btn139" id="assess_diy_set" style="cursor:pointer;">
+                     <input type="button" name="" value="由员工创建计划"  class="btn139"  id="assess_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
 
             </div>
 

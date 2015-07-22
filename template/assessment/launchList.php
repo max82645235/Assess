@@ -11,10 +11,10 @@
     <script type="text/javascript">
         var AssessInstance =  new Assess();
         $(function(){
-            AssessInstance.triggerBusSelect(true); //刚进页面时触发一次部门二级联动ajax查询
+            AssessInstance.triggerBusSelect(1); //刚进页面时触发一次部门二级联动ajax查询
             //业务部门父类选择
             $("#bus_area_parent").change(function(){
-                AssessInstance.triggerBusSelect(true);
+                AssessInstance.triggerBusSelect(1);
             });
 
             $("#copy_assess_btn").click(function(){
@@ -70,7 +70,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">考核管理 >管理列表</p>
+        <p class="icon1">HR考核管理 > 考核计划列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 50px;">
@@ -78,7 +78,7 @@
                 <input type="hidden" name="m" value="<?=getgpc('m')?>">
                 <input type="hidden" name="a" value="<?=getgpc('a')?>">
                 <div class="jssel" style="z-index:98">
-                    业务部门：
+                    业务单元：
                     <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
                         <option value="">请选择</option>
                         <?php foreach($bus_parent_list as $k=>$v){?>
@@ -111,7 +111,7 @@
                     </select>
                 </div>
                 <div class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;考核周期：
+                    &nbsp;&nbsp;&nbsp;考核频率：
                     <select name="assess_period_type">
                         <option value="">请选择</option>
                         <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
@@ -122,16 +122,16 @@
                         <?php }?>
                     </select>
                 </div>
-                <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
+                <div class="sechk jssel" style="margin-top: 5px;clear: both;float: left;width: 235px;">
                     考核名称：
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
                 </div>
-                    <input type="submit" value="搜索" class="btn48"  style="float: left;margin-top: 5px;">
-
-
+                <div class="jssel" style="z-index:98;margin-left: 5px;margin-top: 5px;">
+                    <input type="submit" value="搜索" class="btn48" >
+                </div>
             </form>
             <?php if($auth->setIsMy(true)->validIsAuth('launchAssess')){?>
-                <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">发起考核</a>
+                <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">创建考核</a>
             <?php }?>
         </div>
 
@@ -143,7 +143,7 @@
                     </th>
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
-                    <th width="200" style="text-align: center;">考核周期</th>
+                    <th width="200" style="text-align: center;">考核时间</th>
                     <th width="100" style="text-align: center;">状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
                     <th width="128" style="text-align: center;">操作</th>
@@ -184,7 +184,6 @@
                                 <?php if($auth->setIsMy($isMy)->validIsAuth('publishAssess') && $data['base_status']==AssessDao::HrAssessWait){?>
                                         <a href="?m=assessment&a=launchList&act=publishAssess&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">发布</a>
                                 <?php }?>
-
                                 <?php if($auth->setIsMy($isMy)->validIsAuth('hrViewPublish')){?>
                                          <a href="?m=assessment&a=launchList&act=hrViewStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php }?>

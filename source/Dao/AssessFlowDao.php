@@ -10,36 +10,44 @@ require_once 'BaseDao.php';
 class AssessFlowDao extends BaseDao{
     protected $assessDao;
     static $UserAssessStatusByHr = array(
-        '0'=>'待考核人创建',
+        '0'=>'待考核人创建计划',
         '1'=>'待被考核人填写计划',
-        '2'=>'待考核人初审',
-        '3'=>"考核中",
-        '4'=>'待被考核人汇报',
-        '5'=>'待考核人终审',
-        '6'=>'终审完成',
-        '7'=>'考核结束'
+        '2'=>'待考核人审核计划',
+        '3'=>"计划执行中",
+        '4'=>'待被考核人自评',
+        '5'=>'待考核人评估确认',
+        '6'=>'评估完成',
+        '7'=>'考核完成'
     );
 
     static $UserAssessStatusByLeader = array(
-        '0'=>'待我创建',
+        '0'=>'待我创建计划',
         '1'=>'待被考核人填写计划',
-        '2'=>'待我初审',
-        '3'=>"考核中",
-        '4'=>'待下属汇报',
-        '5'=>'待我终审',
-        '6'=>'终审完成',
-        '7'=>'考核结束'
+        '2'=>'待我审核计划',
+        '3'=>"计划执行中",
+        '4'=>'待被考核人自评',
+        '5'=>'待我评估确认',
+        '6'=>'评估完成',
+        '7'=>'考核完成'
     );
 
     static $UserAssessStatusByStaff = array(
-        '0'=>'待考核人创建',
+        '0'=>'待考核人创建计划',
         '1'=>"待我填写计划",
-        '2'=>"待考核人初审",
-        '3'=>"考核中",
-        '4'=>'待我汇报',
-        '5'=>"待考核人终审",
-        '6'=>'终审完成',
-        '7'=>'考核结束'
+        '2'=>"待考核人审核计划",
+        '3'=>"计划执行中",
+        '4'=>'待我自评',
+        '5'=>"待考核人评估确认",
+        '6'=>'评估完成',
+        '7'=>'考核完成'
+    );
+
+    static $UserAssessFontColorMaps = array(
+        '0'=>'#FF4500', //橙
+        '1'=>"#CD8500", //黄
+        '2'=>"#B3EE3A",  //绿
+        '4'=>'#7EC0EE', //青
+        '5'=>"#AB82FF", //紫
     );
 
 
@@ -57,7 +65,6 @@ class AssessFlowDao extends BaseDao{
 
     public function waitMeSearchHandlerList($searchParam){
         $searchResult = array();
-        $searchParam['base_status'] = 1; // 已发布状态
         $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
         $searchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
         //附加领导对应的员工的baseIdList
@@ -93,6 +100,7 @@ class AssessFlowDao extends BaseDao{
                                  inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId  $addStatusSql
                                  inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
         $result = $this->db->getAll($getRelationBaseIdSql);
+
         if($result){
             foreach($result as $data){
                 //过滤掉待HR发布状态的考核
@@ -101,7 +109,6 @@ class AssessFlowDao extends BaseDao{
                 }
             }
         }
-
         return $baseIdList;
     }
 
@@ -112,6 +119,7 @@ class AssessFlowDao extends BaseDao{
         $addSql = "";
         $pageConditionUrl = '';
         $resultList = array();
+        $statusSql = '';
         if(isset($conditionParams['user_assess_status']) && $conditionParams['user_assess_status']!==''){
             $addSql.= "and b.user_assess_status={$conditionParams['user_assess_status']}";//附加用户填写状态条件
             $pageConditionUrl.="&user_assess_status={$conditionParams['user_assess_status']}";
@@ -121,9 +129,15 @@ class AssessFlowDao extends BaseDao{
             $addSql.= "and a.username like'%{$conditionParams['username']}%'"; //附加用户名模糊查询条件
             $pageConditionUrl.="&username={$conditionParams['username']}";
         }
+
+        if(isset($conditionParams['status']) && $conditionParams['status']){
+            $statusSql = "and c.status={$conditionParams['status']} "; //附加用户名模糊查询条件
+            $pageConditionUrl.="&status={$conditionParams['status']}";
+        }
+
         $resultList['staffListSql'] = "select [*] from sa_user as a
                 inner join sa_assess_user_relation as b on a.userId=b.userId and b.base_id={$base_Id} $addSql
-                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId ";
+                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId {$statusSql}";
         $resultList['pageConditionUrl'] = $pageConditionUrl;
         return $resultList;
 
@@ -179,7 +193,7 @@ class AssessFlowDao extends BaseDao{
     //获取用户考核列表页
     public function getMyAssessSearchHandlerListSql($userId,$conditionParams = array()){
         $sql = "select [*] from sa_assess_user_relation as a
-                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId}";
+                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId} and b.base_status>0";
         $pageConditionUrl = '';
         $resultList = array();
         if(isset($conditionParams['assess_period_type']) && $conditionParams['assess_period_type']){
@@ -207,11 +221,13 @@ class AssessFlowDao extends BaseDao{
         $relationRecord = $this->getUserRelationRecord($baseId,$userId);
         if($relationRecord && $relationRecord['user_assess_status'] == self::AssessChecking){
             $relationRecord['user_assess_status'] = self::AssessPreLeadVIew;
-            unset($relationRecord['username']);
             $where = " rid={$relationRecord['rid']}";
-            self::get_update_sql('sa_assess_user_relatioin',$relationRecord,$where);
-            $conditionUrl = $this->getConditionParamUrl();
-            $location = P_SYSPATH."index.php?$conditionUrl";
+            unset($relationRecord['rid']);
+            unset($relationRecord['username']);
+            $sql = self::get_update_sql('sa_assess_user_relation',$relationRecord,$where);
+            $this->db->Execute($sql);
+            $conditionUrl = $this->getConditionParamUrl(array('act'));
+            $location = P_SYSPATH."index.php?act=myStaffList&$conditionUrl";
             header("Location: $location");
         }
     }
@@ -232,7 +248,7 @@ class AssessFlowDao extends BaseDao{
                             break;
 
                         case 3://打分类
-                            $finalScore+=$item['cash']*$item['leadScore'];
+                            $finalScore+=$data['cash']*$item['leadScore'];
                             break;
 
                         case 4://提成类
@@ -272,5 +288,109 @@ class AssessFlowDao extends BaseDao{
     public function triggerStatusUpdate($base_id,$userId){
         $sql = "update sa_assess_user_relation set user_assess_status=4 where base_id={$base_id} and userId ={$userId} and user_assess_status=3";
         $this->db->Execute($sql);
+    }
+
+    public function getAssessReportData($params){
+        $addSql = '';
+        //考核类型
+        if(isset($params['assess_attr_type']) && $params['assess_attr_type']){
+            $addSql.=" and a.assess_attr_type={$params['assess_attr_type']}";
+        }
+
+        //考核状态
+        if(isset($params['user_assess_status']) && $params['user_assess_status']!==''){
+            $addSql.=" and a.user_assess_status={$params['user_assess_status']}";
+        }
+
+        //考核周期
+        if(isset($params['assess_period_type']) && $params['assess_period_type']){
+            $addSql.=" and b.assess_period_type={$params['assess_period_type']}";
+        }
+
+        //年份
+        if(isset($params['assess_year']) && $params['assess_year']){
+            $addSql.=" and b.assess_year={$params['assess_year']}";
+        }
+
+        //月份
+        if(isset($params['assess_month']) && $params['assess_month']){
+            $params['assess_month'] = intval($params['assess_month']);
+            $addSql.=" and b.assess_month={$params['assess_month']}";
+        }
+
+        //姓名
+        if(isset($params['username']) && $params['username']){
+            $addSql.=" and c.username like '%{$params['username']}%' ";
+        }
+
+
+        $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username from sa_assess_user_relation as a
+                inner join sa_assess_base as b on a.base_id=b.base_id
+                inner join sa_user as c on a.userId=c.userId
+                where 1=1 {$addSql} group  by a.base_id ";
+        $retData = $this->db->GetAll($sql);
+        return $retData;
+    }
+
+    public function formatRpItem($rpItem){
+        $rpData = array();
+        $resultData = array();
+        foreach($rpItem as $k=>$item){
+            $rpData['itemDataList'][$k]['rpType'] = $item['rpType'];
+            $rpData['itemDataList'][$k]['rpIntro'] = iconv('UTF-8','GBK//IGNORE',$item['rpIntro']);;
+            $rpData['itemDataList'][$k]['unitType'] = $item['unitType'];
+            $curValue = $rpData['itemDataList'][$k]['rpUnitValue'] = $item['rpUnitValue'];
+            // unitType为1 ：金额 |   为2：百分比
+            if($item['unitType']==2){
+                $curValue = $curValue*0.01;
+            }
+
+            //rpType 为1：奖励  为2：惩罚
+            if($item['rpType']==1){
+                $resultData[$item['unitType']]['totalValue']+= $curValue;
+            }elseif($item['rpType']==2){
+                $resultData[$item['unitType']]['totalValue']-= $curValue;
+            }
+        }
+        $rpData['total'] = $resultData;
+        return $rpData;
+    }
+
+    static function rejectTableMarkForLead($rejectStatus){
+        $html = '';
+        if($rejectStatus>0){
+            $textMaps = array(
+                '1'=>'已驳回',
+                '2'=>'重审'
+            );
+            $font = $textMaps[$rejectStatus];
+            $html = "<span style='color: red;'>&nbsp;[$font]</span>";
+        }
+        return $html;
+    }
+
+    static function rejectTableMarkForStaff($rejectStatus){
+        $html = '';
+        if($rejectStatus>0){
+            $textMaps = array(
+                '1'=>'被驳回',
+                '2'=>'待重审'
+            );
+            $font = $textMaps[$rejectStatus];
+            $html = "<span style='color: red;'>&nbsp;[$font]</span>";
+        }
+        return $html;
+    }
+
+    public function getCreatingUserList($request){
+        $status = $request['status'];
+        $base_id = $request['base_id'];
+        $userId = $request['userId'];
+        $curUserId = getUserId();
+        $sql = "select c.username,c.userId,c.deptlist from sa_user_relation as a
+                inner join  sa_assess_user_relation as b on a.super_userId={$curUserId} and a.status={$status} and a.low_userId = b.userId and b.user_assess_status=0 and b.base_id={$base_id} and a.low_userId!={$userId}
+                inner join sa_user as c on b.userId = c.userId order by c.deptlist asc";
+        $userList = $this->db->GetAll($sql);
+        return $userList;
     }
 }

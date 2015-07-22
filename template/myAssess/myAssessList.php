@@ -12,7 +12,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">我的考核 >考核列表</p>
+        <p class="icon1">我的考核 > 考核列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;考核周期：
+                    &nbsp;&nbsp;&nbsp;考核频率：
                     <select name="assess_period_type">
                         <option value="">请选择</option>
                         <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
@@ -60,16 +60,17 @@
                     </th>
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
-                    <th width="200" style="text-align: center;">考核周期</th>
+                    <th width="150" style="text-align: center;">考核周期</th>
                     <th width="200" style="text-align: center;">流程状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
-                    <th width="100" style="text-align: center;">得分</th>
-                    <th width="200" style="text-align: center;">操作</th>
+                    <th width="100" style="text-align: center;">绩效评分</th>
+                    <th width="100" style="text-align: center;">奖惩</th>
+                    <th width="150" style="text-align: center;">操作</th>
                 </tr>
                 <?php
                 $btnArr = array(
                     '1'=>'填写考核计划',
-                    '4'=>'填写考核提报'
+                    '4'=>'绩效自评'
                 );
                 ?>
                 <?php if($tableData){?>
@@ -84,14 +85,28 @@
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -
                                 <?=date('Y/m/d',strtotime($data['base_end_date']))?>
                             </td>
-                            <td><?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?></td>
+                            <td>
+                                <?=AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']]?>
+                                <?=AssessFlowDao::rejectTableMarkForStaff($data['rejectStatus']);?>
+                            </td>
                             <td><?=($data['publish_date']!='0000-00-00')?$data['publish_date']:'';?></td>
-                            <th width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></th>
+                            <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>
+                            <td>
+                                <?php $rpData = unserialize($data['rpData']);?>
+                                <?php if($rpData){?>
+                                    <?php if(isset($rpData['total'][1]['totalValue'])){?>
+                                        <?=$rpData['total'][1]['totalValue']?>元</br>
+                                    <?php }?>
+                                    <?php if(isset($rpData['total'][2]['totalValue'])){?>
+                                        <?=$rpData['total'][2]['totalValue']*100?>%</br>
+                                    <?php }?>
+                                <?php }elseif($data['user_assess_status']==AssessFlowDao::AssessRealSuccess){echo "-";}?>
+                            </td>
                             <td class="left">
                                 <a href="?m=myassessment&a=myAssess&act=staffViewStaffDetail&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <span >
-                                             <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: #ff3333"><?=$btnArr[$data['user_assess_status']]?></a>
+                                    <span>
+                                             <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
                                 <?php }?>
 

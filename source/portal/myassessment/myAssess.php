@@ -7,6 +7,7 @@
  */
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
+require_once BATH_PATH.'source/Util/btnValid/StaffValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'myAssessList':$_REQUEST['act'];
 //我的考核列表页
 if($_REQUEST['act']=='myAssessList'){
@@ -28,7 +29,7 @@ if($_REQUEST['act']=='myAssessList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,b.*";
+    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,a.rejectStatus,b.*";
     $findSql = str_replace('[*]',$findSql,$sql);
     $findSql.= " order by b.base_id desc limit {$offset},{$limit}";
     $tableData = $db->GetAll($findSql);
@@ -47,6 +48,7 @@ if($_REQUEST['act']=='myAssessFlow'){
     $assessFlowDao = new AssessFlowDao();
     $userId = getUserId();
     $base_id = $_REQUEST['base_id'];
+    $mValid = new StaffValid($base_id,$userId);
     if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
@@ -72,16 +74,25 @@ if($_REQUEST['act']=='myAssessFlow'){
         }
         $uids = array($userId);
         try{
-
+            $historyData = array();
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
             $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
             $nextStatus = $_REQUEST['status']=='next';
             if($_REQUEST['status']=='next'){
                 $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
+                //对于被驳回的状态,修改状态
+                if($userRelationRecord['rejectStatus']==1)
+                    $userRelationRecord['rejectStatus'] = 2;
             }
-            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);
-            $assessDao->setAssessUserItemRecord($uids,$attrRecord);
-
+            if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealLeadView){//当转给领导终审时，需要生成历史记录
+                $historyData = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+                if($_REQUEST['rpItem']){
+                    $userRelationRecord['rpData'] = serialize($assessFlowDao->formatRpItem($_REQUEST['rpItem']));
+                }
+            }
+            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);//更新user_relation表 assess_attr_type状态
+            $assessDao->setAssessUserItemRecord($uids,$attrRecord); //更新user_item表
+            $assessDao->triggerUserItemHistoryWrite($historyData,$assessFlowDao);//当$historyData存在时需要触发对比逻辑，写入前后差异到更新user_relation表 diffData字段
         }catch (Exception $e){
             throw new Exception('500');
         }
@@ -97,7 +108,8 @@ if($_REQUEST['act']=='myAssessFlow'){
     $tpl = new NewTpl('myAssess/myAssessFlow.php',array(
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,
-        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act'))
+        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m','act')),
+        'mValid'=>$mValid
     ));
 
     $tpl->render();
@@ -125,11 +137,14 @@ if($_REQUEST['act']=='staffViewStaffDetail'){
     die();
 }
 
+//更改到提报时
 if($_REQUEST['act']=='triggerStatusUpdate'){
     $assessFlowDao = new AssessFlowDao();
+    $assessDao = new AssessDao();
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
     $assessFlowDao->triggerStatusUpdate($base_id,$userId);
+    $assessDao->checkAssessAllUserSubbingStatus($base_id);
     $conditionUrl = $assessFlowDao->getConditionParamUrl(array('act'));
     $location = P_SYSPATH."index.php?act=myAssessList&$conditionUrl";
     header("Location: $location");

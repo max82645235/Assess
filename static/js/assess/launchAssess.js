@@ -28,6 +28,8 @@ Assess.prototype = {
             $("#attr_type_checkboxes_td").parents('tr').hide();
             $(".attr_content").hide();
         }
+
+        this.selectAttrType();
     },
 
     getLeadDirectSetValue:function(){
@@ -70,9 +72,10 @@ Assess.prototype = {
             this.selectAttrType();
         }
     },
-    formSubHandle:function(jumpUrl){
+    formSubHandle:function(jumpUrl,status){
         var subFormData = {};
         var jumpUrl = jumpUrl;
+        var status = status;
         subFormData.baseData = this.getBaseData().baseSubDataList;
         subFormData.attrData = this.getAttrData();
         var data = {
@@ -89,7 +92,11 @@ Assess.prototype = {
             dataType:'json',
             success:function(retData){
                 if(retData.status=='success'){
-                    alert('保存成功！');
+                    if(status==1){
+                        alert('保存成功');
+                    }else if(status==2){
+                        jumpUrl+=retData.base_id;
+                    }
                     location.href = jumpUrl;
                 }
             }
@@ -160,28 +167,32 @@ Assess.prototype = {
                 //量化指标类
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table");
-                c_table.find("tr").each(function(){
+                c_table.find("tr:visible").each(function(){
                     var tmp = {};
                     tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
                     tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.qz = $(this).find("input[name=qz]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
-                    c_data['table_data'].push(tmp);
+                    tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
+                    tmp.qz = $(this).find("input[tagname=qz]").val();
+                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
+                    if(tmp.qz && tmp.indicator_child){
+                        c_data['table_data'].push(tmp);
+                    }
                 });
 
                 //工作任务类
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table");
-                j_table.find("tr").each(function(k,v){
+                j_table.find("tr:visible").each(function(k,v){
                     var tmp = {};
-                    tmp.job_name = $(this).find("input[name=job_name]").val();
-                    tmp.zbyz = $(this).find("input[name=zbyz]").val();
-                    tmp.qz = $(this).find("input[name=job_qz]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
-                    j_data['table_data'].push(tmp);
+                    tmp.job_name = $(this).find("input[tagname=job_name]").val();
+                    tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
+                    tmp.qz = $(this).find("input[tagname=job_qz]").val();
+                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
+                    if(tmp.qz &&tmp.job_name){
+                        j_data['table_data'].push(tmp);
+                    }
                 });
                 return {commission:c_data,job:j_data};
             },
@@ -190,11 +201,11 @@ Assess.prototype = {
                 var s_data = {table_data:[]};
                 var s_table = $(".attr_form_2[flag=3] table");
                 s_data.cash = $(".attr_form_2[flag=3] input[name=attr3_cash]").val();
-                s_table.find("tr").each(function(k,v){
+                s_table.find("tr:visible").each(function(k,v){
                     var tmp = {};
-                    tmp.score_name = $(this).find("input[name=score_name]").val();
-                    tmp.selfScore = $(this).find("input[name=selfScore]").val();
-                    tmp.leadScore = $(this).find("input[name=leadScore]").val();
+                    tmp.score_name = $(this).find("input[tagname=score_name]").val();
+                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     s_data['table_data'].push(tmp);
                 });
                 return {score:s_data};
@@ -205,10 +216,10 @@ Assess.prototype = {
                 var t_data = {table_data:[]};
                 var t_table = $(".attr_form_3[flag=4] table");
                 t_data.cash = $(".attr_form_3[flag=4] input[name=attr3_cash]").val();
-                t_table.find("tr").each(function(k,v){
+                t_table.find("tr:visible").each(function(k,v){
                     var tmp = {};
-                    tmp.tc_name = $(this).find("input[name=tc_name]").val();
-                    tmp.finishCash = $(this).find("input[name=finishCash]").val();
+                    tmp.tc_name = $(this).find("input[tagname=tc_name]").val();
+                    tmp.finishCash = $(this).find("input[tagname=finishCash]").val();
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};
@@ -229,14 +240,16 @@ Assess.prototype = {
     /*添加指标*/
     addItem:function(jDom,type){
         var itemContainer = jDom.parent().find('.kctjcon:eq(0) .sm_div table');
-        if( itemContainer.find('tr').length>0){
-            var clonedItemDom = itemContainer.find('tr:eq(0)');
+        var len = itemContainer.find('tr').length;
+        if( len>0){
+            var clonedItemDom = itemContainer.find('tr.tpl_tr');
             var cDom = $.extend(true,{}, clonedItemDom);
+            var html  = cDom.html().replace(new RegExp(/(\[@\])/g),len);
+            itemContainer.append("<tr>"+html+"</tr>");
         }else if(this.delTrCache[type] !=undefined){
             var cDom = this.delTrCache[type];
+            itemContainer.append("<tr>"+cDom.html()+"</tr>");
         }
-        console.log(cDom);
-        itemContainer.append("<tr>"+cDom.html()+"</tr>");
         this.clearItemData(itemContainer.find('tr:last'),type);
     },
 
@@ -246,28 +259,28 @@ Assess.prototype = {
             case '1':
                 itemDom.find("select[name=indicator_parent] option:eq(0)").attr("checked",true);
                 itemDom.find("select[name=indicator_child] option:eq(0)").attr("checked",true);
-                itemDom.find("input[name=zbyz]").val('');
-                itemDom.find("input[name=qz]").val('');
-                itemDom.find("input[name=selfScore]").val('');
-                itemDom.find("input[name=leadScore]").val('');
+                itemDom.find("input[tagname=zbyz]").val('');
+                itemDom.find("input[tagname=qz]").val('');
+                itemDom.find("input[tagname=selfScore]").val('');
+                itemDom.find("input[tagname=leadScore]").val('');
                 break;
 
             case '2':
-                itemDom.find("input[name=job_name]").val('');
-                itemDom.find("input[name=job_qz]").val('');
-                itemDom.find("input[name=selfScore]").val('');
-                itemDom.find("input[name=leadScore]").val('');
+                itemDom.find("input[tagname=job_name]").val('');
+                itemDom.find("input[tagname=job_qz]").val('');
+                itemDom.find("input[tagname=selfScore]").val('');
+                itemDom.find("input[tagname=leadScore]").val('');
                 break;
 
             case '3':
-                itemDom.find("input[name=score_name]").val('');
-                itemDom.find("input[name=selfScore]").val('');
-                itemDom.find("input[name=leadScore]").val('');
+                itemDom.find("input[tagname=score_name]").val('');
+                itemDom.find("input[tagname=selfScore]").val('');
+                itemDom.find("input[tagname=leadScore]").val('');
                 break;
 
             case '4':
-                itemDom.find("input[name=tc_name]").val('');
-                itemDom.find("input[name=finishCash]").val('');
+                itemDom.find("input[tagname=tc_name]").val('');
+                itemDom.find("input[tagname=finishCash]").val('');
                 break;
         }
         return itemDom;
@@ -276,8 +289,23 @@ Assess.prototype = {
     delTrCache:{},
     //删除item节点
     delItemDom:function(dBtn,type){
+        var find = '';
+        if(type==1 || type ==2){
+            find = 'td:eq(1) input';
+        }else if(type==3){
+            find = 'td:eq(0) input';
+        }
+
         if($(dBtn).parents('table').find('tr').length==1){
-            this.delTrCache[type] =  $.extend(true,{}, $(dBtn).parents('tr'));
+            var name = $(dBtn).parents('tr').find(find).attr('name');
+            var reg_new = /^.*_new_.*$/;
+            var reg_old = /^.*_old_.*$/;
+            if(reg_new.test(name) ||reg_old.test(name)){
+                var tmp = name.split('_');
+                name = tmp[0]+"_new_[@]";
+                $(dBtn).parents('tr').find(find).attr('name',name);
+                this.delTrCache[type]=  $.extend(true,{}, $(dBtn).parents('tr'));
+            }
         }
         $(dBtn).parents('tr').remove();
     },
@@ -302,7 +330,7 @@ Assess.prototype = {
             $.ajax({
                 type:'get',
                 url:'/salary/index.php',
-                data:{m:'assessment',a:'launchAssess',act:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
+                data:{m:'api',a:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
                 dataType:'json',
                 success:function(ret){
                     if(ret.status=='success'){
@@ -348,10 +376,11 @@ Assess.prototype = {
         }
     },
     jump:function(url,mis){
-        var j = function(url){
+        var url = url;
+        var jp = function(){
            location.href = url;
-        }
-        setTimeout(j,mis,url);
+        };
+        setTimeout(jp,mis);
     },
     adduser:function(userId,username){
         var uids = $("#uids").val();
@@ -417,10 +446,69 @@ Assess.prototype = {
     submitSelectValid:function(){
         var status = true;
         $("#bus_area_child,.commission_indicator_child").each(function(){
+            if($(this).attr('name')=='indicator_child'){
+                if($(this).parents('tr').find('input[tagname=qz]').val()==''){
+                    return true;
+                }
+            }
             if(Assess.prototype.selectChildValid(this)==false){
                 status = false;
             }
         });
+
+        if(this.getLeadDirectSetValue()==0){
+            var attrType = this.getAttrTypeCheckedValue();
+            var trStatus = true;
+            if(attrType==1){
+                if($(".attr_form_1[flag=1] table").find("tr:visible").length==0 && $(".attr_form_1[flag=2] table").find("tr:visible").length==0){
+                    trStatus = false;
+                }
+            }else if(attrType==2){
+                if($(".attr_form_2[flag=3] table").find("tr:visible").length==0){
+                    trStatus = false;
+                }
+            }else if(attrType==3){
+                if($(".attr_form_3[flag=4] table").find("tr:visible").length==0){
+                    trStatus = false;
+                }
+            }
+            if(!trStatus){
+                alert('请添加考核项！');
+                status =false;
+            }
+        }
+
         return status;
+    },
+    addRpItem:function(){
+        var tr = $("#reward_punish_form table tr:hidden");
+        var len = $("#reward_punish_form table tr").length;
+        var html  = tr.html().replace(new RegExp(/(\[@\])/g),len);
+        $("#reward_punish_form table").append("<tr>"+html+"</tr>");
+    },
+    delRpItem:function(dom){
+        $(dom).parents('tr').remove();
+    },
+    getRpItems:function(){
+        var RpItems = [];
+        if($("#reward_punish_form").length>0){
+            $("#reward_punish_form table tr:visible").each(function(){
+                var item = {};
+                item.rpType = $(this).find("select[name=rpType]").val();
+                item.rpIntro = $(this).find("input[tagname=rpIntro]").val();
+                item.unitType = $(this).find("select[name=unitType]").val();
+                item.rpUnitValue = $(this).find("input[tagname=rpUnitValue]").val();
+                RpItems.push(item);
+            });
+        }
+        return RpItems;
+    },
+    //用户考核复制
+    copyUserAssess:function(base_id,userId){
+        var status = $("select[name=status]").val();
+        var syspath = $('#syspath').val();
+        var openUrl  = syspath+'index.php?m=myassessment&a=waitMeAssess&act=mulCopyCreateAssess';
+        openUrl+= "&status="+status+"&base_id="+base_id+"&userId="+userId;
+        art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
     }
 };
