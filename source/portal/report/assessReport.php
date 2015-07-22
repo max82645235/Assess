@@ -8,6 +8,7 @@
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'assessReportList':$_REQUEST['act'];
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
+checkUserAuthority();//验证act请求权限
 //绩效考核报表
 if($_REQUEST['act']=='assessReportList'){
     $assessFlowDao = new AssessFlowDao();

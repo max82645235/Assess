@@ -317,6 +317,7 @@ EOF;
                 <!--Ìá³ÉÀà-->
                 <?=$assessAttrWidget->renderAttr($record_info['attr_info'],3,array(),$mValid)?>
             </div>
+     <!--       --><?/*=$assessAttrWidget->pluploadPlugin()*/?>
 
 
             <div class="kctjbot">

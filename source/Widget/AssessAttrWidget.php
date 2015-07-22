@@ -161,4 +161,12 @@ class AssessAttrWidget{
         $this->tpl->set_data(array('record_info'=>$record_info));
         $this->tpl->render();
     }
+
+    //ÉÏ´«²å¼ş
+    public function pluploadPlugin(){
+        $renderPath = BATH_PATH."template/assessment/widget/plugloadPluginWidget.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array());
+        $this->tpl->render();
+    }
 }

@@ -129,6 +129,10 @@ function page($count=0,$limit=0,$page=1,$pageurl='',$anchor=''){
 
     $output .= '<span>共'.$count.'条 <em class="c-yel">'.$page.'</em>/'.$pages.'</span>';
 
+    if(preg_match("/^.*(&pn=[0-9]*).*$/",$pageurl,$matches)){
+        $pageurl = str_replace($matches[1],'',$pageurl);
+    }
+
     if($pages>1){
         if($page > 1){
             $output .= '<a href="'.$pageurl.'&pn=1'.$anchor.'">首页</a>';
@@ -300,6 +304,17 @@ function get_authcode($string,$operation="DECODE",$key="",$expiry=0) {
         // 把动态密匙保存在密文里，这也是为什么同样的明文，生产不同密文后能解密的原因
         // 因为加密后的密文可能是一些特殊字符，复制过程可能会丢失，所以用base64编码
         return $keyc.str_replace("=","",base64_encode($result));
+    }
+}
+
+function checkUserAuthority(){
+    global $m,$a;
+    require_once BATH_PATH.'source/Util/Auth.php';
+    $act = $_REQUEST['act'];
+    $auth = new Auth();
+    $auth->addAuthItem($act,array('m'=>$m,'a'=>$a,'act'=>$act));
+    if(!$auth->setIsMy(true)->validIsAuth($act)){
+        throw new Exception('you have no power to visit this page!');
     }
 }
 ?>
