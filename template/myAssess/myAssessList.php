@@ -61,7 +61,7 @@
                     <th class="left" style="text-align: center;">绩效考核名称</th>
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="150" style="text-align: center;">考核周期</th>
-                    <th width="150" style="text-align: center;">流程状态</th>
+                    <th width="200" style="text-align: center;">流程状态</th>
                     <th width="100" style="text-align: center;">发布日期</th>
                     <th width="100" style="text-align: center;">绩效评分</th>
                     <th width="100" style="text-align: center;">奖惩</th>
