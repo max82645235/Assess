@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
-    <title>发起考核</title>
+    <title>创建考核计划</title>
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>calendar-new.css" rel="stylesheet" type="text/css" />
@@ -57,10 +57,19 @@
             $("#sub_form").submit(function(e){
                 if($.myValidate.errorList.length==0 && AssessInstance.submitSelectValid()){
                     var jumpUrl = '<?=P_SYSPATH."index.php?m=assessment&a=launchList&".$conditionUrl?>';
-                    AssessInstance.formSubHandle(jumpUrl);
+                    AssessInstance.formSubHandle(jumpUrl,1);
                 }
                 return false;
                 e.preventDefault();
+            });
+
+            //发布
+            $("#pubBtb").click(function(){
+                $("#sub_form").valid();
+                if($.myValidate.errorList.length==0 && AssessInstance.submitSelectValid()){
+                    var jumpUrl = $("#pubBtb").attr('pubUrl');
+                    AssessInstance.formSubHandle(jumpUrl,2);
+                }
             });
 
             //追加属性节点
@@ -181,7 +190,7 @@ EOF;
 <body>
 <div class="bg baseInfo_content">
     <div class="rtop">
-        <p class="icon1">考核管理 > 发起考核</p>
+        <p class="icon1">HR考核管理 > 创建考核计划</p>
     </div>
     <div class="kctjcon">
         <p class="tjtip">注：*为必填项</p>
@@ -315,8 +324,8 @@ EOF;
                     <input type="submit" class="bluebtn" value="确定" />
                 <?php }?>
 
-                <?php if(isset($record_info['base_info']) && $record_info['base_info']['base_status']==AssessDao::HrAssessWait){?>
-                    <input type="button" class="bluebtn" value="发布" onclick="location.href='<?=P_SYSPATH?>index.php?m=assessment&a=launchList&act=publishAssess&base_id=<?=$record_info['base_info']['base_id']?>';" />
+                <?php if(!isset($record_info['base_info']) || $record_info['base_info']['base_status']==AssessDao::HrAssessWait){?>
+                    <input type="button" id="pubBtb" class="bluebtn" value="发布" pubUrl="<?=P_SYSPATH?>index.php?m=assessment&a=launchList&act=publishAssess&base_status=1&base_id=" />
                 <?php }?>
                 <input type="button" class="btn67" value="返回"  name="backBtn" onclick="history.go(-1);"/>
             </div>

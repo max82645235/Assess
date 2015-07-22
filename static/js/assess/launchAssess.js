@@ -72,9 +72,10 @@ Assess.prototype = {
             this.selectAttrType();
         }
     },
-    formSubHandle:function(jumpUrl){
+    formSubHandle:function(jumpUrl,status){
         var subFormData = {};
         var jumpUrl = jumpUrl;
+        var status = status;
         subFormData.baseData = this.getBaseData().baseSubDataList;
         subFormData.attrData = this.getAttrData();
         var data = {
@@ -91,7 +92,11 @@ Assess.prototype = {
             dataType:'json',
             success:function(retData){
                 if(retData.status=='success'){
-                    alert('保存成功！');
+                    if(status==1){
+                        alert('保存成功');
+                    }else if(status==2){
+                        jumpUrl+=retData.base_id;
+                    }
                     location.href = jumpUrl;
                 }
             }

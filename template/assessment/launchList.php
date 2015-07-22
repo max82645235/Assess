@@ -70,7 +70,7 @@
 <body>
 <div class="bg">
     <div class="rtop">
-        <p class="icon1">考核管理 > 管理列表</p>
+        <p class="icon1">HR考核管理 > 考核计划列表</p>
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 50px;">
@@ -122,16 +122,16 @@
                         <?php }?>
                     </select>
                 </div>
-                <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
+                <div class="sechk jssel" style="margin-top: 5px;clear: both;float: left;width: 235px;">
                     考核名称：
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="请输入考核名称"  style="margin-bottom: 3px;">
                 </div>
-                    <input type="submit" value="搜索" class="btn48"  style="float: left;margin-top: 5px;">
-
-
+                <div class="jssel" style="z-index:98;margin-left: 5px;margin-top: 5px;">
+                    <input type="submit" value="搜索" class="btn48" >
+                </div>
             </form>
             <?php if($auth->setIsMy(true)->validIsAuth('launchAssess')){?>
-                <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">创建考核计划</a>
+                <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">创建考核</a>
             <?php }?>
         </div>
 

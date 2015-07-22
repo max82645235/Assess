@@ -53,7 +53,7 @@ if($_REQUEST['act']=='launchAssess'){
                             $assessDao->setAssessUserItemRecord($uids,$attrResult);
                         }
                     }
-                    echo json_encode(array('status'=>'success'));
+                    echo json_encode(array('status'=>'success','base_id'=>$base_id));
                 }
             }
             die();
