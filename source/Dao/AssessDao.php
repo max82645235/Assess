@@ -71,7 +71,7 @@ class AssessDao extends BaseDao{
 
     //根据考核周期，开始时间获取考核结束时间
     static function getAssessBaseEndDate($periodType,$startDate){
-        return date('Y-m-d',strtotime('+'.$periodType.' month',strtotime($startDate)));
+        return date('Y-m-d',strtotime('+'.$periodType.' month',strtotime($startDate))-1);
     }
 
     protected function getAssessYearMonth($base_start_date){

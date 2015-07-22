@@ -155,6 +155,8 @@ if($_REQUEST['act']=='hrViewStaffList'){
 if($_REQUEST['act']=='hrViewStaffDetail'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
+    $auth = new Auth();
+    $auth->addAuthItem('hrAssessReject',array('m'=>$m,'a'=>$a,'act'=>'hrAssessReject'));
     $base_id = $_REQUEST['base_id'];
     $userId = $_REQUEST['userId'];
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
@@ -163,11 +165,32 @@ if($_REQUEST['act']=='hrViewStaffDetail'){
     require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
     $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     $tpl = new NewTpl('assessment/viewStaffDetail.php',array(
+        'auth'=>$auth,
         'record_info'=>$record_info,
         'assessAttrWidget'=>$assessAttrWidget,
         'conditionUrl'=>$assessFlowDao->getConditionParamUrl(array('a','m','act','userId'))
     ));
     $tpl->render();
+    die();
+}
+
+//hr驳回审核完成的考核
+if($_REQUEST['act']=='hrAssessReject'){
+    $base_id = $_REQUEST['base_id'];
+    $userId = $_REQUEST['userId'];
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    $record_info = $assessFlowDao->getUserRelationRecord($base_id,$userId);
+    $result = array();
+    if($record_info && $record_info['user_assess_status']>=AssessFlowDao::AssessRealSuccess){
+        unset($record_info['username']);
+        $record_info['user_assess_status'] = AssessFlowDao::AssessRealLeadView;
+        $record_info['rejectText'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['reject']);
+        $record_info['rejectStatus'] = 2;
+        $assessDao->triggerUserNewAttrTypeUpdate($record_info,false);
+        $result['status'] = 'success';
+    }
+    echo json_encode($result);
     die();
 }
 

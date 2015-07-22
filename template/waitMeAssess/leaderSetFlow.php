@@ -7,7 +7,6 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
-    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
     <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
     <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
@@ -227,17 +226,9 @@
                 }
                 ?>
 
-                <?php
-                    $diffData = unserialize($record_info['relation']['diffData']);
-                    $historyData = unserialize($diffData['history']);
-                    $record_info['relation']['diffData'] = $diffData;
-                ?>
-                <?php if(!empty($record_info['relation']['diffData']) && $diffData['same']==0){?>
-                    <p class="tjtip">提报前</p>
-                    <?=$assessAttrWidget->renderItemTable($historyData)?>
-                    <p class="tjtip">提报后</p>
-                    <?=$assessAttrWidget->renderItemTable($record_info,true)?>
-                <?php }?>
+                <!--对比记录模块-->
+                <?=$assessAttrWidget->compareHistory($record_info);?>
+
                 <div class="attr_content">
                     <!--任务/指标类-->
                     <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList,$mValid)?>

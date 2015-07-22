@@ -269,7 +269,7 @@ EOF;
                 </tr>
 
                 <tr>
-                    <td align="right"><em class="c-yel">*</em> 员工填写提报时间：&nbsp;</td>
+                    <td align="right"><em class="c-yel">*</em> 员工自评开始时间：&nbsp;</td>
                     <td class="jsline">
                         <?=dateHtml($record_info['base_info'],'staff_sub_start_date',$mValid->getDisableValid('staff_sub_start_date'));?>
                     </td>
@@ -313,6 +313,10 @@ EOF;
             <div class="kctjbot">
                 <?php if(!isset($record_info['base_info']) ||$record_info['base_info']!=AssessDao::HrAssessOver){?>
                     <input type="submit" class="bluebtn" value="确定" />
+                <?php }?>
+
+                <?php if(isset($record_info['base_info']) && $record_info['base_info']['base_status']==AssessDao::HrAssessWait){?>
+                    <input type="button" class="bluebtn" value="发布" onclick="location.href='<?=P_SYSPATH?>index.php?m=assessment&a=launchList&act=publishAssess&base_id=<?=$record_info['base_info']['base_id']?>';" />
                 <?php }?>
                 <input type="button" class="btn67" value="返回"  name="backBtn" onclick="history.go(-1);"/>
             </div>

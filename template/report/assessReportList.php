@@ -21,7 +21,7 @@
                 <input type="hidden" name="a" value="assessReport">
                 <input type="hidden" name="act" value="assessReportList">
                 <div class="jssel" style="z-index:98">
-                    &nbsp;&nbsp;&nbsp;考核周期：
+                    &nbsp;&nbsp;&nbsp;考核频率：
                     <select name="assess_period_type">
                         <option value="">请选择</option>
                         <?php foreach(AssessDao::$AssessPeriodTypeMaps as $k=>$v){?>
@@ -74,11 +74,12 @@
             <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" >
                 <tr >
                     <th width="100" style="text-align: center;">考核人姓名</th>
-                    <th width="100" style="text-align: center;">考核周期</th>
+                    <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核时间</th>
                     <th width="200" style="text-align: center;">考核类型</th>
                     <th width="200" style="text-align: center;">流程状态</th>
-                    <th width="100" style="text-align: center;">得分</th>
+                    <th width="100" style="text-align: center;">绩效评分</th>
+                    <th width="150" style="text-align: center;">奖惩</th>
                 </tr>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
@@ -98,6 +99,17 @@
                             </td>
                             <td><?=AssessFlowDao::$UserAssessStatusByHr[$data['user_assess_status']]?></td>
                             <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>
+                            <td>
+                                <?php $rpData = unserialize($data['rpData']);?>
+                                <?php if($rpData){?>
+                                    <?php if(isset($rpData['total'][1]['totalValue'])){?>
+                                        <?=$rpData['total'][1]['totalValue']?>元</br>
+                                    <?php }?>
+                                    <?php if(isset($rpData['total'][2]['totalValue'])){?>
+                                        <?=$rpData['total'][2]['totalValue']*100?>%</br>
+                                    <?php }?>
+                                <?php }elseif($data['user_assess_status']==AssessFlowDao::AssessRealSuccess){echo "-";}?>
+                            </td>
                         </tr>
                     <?php }?>
                 <?php }?>

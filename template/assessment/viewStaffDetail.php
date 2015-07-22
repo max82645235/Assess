@@ -7,6 +7,10 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
+    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
 
     <style>
         .jbtab tr th{font-weight:600;}
@@ -29,6 +33,42 @@
             background: #fff;
         }
     </style>
+    <script>
+        $(function(){
+            $("#hrRejectBtn").click(function(){
+                var userId = $('#hidden_user_id').val();
+                var base_id = $('#hidden_base_id').val();
+                var formData = {
+                    m:'assessment',
+                    a:'launchList',
+                    act:'hrAssessReject',
+                    userId:userId,
+                    base_id,base_id
+                };
+
+                art.dialog.prompt('请输入驳回理由！',function(reject){
+                    if(!reject){
+                        alert('驳回理由必填');
+                        return false;
+                    }
+                    formData.reject = reject;
+                    $.ajax({
+                        type:'post',
+                        url:'/salary/index.php',
+                        data:formData,
+                        dataType:'json',
+                        success:function(retData){
+                            if(retData.status=='success'){
+                                art.dialog({lock:true});
+                                art.dialog.tips('驳回成功',2);
+                                setTimeout('history.go(-1)',1000);
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="bg">
@@ -99,7 +139,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">最终得分：&nbsp;</td>
+                        <td align="right">最终评分：&nbsp;</td>
                         <td id="attr_type_checkboxes_td">
 
                             <span><?=($record_info['relation']['score'])?$record_info['relation']['score']:'';?></span>
@@ -116,12 +156,17 @@
                 </table>
             </div>
             <div class="pad25">
+                <?=$assessAttrWidget->compareHistory($record_info);?>
+
                 <div class="attr_content">
                     <!--考核属性表格-->
                     <?=$assessAttrWidget->renderItemTable($record_info)?>
                 </div>
             </div>
             <div class="kctjbot">
+                <?php if($record_info['relation']['user_assess_status']>=AssessFlowDao::AssessRealSuccess && $auth->setIsMy(true)->validIsAuth('hrAssessReject')){?>
+                    <input type="button" id="hrRejectBtn" class="bluebtn" value="审查驳回"  />
+                <?php }?>
                 <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
             </div>
         </form>

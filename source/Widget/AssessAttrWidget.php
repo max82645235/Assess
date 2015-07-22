@@ -145,6 +145,7 @@ class AssessAttrWidget{
         return $style;
     }
 
+    //奖惩table
     public function rewardPunish($relationData){
         $rpData = unserialize($relationData['rpData']);
         $renderPath = BATH_PATH."template/assessment/widget/rewardPunishWidget.php";
@@ -153,4 +154,11 @@ class AssessAttrWidget{
         $this->tpl->render();
     }
 
+    //历史记录对比
+    public function compareHistory($record_info){
+        $renderPath = BATH_PATH."template/assessment/widget/compareHistory.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('record_info'=>$record_info));
+        $this->tpl->render();
+    }
 }

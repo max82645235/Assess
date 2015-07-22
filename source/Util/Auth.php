@@ -46,10 +46,6 @@ class Auth{
     //ÅÐ¶Ï°´Å¥È¨ÏÞ
     public function getBtnAuth($btnKey){
         global $p_power;
-        if(getIsRootGroup()){
-            return true;
-        }
-
         if(array_key_exists($btnKey,$this->authList)){
             $m = $this->authList[$btnKey]['m'];
             $a = $this->authList[$btnKey]['a'];

@@ -1,5 +1,5 @@
 <?php $totalScore = 0;?>
-<p class="tjtip">评分</p>
+<p class="tjtip">考核报表</p>
 <?php if($assessAttrType==1){?>
     <?php
         require_once BATH_PATH.'source/Dao/IndicatorDao.php';
@@ -11,8 +11,8 @@
             <th width="30%">考核项</th>
             <th width="10%">权重</th>
             <th width="15%">自评分</th>
-            <th width="15%">实际得分</th>
-            <th width="20%">汇总得分</th>
+            <th width="15%">实际评分</th>
+            <th width="20%">汇总评分</th>
         </tr>
         <?php foreach($itemInfo as $item){?>
             <?php $itemList = unserialize($item['itemData']);?>
@@ -95,8 +95,8 @@
             <th width="15%">分值金额转化率(元/分)</th>
             <th width="20%">考核项</th>
             <th width="15%">自评分</th>
-            <th width="15%">实际得分</th>
-            <th width="20%">汇总得分</th>
+            <th width="15%">实际评分</th>
+            <th width="20%">汇总评分</th>
         </tr>
         <?php foreach($itemList as $key=>$data){?>
             <tr <?=$widget->getDifferShow(3);?>>
@@ -165,7 +165,7 @@
         <tr>
             <td><?=($itemData['rpType']==1)?'奖励':'惩罚';?> </td>
             <td ><?=$itemData['rpIntro']?></td>
-            <td><?=$itemData['rpUnitValue']?></td>
+            <td><?=($itemData['rpType']==1)?'+':'-';?><?=$itemData['rpUnitValue']?></td>
             <td><?=($itemData['unitType']==1)?'元':'%';?> </td>
         </tr>
     <?php }?>
