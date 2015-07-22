@@ -122,9 +122,9 @@
                 </tr>
                 <?php
                 $btnArr = array(
-                    '0'=>'创建',
-                    '2'=>'初审',
-                    '5'=>'终审',
+                    '0'=>'创建计划',
+                    '2'=>'审核计划',
+                    '5'=>'评估确认',
                 );
                 ?>
                 <?php if($tableData){?>
@@ -177,7 +177,7 @@
             </p>
             <div>
                 <input type="hidden" id="syspath" value="<?=P_SYSPATH?>">
-                <input type="button" name=""  value="由员工自行设置" class="btn139" id="assess_user_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
+                <input type="button" name=""  value="由员工创建计划" class="btn139" id="assess_user_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
             </div>
         </div>
     </div>
