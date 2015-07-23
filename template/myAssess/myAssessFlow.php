@@ -187,9 +187,7 @@
                 </div>
                 <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessPreReport){?>
                     <?=$assessAttrWidget->rewardPunish($record_info['relation'])?>
-                <?php }?>
-                <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessPreReport){?>
-                    <?=$assessAttrWidget->pluploadPlugin()?>
+                    <?=$assessAttrWidget->pluploadPlugin($record_info['relation']['plupFileList'])?>
                 <?php }?>
             </div>
             <div class="kctjbot">

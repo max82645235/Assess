@@ -59,6 +59,7 @@
                     formData.base_id = $("#hidden_base_id").val();
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
+                    formData.plupFileList = AssessInstance.getPlugList();
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -87,6 +88,7 @@
                 formData.base_id = $("#hidden_base_id").val();
                 formData.userId = $("#hidden_user_id").val();
                 formData.rpItem = AssessInstance.getRpItems();
+                formData.plupFileList = AssessInstance.getPlugList();
                 art.dialog.prompt('请输入驳回理由！',function(reject){
                     if(!reject){
                         alert('驳回理由必填');
@@ -136,6 +138,7 @@
                     formData.base_id = $("#hidden_base_id").val();
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
+                    formData.plupFileList = AssessInstance.getPlugList();
                     art.dialog.confirm(confirmMsg[status],function(){
                         $.ajax({
                             type:'post',
@@ -239,31 +242,11 @@
                     <!--提成类-->
                     <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList,$mValid)?>
                 </div>
-                <?php if($record_info['relation']['user_assess_status']==5){?>
+                <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessRealLeadView){?>
                     <?=$assessAttrWidget->rewardPunish($record_info['relation'])?>
+                    <?=$assessAttrWidget->pluploadPlugin($record_info['relation']['plupFileList'])?>
                 <?php }?>
 
-                <?php if($uploadedFileList){?>
-                    <p class="tjtip">文件下载区</p>
-                    <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
-                        <tbody>
-                        <tr>
-                            <th width="60%">文件名</th>
-                            <th width="10%">上传日期</th>
-                            <th>操作</th>
-                        </tr>
-                        <?php foreach($record_info['plupFileList'] as $fileInfo){ ?>
-                            <tr>
-                                <td class="left"><?=$fileInfo['cName']?></td>
-                                <td><?=substr($fileInfo['createTime'],0,10)?></td>
-                                <td>
-                                    <a class="bjwrt" href="<?=$fileInfo['filePath']?>">下载</a>
-                                </td>
-                            </tr>
-                        <?php }?>
-                        </tbody>
-                    </table>
-                <?php }?>
 
             </div>
             <div class="kctjbot">

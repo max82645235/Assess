@@ -146,6 +146,11 @@ if($_REQUEST['act']=='leaderSetFlow'){
                 if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealSuccess){
                     $assessDao->checkAssessAllUserSuccessStatus($base_id);
                 }
+
+                //附件上传保存
+                if($_REQUEST['plupFileList']){
+                    $assessDao->plugFileSave($_REQUEST['plupFileList'],$userRelationRecord['rid']);
+                }
             }
         }catch (Exception $e){
             throw new Exception('500');
