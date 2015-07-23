@@ -8,19 +8,14 @@
  * Author : wmc
  */
 //判断用户改脚本访问权限
-function checkUserAuthority(){
-    return true;
-}
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
 require_once BATH_PATH.'source/Util/Auth.php';
-
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchList':$_REQUEST['act'];
-
+checkUserAuthority();//验证act请求权限
 if($_REQUEST['act']=='launchList'){
     $assessDao = new AssessDao();
     $table = 'sa_assess_base';
-    $_REQUEST['base_status'] = (!isset($_REQUEST['base_status']))?'0':$_REQUEST['base_status']; //状态初始默认为0  待发布状态
     $_REQUEST['byme_status'] = (!isset($_REQUEST['byme_status']))?'1':$_REQUEST['byme_status']; //状态初始默认为1 由我发起
     $searchResult = $assessDao->getBaseSearchHandlerList($table,$_REQUEST);
     $pageurl = '?m='.$m.'&a='.$a.$searchResult['pageConditionUrl'];
@@ -140,6 +135,7 @@ if($_REQUEST['act']=='hrViewStaffList'){
     //获取表格查询结果
     $findSql = " a.*,b.user_assess_status,b.base_id,b.score";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
+    $findSql.= " limit {$offset},{$limit}";
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('assessment/hrViewStaffList.php',array(
         'tableData'=>$tableData,
@@ -180,6 +176,8 @@ if($_REQUEST['act']=='hrAssessReject'){
     $userId = $_REQUEST['userId'];
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
+    $auth = new Auth();
+    $auth->addAuthItem('hrAssessReject',array('m'=>$m,'a'=>$a,'act'=>'hrAssessReject'));
     $record_info = $assessFlowDao->getUserRelationRecord($base_id,$userId);
     $result = array();
     if($record_info && $record_info['user_assess_status']>=AssessFlowDao::AssessRealSuccess){

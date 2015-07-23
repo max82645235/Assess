@@ -9,6 +9,7 @@ require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
 require_once BATH_PATH.'source/Util/btnValid/StaffValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'myAssessList':$_REQUEST['act'];
+checkUserAuthority();//验证act请求权限
 //我的考核列表页
 if($_REQUEST['act']=='myAssessList'){
     $assessDao = new AssessDao();

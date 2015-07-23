@@ -8,81 +8,76 @@
  * Author : wmc
  */
 //判断用户改脚本访问权限
-function checkUserAuthority(){
-    return true;
-}
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Util/btnValid/HrValid.php';
-
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
+checkUserAuthority();//验证act请求权限
 if($_REQUEST['act']=='launchAssess'){
     $base_id = getgpc('base_id'); //考核表主键
     $user_id = getUserId();//当前用户身份Id
     $assessDao = new AssessDao();
-    if(checkUserAuthority()){
-        $mValid = new HrValid($base_id);
-        //ajax表单提交
-        if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
-            if(isset($_REQUEST['subFormData']['baseData'])){
-                //assess_base主表保存
-                if(mb_detect_encoding($_REQUEST['subFormData']['baseData']['base_name'])=='UTF-8'){
-                    $_REQUEST['subFormData']['baseData']['base_name'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['subFormData']['baseData']['base_name']);
-                }
-                if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
-                    $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
-                    $baseRecord = $assessDao->getAssessBaseRecord($base_id);
-                    $assessDao->setAssessUserRelation($uids,$baseRecord);//考核用户关系表设置
-                    $clearTag = $assessDao->clearDeleteUser($base_id,$uids); //清除删除的用户
-                    //如果不勾选领导设置时
-                    if(isset($_REQUEST['subFormData']['attrData']) && $_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){
-                        $attrRecord = array();
-                        $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
-                        foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
-                            $tmp = array();
-                            $tmp['base_id'] = $base_id;
-                            $tmp['attr_type'] = $attrRecordType[$key];
-                            $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
-                            $tmp['itemData'] = $data['table_data'];
-                            $attrRecord[$key] = $tmp;
-                        }
-                        //assess_attr表保存
-                        if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
-                            if($clearTag){//当clearTag标识为true 清除残留的delete用户ITEM
-                                $assessDao->clearDeleteUserItem($base_id,$uids);
-                            }
-                            $assessDao->setAssessUserItemRecord($uids,$attrResult);
-                        }
-                    }
-                    echo json_encode(array('status'=>'success','base_id'=>$base_id));
-                }
+    $mValid = new HrValid($base_id);
+    //ajax表单提交
+    if(isset($_REQUEST['formSubTag']) && $_REQUEST['formSubTag']==1 && isset($_REQUEST['subFormData'])){
+        if(isset($_REQUEST['subFormData']['baseData'])){
+            //assess_base主表保存
+            if(mb_detect_encoding($_REQUEST['subFormData']['baseData']['base_name'])=='UTF-8'){
+                $_REQUEST['subFormData']['baseData']['base_name'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['subFormData']['baseData']['base_name']);
             }
-            die();
-        }else{
-            //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
-            $record_info = array();
-            if($base_id){
-                $record_info = $assessDao->getAssessRecordInfo($base_id);
-                $relationUsers = $assessDao->getRelatedUserRecord($base_id);
+            if($base_id = $assessDao->setAssessBaseRecord($_REQUEST['subFormData']['baseData'])){
+                $uids = explode(',',$_REQUEST['subFormData']['baseData']['uids']);
+                $baseRecord = $assessDao->getAssessBaseRecord($base_id);
+                $assessDao->setAssessUserRelation($uids,$baseRecord);//考核用户关系表设置
+                $clearTag = $assessDao->clearDeleteUser($base_id,$uids); //清除删除的用户
+                //如果不勾选领导设置时
+                if(isset($_REQUEST['subFormData']['attrData']) && $_REQUEST['subFormData']['baseData']['lead_direct_set_status']==0){
+                    $attrRecord = array();
+                    $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
+                    foreach($_REQUEST['subFormData']['attrData']['fromData']['handlerData'] as $key=>$data){
+                        $tmp = array();
+                        $tmp['base_id'] = $base_id;
+                        $tmp['attr_type'] = $attrRecordType[$key];
+                        $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
+                        $tmp['itemData'] = $data['table_data'];
+                        $attrRecord[$key] = $tmp;
+                    }
+                    //assess_attr表保存
+                    if($attrResult = $assessDao->setAssessAttrRecord($attrRecord)){
+                        if($clearTag){//当clearTag标识为true 清除残留的delete用户ITEM
+                            $assessDao->clearDeleteUserItem($base_id,$uids);
+                        }
+                        $assessDao->setAssessUserItemRecord($uids,$attrResult);
+                    }
+                }
+                echo json_encode(array('status'=>'success','base_id'=>$base_id));
             }
         }
-
-
-        require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
-        $assessAttrWidget = new AssessAttrWidget(new NewTpl());
-
-        $tpl = new NewTpl('assessment/launchAssess.php',array(
-            'record_info'=>$record_info,
-            'relationUsers'=>$relationUsers,
-            'attrTypeMaps'=>AssessDao::$attrTypeMaps,
-            'assessAttrWidget'=>$assessAttrWidget,
-            'cfg'=>$cfg,
-            'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m')),
-            'mValid'=>$mValid
-        ));
-
-        $tpl->render();
         die();
+    }else{
+        //当$base_id存在时，说明此考核已经存在，属于更新操作，否则属于新建考核
+        $record_info = array();
+        if($base_id){
+            $record_info = $assessDao->getAssessRecordInfo($base_id);
+            $relationUsers = $assessDao->getRelatedUserRecord($base_id);
+        }
     }
+
+
+    require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
+    $assessAttrWidget = new AssessAttrWidget(new NewTpl());
+
+    $tpl = new NewTpl('assessment/launchAssess.php',array(
+        'record_info'=>$record_info,
+        'relationUsers'=>$relationUsers,
+        'attrTypeMaps'=>AssessDao::$attrTypeMaps,
+        'assessAttrWidget'=>$assessAttrWidget,
+        'cfg'=>$cfg,
+        'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m')),
+        'mValid'=>$mValid
+    ));
+
+    $tpl->render();
+    die();
 }
 
 
