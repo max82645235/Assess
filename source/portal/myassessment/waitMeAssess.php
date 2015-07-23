@@ -155,6 +155,9 @@ if($_REQUEST['act']=='leaderSetFlow'){
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
         $assessFlowDao->validLeaderSetFlow($record_info['relation']['user_assess_status']);
+        if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessRealLeadView){
+            $record_info['plupFileList'] = $assessFlowDao->getPlugFileList($record_info['relation']['rid']);
+        }
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }

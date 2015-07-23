@@ -393,4 +393,10 @@ class AssessFlowDao extends BaseDao{
         $userList = $this->db->GetAll($sql);
         return $userList;
     }
+
+    public function getPlugFileList($rid){
+        $sql = "select * from sa_upload_file where rid={$rid}";
+        $result = $this->db->getAll($sql);
+        return $result;
+    }
 }

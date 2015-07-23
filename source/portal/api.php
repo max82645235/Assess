@@ -126,6 +126,7 @@ if($a =='ajaxIndicatorClassify'){
 if($a =='uploadFile'){
     require_once BATH_PATH.'source/uploadFile.php';
     $uf = new UploadFile("file");//upfile为上传空间file的name属性
+    $uf->setFileType("image|office|rar");
     $uf->setSaveDir("/salary/");
     $stat=$uf->upload();
     $jsonArr = array();

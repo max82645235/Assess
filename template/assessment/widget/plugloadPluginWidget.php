@@ -86,24 +86,4 @@
     }
 </script>
 
-<p class="tjtip">已上传文件</p>
-<table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
-    <tbody>
-        <tr>
-            <th width="60%">文件名</th>
-            <th width="10%">上传日期</th>
-            <th>操作</th>
-        </tr>
-        <?php foreach($uploadedFileList as $fileInfo){ ?>
-            <tr>
-                <td class="left"><?=$fileInfo['cName']?></td>
-                <td><?=substr($fileInfo['createTime'],0,10)?></td>
-                <td>
-                    <input type="button" value="下载" class="btn67 downloadFileBtn" onclick="downFile(<?=$fileInfo['fileId']?>)">
-                </td>
-            </tr>
-        <?php }?>
-    </tbody>
-
-</table>
 
