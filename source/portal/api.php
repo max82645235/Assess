@@ -132,7 +132,6 @@ if($a =='uploadFile'){
     if($stat == "success"){
         $jsonArr['error'] = 0;
         $jsonArr['url'] = iconv("gbk","utf-8//ignore",$uf->getSaveFileURL());
-        $jsonArr['cName'] = iconv("gbk","utf-8//ignore",$_FILES['file']['name']);
     }else{
         $jsonArr['error'] = 1;
     }

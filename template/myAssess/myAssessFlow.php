@@ -87,7 +87,6 @@
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
                     formData.plupFileList = AssessInstance.getPlugList();
-                    console.log(formData);return;
                     art.dialog.confirm('您确定提交考核审核申请么？',function(){
                         $.ajax({
                             type:'post',

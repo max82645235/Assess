@@ -513,9 +513,7 @@ Assess.prototype = {
     },
     plugFileList:[],
     pushPlugFile:function(fileInfo){
-        console.log(fileInfo);
         this.plugFileList.push(fileInfo);
-        console.log(this.plugFileList);
     },
     getPlugList:function(){
         return this.plugFileList;

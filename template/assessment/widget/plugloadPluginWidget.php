@@ -19,7 +19,7 @@
         $("#uploader").plupload({
             // General settings
             runtimes : 'html5,flash,silverlight,html4',
-            url : 'http://221.231.141.162/salary/index.php?m=api&a=uploadFile',
+            url : '<?=P_SYSPATH?>index.php?m=api&a=uploadFile',
 
             // User can upload no more then 20 files in one go (sets multiple_queues to false)
             max_file_count: 20,
@@ -69,9 +69,8 @@
                 FileUploaded: function(up, file, info) {
                     // 上传回调
                     var dataObj=eval("("+info.response+")");
-                    console.log(dataObj);
                     if(dataObj.error==0){
-                        Assess.prototype.pushPlugFile({url:dataObj.url,cName:dataObj.cName});
+                        Assess.prototype.pushPlugFile({url:dataObj.url,cName:file.name});
                     }
                 },
                 Error: function(up, err) {
