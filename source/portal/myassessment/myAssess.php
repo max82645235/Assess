@@ -137,6 +137,7 @@ if($_REQUEST['act']=='staffViewStaffDetail'){
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
 
     $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
+    $record_info['plupFileList'] = $assessFlowDao->getPlugFileList($record_info['relation']['rid']);
     require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
     $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     $tpl = new NewTpl('assessment/viewStaffDetail.php',array(

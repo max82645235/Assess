@@ -161,6 +161,9 @@
                 <div class="attr_content">
                     <!--考核属性表格-->
                     <?=$assessAttrWidget->renderItemTable($record_info)?>
+
+                    <!--下载区-->
+                    <?=$assessAttrWidget->getDownloadArea($record_info['plupFileList'])?>
                 </div>
             </div>
             <div class="kctjbot">
