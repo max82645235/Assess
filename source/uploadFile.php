@@ -1,22 +1,23 @@
 <?php
+/**
+ * Description: 文件上传
+ * @Copyright: HOUSE365 (c) 2008
+ * Author: chiwm
+ * Create: 2008-6-11
+ * Amendment Record:
+
+ * sampel
+include_once($strBaseSite."common/uploadFile.php");
+$uf = new UploadFile("upfile");//upfile为上传空间file的name属性
+$rtnMSG=$uf->upload();
+var_dump($uf->getSaveFileURL());//图片绝对url地址
+var_dump($rtnMSG);//$rtnMSG="success" 文件上传成功
+
+<input name="upfile" type="file" size="20">
+ */
 class UploadFile
 {
-    /**
-    * Description: 文件上传
-    * @Copyright: HOUSE365 (c) 2008
-    * Author: chiwm
-    * Create: 2008-6-11
-    * Amendment Record:
 
-    * sampel
-    include_once($strBaseSite."common/uploadFile.php");
-    $uf = new UploadFile("upfile");//upfile为上传空间file的name属性
-    $rtnMSG=$uf->upload();
-    var_dump($uf->getSaveFileURL());//图片绝对url地址
-    var_dump($rtnMSG);//$rtnMSG="success" 文件上传成功
-
-    <input name="upfile" type="file" size="20">
-    */
     var $strInputName;//上传的file输入框name属性
     var $intMaxSize=204800;//200k //允许上传的最大文件大小(单位：B)
     var $strFileType="image";//允许上传的文件类型（以|线分割）（image代表所有图片文件，office代表办公文件）

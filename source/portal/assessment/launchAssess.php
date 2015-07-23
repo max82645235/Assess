@@ -139,5 +139,3 @@ if($_REQUEST['act']=='selectUserList'){
     $tpl->render();
     die();
 }
-
-

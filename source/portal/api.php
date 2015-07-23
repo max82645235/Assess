@@ -99,4 +99,19 @@ if($a =='ajaxIndicatorClassify'){
         die();
     }
 }
+
+
+if($a =='uploadFile'){
+    require_once BATH_PATH.'source/UploadFile.php';
+    $uf = new UploadFile("file");//upfile为上传空间file的name属性
+    $uf->setSaveDir("/salary/");
+    $stat=$uf->upload();
+    if($stat == "success"){
+        $picurl = $uf->getSaveFileURL();
+        json_halt(0,$picurl);
+    }else{
+        json_halt(1,$stat);
+        exit();
+    }
+}
 ?>

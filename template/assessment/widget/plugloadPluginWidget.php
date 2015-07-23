@@ -1,20 +1,16 @@
 <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" />
-<link rel="stylesheet" href="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.css">
-<script src="http://newscms.house365.com/newCMS/yii/js/jqueryui/external/jquery/jquery.js"></script>
-<script src="http://newscms.house365.com/newCMS/yii/js/jqueryui/jquery-ui.js"></script>
-
 <!-- production -->
 <script type="text/javascript" src="<?=P_SYSPATH?>static/js/plupload/js/plupload.full.min.js"></script>
 <script type="text/javascript" src="<?=P_SYSPATH?>static/js/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
 <script type="text/javascript" src="<?=P_SYSPATH?>static/js/plupload/js/i18n/zh_CN.js"></script>
 
 
+<p class="tjtip">上传文件区</p>
 
-<form id="form" method="post" action="../dump.php">
+<form id="form" method="post" action="../dump.php" >
     <div id="uploader">
     </div>
     <br />
-    <input type="submit" value="Submit" />
 </form>
 
 <script type="text/javascript">
@@ -23,7 +19,7 @@
         $("#uploader").plupload({
             // General settings
             runtimes : 'html5,flash,silverlight,html4',
-            url : '../upload.php',
+            url : '<?=P_SYSPATH?>index.php?m=api&a=uploadFile',
 
             // User can upload no more then 20 files in one go (sets multiple_queues to false)
             max_file_count: 20,
@@ -90,5 +86,32 @@
         });
     });
 </script>
-</body>
-</html>
+
+<p class="tjtip">已上传文件</p>
+<table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
+    <tbody>
+        <tr>
+            <th width="60%">文件名</th>
+            <th width="10%">上传日期</th>
+            <th>操作</th>
+        </tr>
+        <tr>
+            <td class="left">文件名1</td>
+            <td>2015-1-1</td>
+            <td>
+                <input type="button" value="删除" class="btn67 delFileBtn">
+                <input type="button" value="下载" class="btn67 downloadFileBtn">
+            </td>
+        </tr>
+        <tr>
+            <td class="left">文件名1</td>
+            <td>2015-1-1</td>
+            <td>
+                <input type="button" value="删除" class="btn67 delFileBtn">
+                <input type="button" value="下载" class="btn67 downloadFileBtn">
+            </td>
+        </tr>
+    </tbody>
+
+</table>
+
