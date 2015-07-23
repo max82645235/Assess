@@ -87,6 +87,27 @@ if($a == 'get_oa_msg'){
     halt("get_oa_msg {$uid}");
 }
 
+if($a=='ajaxBusClassify'){
+    global $cfg;
+    if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
+        $bus_area_parent = $_REQUEST['bus_area_parent'];
+        $retData = array('data'=>array());
+        require_once BATH_PATH.'source/Dao/AssessDao.php';
+        $assessDao = new AssessDao();
+        if(isset($cfg['tixi'][$bus_area_parent])){
+            foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
+                if($assessDao->validBusAuth($bus_area_parent,$k)){
+                    $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
+                    $retData['data'][] = $tmp;
+                }
+            }
+            $retData['status'] = 'success';
+        }
+        echo json_encode($retData);
+        die();
+    }
+}
+
 if($a =='ajaxIndicatorClassify'){
     if(isset($_GET['indicator_parent'])){
         $indicator_parent = $_GET['indicator_parent'];
@@ -102,7 +123,7 @@ if($a =='ajaxIndicatorClassify'){
 
 
 if($a =='uploadFile'){
-    require_once BATH_PATH.'source/UploadFile.php';
+    require_once BATH_PATH.'source/uploadFile.php';
     $uf = new UploadFile("file");//upfile为上传空间file的name属性
     $uf->setSaveDir("/salary/");
     $stat=$uf->upload();

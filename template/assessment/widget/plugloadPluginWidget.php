@@ -64,26 +64,20 @@
             flash_swf_url : '<?=P_SYSPATH?>static/js/plupload/js/Moxie.swf',
 
             // Silverlight settings
-            silverlight_xap_url : '<?=P_SYSPATH?>static/js/plupload/js/Moxie.xap'
-        });
+            silverlight_xap_url : '<?=P_SYSPATH?>static/js/plupload/js/Moxie.xap',
+            init: {
+                FileUploaded: function(up, file, info) {
+                    // Called when file has finished uploading
 
-
-        // Handle the case when form was submitted before uploading has finished
-        $('#form').submit(function(e) {
-            // Files in queue upload them first
-            if ($('#uploader').plupload('getFiles').length > 0) {
-
-                // When all files are uploaded submit form
-                $('#uploader').on('complete', function() {
-                    $('#form')[0].submit();
-                });
-
-                $('#uploader').plupload('start');
-            } else {
-                alert("You must have at least one file in the queue.");
+                    console.log(info);
+                    log('[FileUploaded] File:', file, "Info:", info);
+                },
+                Error: function(up, err) {
+                    document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
+                }
             }
-            return false; // Keep the form from submitting
         });
+
     });
 </script>
 

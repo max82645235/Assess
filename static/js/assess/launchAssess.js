@@ -6,7 +6,7 @@ Assess.prototype = {
             type:'get',
             url:'/salary/index.php',
             data:{
-                m:'assessment',a:'launchAssess',act:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
+                m:'api',a:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
             },
             dataType:'json',
             success:function(ret){

@@ -82,8 +82,9 @@ if($_REQUEST['act']=='launchAssess'){
 
 
 //部门二级分类
-if($_REQUEST['act']=='ajaxBusClassify'){
+/*if($_REQUEST['act']=='ajaxBusClassify'){
     global $cfg;
+    ini_set('display_errors','on');
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $validAuth = $_REQUEST['validAuth'];
@@ -101,7 +102,7 @@ if($_REQUEST['act']=='ajaxBusClassify'){
         echo json_encode($retData);
         die();
     }
-}
+}*/
 
 if($_REQUEST['act']=='ajaxIndicatorClassify'){
     if(isset($_GET['indicator_parent'])){
