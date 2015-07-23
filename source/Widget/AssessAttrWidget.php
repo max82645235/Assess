@@ -166,6 +166,14 @@ class AssessAttrWidget{
     public function pluploadPlugin($plupFileList){
         $renderPath = BATH_PATH."template/assessment/widget/plugloadPluginWidget.php";
         $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('plupFileList'=>$plupFileList,'widget'=>$this));
+        $this->tpl->render();
+    }
+
+    //ÏÂÔØÇø
+    public function getDownloadArea($plupFileList){
+        $renderPath = BATH_PATH."template/assessment/widget/downloadFileWidget.php";
+        $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('plupFileList'=>$plupFileList));
         $this->tpl->render();
     }
