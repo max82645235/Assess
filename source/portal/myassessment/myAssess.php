@@ -78,6 +78,7 @@ if($_REQUEST['act']=='myAssessFlow'){
             $historyData = array();
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
             $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
+
             $nextStatus = $_REQUEST['status']=='next';
             if($_REQUEST['status']=='next'){
                 $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;
@@ -90,10 +91,16 @@ if($_REQUEST['act']=='myAssessFlow'){
                 if($_REQUEST['rpItem']){
                     $userRelationRecord['rpData'] = serialize($assessFlowDao->formatRpItem($_REQUEST['rpItem']));
                 }
+
+                //待我汇报状态 可以附件上传保存
+                if($_REQUEST['plupFileList']){
+                    $assessDao->plugFileSave($_REQUEST['plupFileList'],$userRelationRecord['rid']);
+                }
             }
             $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);//更新user_relation表 assess_attr_type状态
             $assessDao->setAssessUserItemRecord($uids,$attrRecord); //更新user_item表
             $assessDao->triggerUserItemHistoryWrite($historyData,$assessFlowDao);//当$historyData存在时需要触发对比逻辑，写入前后差异到更新user_relation表 diffData字段
+
         }catch (Exception $e){
             throw new Exception('500');
         }

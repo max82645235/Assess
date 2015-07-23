@@ -91,12 +91,13 @@ if($a=='ajaxBusClassify'){
     global $cfg;
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
+        $validAuth = $_REQUEST['validAuth'];
         $retData = array('data'=>array());
         require_once BATH_PATH.'source/Dao/AssessDao.php';
         $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                if($assessDao->validBusAuth($bus_area_parent,$k)){
+                if(!$validAuth || $assessDao->validBusAuth($bus_area_parent,$k)){
                     $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
                     $retData['data'][] = $tmp;
                 }
@@ -127,12 +128,15 @@ if($a =='uploadFile'){
     $uf = new UploadFile("file");//upfile为上传空间file的name属性
     $uf->setSaveDir("/salary/");
     $stat=$uf->upload();
+    $jsonArr = array();
     if($stat == "success"){
-        $picurl = $uf->getSaveFileURL();
-        json_halt(0,$picurl);
+        $jsonArr['error'] = 0;
+        $jsonArr['url'] = iconv("gbk","utf-8//ignore",$uf->getSaveFileURL());
+        $jsonArr['cName'] = iconv("gbk","utf-8//ignore",$_FILES['file']['name']);
     }else{
-        json_halt(1,$stat);
-        exit();
+        $jsonArr['error'] = 1;
     }
+    echo json_encode($jsonArr);
+    die();
 }
 ?>

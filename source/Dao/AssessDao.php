@@ -666,4 +666,18 @@ class AssessDao extends BaseDao{
             $this->triggerUserNewAttrTypeUpdate($newData['relation']);
         }
     }
+
+    //¸½¼þ±£´æ
+    public function plugFileSave($fileList,$rid){
+        $record = array();
+        $record['rid'] = $rid;
+        $record['createTime'] = date("Y-m-d H:i:s");
+        $tbl =  "`".DB_PREFIX."upload_file`";
+        foreach($fileList as $data){
+            $record['filePath'] = $data['url'];
+            $record['cName'] =  iconv('utf-8','gbk',$data['cName']);
+            $sql = self::get_insert_sql($tbl,$record);
+            $this->db->Execute($sql);
+        }
+    }
 }

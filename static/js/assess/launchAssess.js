@@ -510,5 +510,14 @@ Assess.prototype = {
         var openUrl  = syspath+'index.php?m=myassessment&a=waitMeAssess&act=mulCopyCreateAssess';
         openUrl+= "&status="+status+"&base_id="+base_id+"&userId="+userId;
         art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
+    },
+    plugFileList:[],
+    pushPlugFile:function(fileInfo){
+        console.log(fileInfo);
+        this.plugFileList.push(fileInfo);
+        console.log(this.plugFileList);
+    },
+    getPlugList:function(){
+        return this.plugFileList;
     }
 };

@@ -19,7 +19,7 @@
         $("#uploader").plupload({
             // General settings
             runtimes : 'html5,flash,silverlight,html4',
-            url : '<?=P_SYSPATH?>index.php?m=api&a=uploadFile',
+            url : 'http://221.231.141.162/salary/index.php?m=api&a=uploadFile',
 
             // User can upload no more then 20 files in one go (sets multiple_queues to false)
             max_file_count: 20,
@@ -67,10 +67,12 @@
             silverlight_xap_url : '<?=P_SYSPATH?>static/js/plupload/js/Moxie.xap',
             init: {
                 FileUploaded: function(up, file, info) {
-                    // Called when file has finished uploading
-
-                    console.log(info);
-                    log('[FileUploaded] File:', file, "Info:", info);
+                    // 上传回调
+                    var dataObj=eval("("+info.response+")");
+                    console.log(dataObj);
+                    if(dataObj.error==0){
+                        Assess.prototype.pushPlugFile({url:dataObj.url,cName:dataObj.cName});
+                    }
                 },
                 Error: function(up, err) {
                     document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
@@ -79,6 +81,10 @@
         });
 
     });
+    function downFile(fileId){
+        var url = '';
+        window.open(url);
+    }
 </script>
 
 <p class="tjtip">已上传文件</p>
@@ -89,22 +95,15 @@
             <th width="10%">上传日期</th>
             <th>操作</th>
         </tr>
-        <tr>
-            <td class="left">文件名1</td>
-            <td>2015-1-1</td>
-            <td>
-                <input type="button" value="删除" class="btn67 delFileBtn">
-                <input type="button" value="下载" class="btn67 downloadFileBtn">
-            </td>
-        </tr>
-        <tr>
-            <td class="left">文件名1</td>
-            <td>2015-1-1</td>
-            <td>
-                <input type="button" value="删除" class="btn67 delFileBtn">
-                <input type="button" value="下载" class="btn67 downloadFileBtn">
-            </td>
-        </tr>
+        <?php foreach($uploadedFileList as $fileInfo){ ?>
+            <tr>
+                <td class="left"><?=$fileInfo['cName']?></td>
+                <td><?=substr($fileInfo['createTime'],0,10)?></td>
+                <td>
+                    <input type="button" value="下载" class="btn67 downloadFileBtn" onclick="downFile(<?=$fileInfo['fileId']?>)">
+                </td>
+            </tr>
+        <?php }?>
     </tbody>
 
 </table>

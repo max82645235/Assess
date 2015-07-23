@@ -86,6 +86,8 @@
                     formData.base_id = $("#hidden_base_id").val();
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
+                    formData.plupFileList = AssessInstance.getPlugList();
+                    console.log(formData);return;
                     art.dialog.confirm('您确定提交考核审核申请么？',function(){
                         $.ajax({
                             type:'post',
@@ -184,8 +186,11 @@
                     <!--提成类-->
                     <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList,$mValid)?>
                 </div>
-                <?php if($record_info['relation']['user_assess_status']==4){?>
+                <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessPreReport){?>
                     <?=$assessAttrWidget->rewardPunish($record_info['relation'])?>
+                <?php }?>
+                <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessPreReport){?>
+                    <?=$assessAttrWidget->pluploadPlugin()?>
                 <?php }?>
             </div>
             <div class="kctjbot">

@@ -317,10 +317,6 @@ EOF;
                 <!--提成类-->
                 <?=$assessAttrWidget->renderAttr($record_info['attr_info'],3,array(),$mValid)?>
             </div>
-            <?php if($_GET['test']){?>
-            <?=$assessAttrWidget->pluploadPlugin()?>
-            <?php }?>
-
             <div class="kctjbot">
                 <?php if(!isset($record_info['base_info']) ||$record_info['base_info']!=AssessDao::HrAssessOver){?>
                     <input type="submit" class="bluebtn" value="确定" />
