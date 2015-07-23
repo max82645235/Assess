@@ -163,10 +163,10 @@ class AssessAttrWidget{
     }
 
     //ÉÏ´«²å¼ş
-    public function pluploadPlugin(){
+    public function pluploadPlugin($plupFileList){
         $renderPath = BATH_PATH."template/assessment/widget/plugloadPluginWidget.php";
         $this->tpl->set_tpl($renderPath);
-        $this->tpl->set_data(array());
+        $this->tpl->set_data(array('plupFileList'=>$plupFileList));
         $this->tpl->render();
     }
 }

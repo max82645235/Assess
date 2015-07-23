@@ -109,6 +109,9 @@ if($_REQUEST['act']=='myAssessFlow'){
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
         $assessFlowDao->validStuffSetFow($record_info['relation']['user_assess_status']);
+        if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessPreReport){
+            $record_info['plupFileList'] = $assessFlowDao->getPlugFileList($record_info['relation']['rid']);
+        }
         require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
         $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     }

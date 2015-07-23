@@ -244,7 +244,7 @@
                 </div>
                 <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessRealLeadView){?>
                     <?=$assessAttrWidget->rewardPunish($record_info['relation'])?>
-                    <?=$assessAttrWidget->pluploadPlugin($record_info['relation']['plupFileList'])?>
+                    <?=$assessAttrWidget->pluploadPlugin($record_info['plupFileList'])?>
                 <?php }?>
 
 
