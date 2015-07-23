@@ -90,6 +90,9 @@ class AssessAttrWidget{
                 $itemList[] = $item;
             }
         }
+        if(!$itemList){
+            return false;
+        }
         self::$compareStatus = $compareStatus;
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);

@@ -18,7 +18,7 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
-                                <td width="26%">
+                                <td width="20%">
                                     <em class="c-yel">*</em>
                                     <select <?=$widget->disabled()?>  onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator_parent">
                                         <?php if($indicatorList){?>
@@ -34,22 +34,28 @@
                                     <input <?=$widget->disabled()?> type="hidden" name="indicator_child_hidden" class="indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
                                 </td>
 
-                                <td width="15%" class="sm_xsmbadd_td2">
+                                <td width="10%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
                                         <input <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true }}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
-                                    <td width="15%" class="sm_xsmbadd_td2">
+                                    <td width="10%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
                                             <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="selfScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
                                         </div>
                                     </td>
+                                    <td width="30%" class="sm_xsmbadd_td2">
+                                        <div class="smfl">
+                                            <span> 自我评价：</span>
+                                            <input  type="text" value="<?=$itemData['selfAssess']?>" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
+                                        </div>
+                                    </td>
                                 <?php }?>
                                 <?php if(isset($scoreList['leadScore'])){?>
-                                    <td width="15%" class="sm_xsmbadd_td2">
+                                    <td width="10%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
                                             <input  type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="leadScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
@@ -69,7 +75,7 @@
                     <?php }?>
                 <?php }?>
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
-                    <td width="25%">
+                    <td width="20%">
                         <em class="c-yel">*</em>
                         <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
                             <?php if($indicatorList){?>
@@ -83,22 +89,28 @@
                         </select>
                     </td>
 
-                    <td width="15%" class="sm_xsmbadd_td2">
+                    <td width="10%" class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
                         </div>
                     </td>
                     <?php if(isset($scoreList['selfScore'])){?>
-                        <td width="15%" class="sm_xsmbadd_td2">
+                        <td width="10%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 自评分：</span>
                                 <input type="text" value=""  tagname="selfScore" name="selfScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
                             </div>
                         </td>
+                        <td width="30%" class="sm_xsmbadd_td2">
+                            <div class="smfl">
+                                <span> 自我评价：</span>
+                                <input  type="text" value="" tagname="selfAssess" name="selfAssess_new_[@]"  class="width160 j-notnull" />
+                            </div>
+                        </td>
                     <?php }?>
                     <?php if(isset($scoreList['leadScore'])){?>
-                        <td width="15%" class="sm_xsmbadd_td2">
+                        <td width="10%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 领导评分：</span>
                                 <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true}}" />

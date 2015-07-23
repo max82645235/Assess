@@ -18,7 +18,7 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
-                                <td width="40%">
+                                <td width="30%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>考核项： </span>
                                         <input <?=$widget->disabled()?> type="text" value="<?=$itemData['score_name']?>" tagname="score_name" name="score_name_old_<?=$key?>" class="{validate:{required:true}}" />
@@ -39,6 +39,12 @@
                                             <input type="text" value="<?=$itemData['leadScore']?>"  tagname="leadScore"   name="leadScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true}}" />
                                         </div>
                                     </td>
+                                    <td width="30%" class="sm_xsmbadd_td2">
+                                        <div class="smfl">
+                                            <span> 自我评价：</span>
+                                            <input  type="text" value="<?=$itemData['selfAssess']?>" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
+                                        </div>
+                                    </td>
                                 <?php }?>
                             <?php if($widget->validElement()){?>
                                 <td width="15%" class="sm_xsmbadd_td2">
@@ -52,7 +58,7 @@
                     <?php }?>
                 <?php }?>
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
-                    <td width="40%">
+                    <td width="30%">
                         <div class="smfl">
                             <span><em class="c-yel">*</em>考核项： </span>
                             <input type="text" value="" tagname="score_name" name="score_name_new_[@]" class="{validate:{required:true}}" />
@@ -63,6 +69,12 @@
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 自评分：</span>
                                 <input type="text" value="" tagname="selfScore"  name="selfScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true}}" />
+                            </div>
+                        </td>
+                        <td width="30%" class="sm_xsmbadd_td2">
+                            <div class="smfl">
+                                <span> 自我评价：</span>
+                                <input  type="text" value="" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
                             </div>
                         </td>
                     <?php }?>

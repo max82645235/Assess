@@ -7,12 +7,13 @@
     ?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th width="20%">考核类型</th>
-            <th width="30%">考核项</th>
+            <th width="15%">考核类型</th>
+            <th width="20%">考核项</th>
             <th width="10%">权重</th>
-            <th width="15%">自评分</th>
-            <th width="15%">实际评分</th>
-            <th width="20%">汇总评分</th>
+            <th width="10%">自评分</th>
+            <th width="25%">自我评价</th>
+            <th width="10%">实际评分</th>
+            <th width="15%">汇总评分</th>
         </tr>
         <?php foreach($itemInfo as $item){?>
             <?php $itemList = unserialize($item['itemData']);?>
@@ -42,6 +43,7 @@
                         </td>
                         <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
                         <td ><?=$data['selfScore']?></td>
+                        <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
@@ -68,6 +70,7 @@
                         <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'job_name'));?>><?=$data['job_name']?></td>
                         <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
                         <td ><?=$data['selfScore']?></td>
+                        <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
                         <td>
                             <?php
@@ -82,7 +85,7 @@
             <?php }?>
         <?php }?>
         <tr>
-            <td colspan="5">合计分</td>
+            <td colspan="6">合计分</td>
             <td><?=(intval($totalScore))?intval($totalScore):'';?></td>
         </tr>
     </table>
@@ -93,10 +96,11 @@
         <tr>
             <th width="15%">考核类型</th>
             <th width="15%">分值金额转化率(元/分)</th>
-            <th width="20%">考核项</th>
-            <th width="15%">自评分</th>
-            <th width="15%">实际评分</th>
-            <th width="20%">汇总评分</th>
+            <th width="15%">考核项</th>
+            <th width="10%">自评分</th>
+            <th width="15%">自我评价</th>
+            <th width="10%">实际评分</th>
+            <th width="15%">汇总评分</th>
         </tr>
         <?php foreach($itemList as $key=>$data){?>
             <tr <?=$widget->getDifferShow(3);?>>
@@ -115,6 +119,7 @@
                 <?php }?>
                 <td <?=$widget->getDifferShow(3,array('index'=>$key,'attr'=>'score_name'));?>><?=$data['score_name']?></td>
                 <td ><?=$data['selfScore']?></td>
+                <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
                 <td><?=$data['leadScore']?></td>
                 <td>
                     <?php
@@ -127,7 +132,7 @@
             </tr>
         <?php }?>
         <tr>
-            <td colspan="5">合计分</td>
+            <td colspan="6">合计分</td>
             <td><?=(intval($totalScore))?intval($totalScore):'';?></td>
         </tr>
     </table>
@@ -137,13 +142,15 @@
         <tr>
             <th width="20%">考核类型</th>
             <th width="10%">提成点</th>
-            <th width="30%">完成金额</th>
-            <th width="40%">合计</th>
+            <th width="20%">完成金额</th>
+            <th width="30%">自我评价</th>
+            <th width="20%">合计</th>
         </tr>
         <tr  <?=$widget->getDifferShow(4);?>>
             <td>提成类 </td>
             <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'tc_name'));?>><?=$itemList[0]['tc_name']?>%</td>
             <td ><?=$itemList[0]['finishCash']?></td>
+            <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
             <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']:''?></td>
         </tr>
     </table>
