@@ -60,6 +60,8 @@
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
                     formData.plupFileList = AssessInstance.getPlugList();
+                    console.log(formData);
+                    return false;
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',

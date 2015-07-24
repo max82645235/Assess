@@ -174,6 +174,7 @@ Assess.prototype = {
                     tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
                     tmp.qz = $(this).find("input[tagname=qz]").val();
                     tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
                     tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     if(tmp.qz && tmp.indicator_child){
                         c_data['table_data'].push(tmp);
@@ -189,6 +190,7 @@ Assess.prototype = {
                     tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
                     tmp.qz = $(this).find("input[tagname=job_qz]").val();
                     tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
                     tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     if(tmp.qz &&tmp.job_name){
                         j_data['table_data'].push(tmp);
@@ -205,6 +207,7 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.score_name = $(this).find("input[tagname=score_name]").val();
                     tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                    tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
                     tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     s_data['table_data'].push(tmp);
                 });
@@ -220,6 +223,7 @@ Assess.prototype = {
                     var tmp = {};
                     tmp.tc_name = $(this).find("input[tagname=tc_name]").val();
                     tmp.finishCash = $(this).find("input[tagname=finishCash]").val();
+                    tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
                     t_data['table_data'].push(tmp);
                 });
                 return {target:t_data};
@@ -263,6 +267,7 @@ Assess.prototype = {
                 itemDom.find("input[tagname=qz]").val('');
                 itemDom.find("input[tagname=selfScore]").val('');
                 itemDom.find("input[tagname=leadScore]").val('');
+                itemDom.find("input[tagname=selfAssess]").val('');
                 break;
 
             case '2':
@@ -270,17 +275,20 @@ Assess.prototype = {
                 itemDom.find("input[tagname=job_qz]").val('');
                 itemDom.find("input[tagname=selfScore]").val('');
                 itemDom.find("input[tagname=leadScore]").val('');
+                itemDom.find("input[tagname=selfAssess]").val('');
                 break;
 
             case '3':
                 itemDom.find("input[tagname=score_name]").val('');
                 itemDom.find("input[tagname=selfScore]").val('');
                 itemDom.find("input[tagname=leadScore]").val('');
+                itemDom.find("input[tagname=selfAssess]").val('');
                 break;
 
             case '4':
                 itemDom.find("input[tagname=tc_name]").val('');
                 itemDom.find("input[tagname=finishCash]").val('');
+                itemDom.find("input[tagname=selfAssess]").val('');
                 break;
         }
         return itemDom;

@@ -3,11 +3,13 @@
 <script type="text/javascript" src="<?=P_SYSPATH?>static/js/plupload/js/plupload.full.min.js"></script>
 <script type="text/javascript" src="<?=P_SYSPATH?>static/js/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
 <script type="text/javascript" src="<?=P_SYSPATH?>static/js/plupload/js/i18n/zh_CN.js"></script>
-
+<style>
+    .plupload_wrapper table td{line-height:5px;}
+</style>
 
 <p class="tjtip">上传文件区</p>
 
-<form id="form" method="post" action="../dump.php" >
+<form id="form" method="post" action="" >
     <div id="uploader">
     </div>
     <br />
@@ -56,7 +58,6 @@
             // Views to activate
             views: {
                 list: true,
-                thumbs: true, // Show thumbs
                 active: 'thumbs'
             },
 

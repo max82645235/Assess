@@ -12,23 +12,29 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
-                                <td width="26%">
+                                <td width="21%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>工作任务名称： </span>
                                         <input  <?=$widget->disabled()?> type="text" value="<?=$itemData['job_name']?>" tagname="job_name" name="job_name_old_<?=$key?>" class="width160 j-notnull {validate:{job_name:true}}" />
                                     </div>
                                 </td>
-                                <td width="15%" class="sm_xsmbadd_td2">
+                                <td width="10%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
                                         <input   <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="job_qz" name="job_qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
-                                    <td width="15%" class="sm_xsmbadd_td2">
+                                    <td width="10%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
                                             <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="job_selfScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
+                                        </div>
+                                    </td>
+                                    <td width="30%" class="sm_xsmbadd_td2">
+                                        <div class="smfl">
+                                            <span> 自我评价：</span>
+                                            <input  type="text" value="<?=$itemData['selfAssess']?>" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
                                         </div>
                                     </td>
                                 <?php }?>
@@ -53,13 +59,13 @@
                     <?php }?>
                 <?php }?>
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
-                    <td width="26%">
+                    <td width="21%">
                         <div class="smfl">
                             <span><em class="c-yel">*</em>工作任务名称： </span>
                             <input type="text" value="" tagname="job_name" name="job_name_new_[@]" class="width160 j-notnull {validate:{job_name:true }}" />
                         </div>
                     </td>
-                    <td width="15%" class="sm_xsmbadd_td2">
+                    <td width="10%" class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input type="text" value="" tagname="job_qz" name="job_qz_new_[@]"  class="width40 j-notnull {validate:{totalQz:true }}" />&nbsp;%
@@ -70,6 +76,12 @@
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 自评分：</span>
                                 <input type="text" value="" tagname="selfScore" name="job_selfScore_new_[@]"  class="width40 j-notnull required {validate:{required:true,percent:true}}" />
+                            </div>
+                        </td>
+                        <td width="30%" class="sm_xsmbadd_td2">
+                            <div class="smfl">
+                                <span> 自我评价：</span>
+                                <input  type="text" value="" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
                             </div>
                         </td>
                     <?php }?>
