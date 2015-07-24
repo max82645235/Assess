@@ -21,7 +21,7 @@
         $("#uploader").plupload({
             // General settings
             runtimes : 'html5,flash,silverlight,html4',
-            url : '<?=P_SYSPATH?>index.php?m=api&a=uploadFile',
+            url : '<?=P_SYSPATH?>index.php?m=unlogin&a=assessUnlogin&act=uploadFile',
 
             // User can upload no more then 20 files in one go (sets multiple_queues to false)
             max_file_count: 20,
@@ -42,7 +42,8 @@
                 // Specify what files to browse for
                 mime_types: [
                     {title : "Image files", extensions : "jpg,gif,png"},
-                    {title : "Zip files", extensions : "zip,rar"}
+                    {title : "Zip files", extensions : "zip,rar"},
+                    {title : "Doc files", extensions : "doc,psw,pwd,xls,csv,xlt,vsd,ppt,pdf"}
                 ]
             },
 

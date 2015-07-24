@@ -24,7 +24,7 @@
                                             <input  style="width: 100px;" type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash" name="finishCash"  class="width40 j-notnull  {validate:{required:true,cash:true}}" />
                                         </div>
                                     </td>
-                                    <td width="30%" class="sm_xsmbadd_td2">
+                                    <td width="20%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span> 自我评价：</span>
                                             <input  type="text" value="<?=$itemData['selfAssess']?>" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
@@ -50,7 +50,7 @@
                                     <input type="text" value="<?=$itemData['finishCash']?>" tagname="finishCash"  class="width40 j-notnull {validate:{required:true,cash:true}}" style="width: 100px;" />
                                 </div>
                             </td>
-                            <td width="30%" class="sm_xsmbadd_td2">
+                            <td width="20%" class="sm_xsmbadd_td2">
                                 <div class="smfl">
                                     <span> 自我评价：</span>
                                     <input  type="text" value="" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />

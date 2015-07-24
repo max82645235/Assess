@@ -31,7 +31,7 @@
                                             <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="job_selfScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
                                         </div>
                                     </td>
-                                    <td width="30%" class="sm_xsmbadd_td2">
+                                    <td width="20%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span> 自我评价：</span>
                                             <input  type="text" value="<?=$itemData['selfAssess']?>" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />
@@ -78,7 +78,7 @@
                                 <input type="text" value="" tagname="selfScore" name="job_selfScore_new_[@]"  class="width40 j-notnull required {validate:{required:true,percent:true}}" />
                             </div>
                         </td>
-                        <td width="30%" class="sm_xsmbadd_td2">
+                        <td width="20%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span> 自我评价：</span>
                                 <input  type="text" value="" tagname="selfAssess" name="selfAssess_old_<?=$key?>"  class="width160 j-notnull" />

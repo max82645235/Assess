@@ -6,7 +6,7 @@ Assess.prototype = {
             type:'get',
             url:'/salary/index.php',
             data:{
-                m:'api',a:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
+                m:'unlogin',a:'assessUnlogin',act:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
             },
             dataType:'json',
             success:function(ret){
@@ -338,7 +338,7 @@ Assess.prototype = {
             $.ajax({
                 type:'get',
                 url:'/salary/index.php',
-                data:{m:'api',a:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
+                data:{m:'unlogin',a:'assessUnlogin',act:'ajaxIndicatorClassify',indicator_parent:indicator_parent},
                 dataType:'json',
                 success:function(ret){
                     if(ret.status=='success'){
