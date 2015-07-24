@@ -122,7 +122,7 @@
                         <?php }?>
                     </select>
                 </div>
-                <div class="sechk jssel" style="margin-top: 5px;clear: both;float: left;width: 235px;">
+                <div class="sechk jssel" style="margin-top: 5px;float: left;width: 235px;">
                     ¿¼ºËÃû³Æ£º
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="ÇëÊäÈë¿¼ºËÃû³Æ"  style="margin-bottom: 3px;">
                 </div>
@@ -134,7 +134,7 @@
                 <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">´´½¨¿¼ºË</a>
             <?php }?>
         </div>
-
+        <div style="clear:both;background: none;border:none;"></div>
         <div class="mrtb10" >
             <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
                 <tr >

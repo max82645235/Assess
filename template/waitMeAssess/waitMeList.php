@@ -50,7 +50,7 @@
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
                 <input type="hidden" name="m" value="myassessment">
                 <input type="hidden" name="a" value="waitMeAssess">
-                <div class="jssel" style="z-index:98">
+                <div class="jssel" style="z-index:98;float: left;">
                     ÒµÎñµ¥Ôª£º
                     <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
                         <option value="">ÇëÑ¡Ôñ</option>
@@ -60,14 +60,14 @@
                     </select>
                     <input type="hidden" name="bus_area_parent_hidden" id="bus_area_parent_hidden" value="<?=isset($_REQUEST['bus_area_parent'])?$_REQUEST['bus_area_parent']:'';?>">
                 </div>
-                <div class="jssel" style="z-index:49">
+                <div class="jssel" style="z-index:49;float: left;">
                     &nbsp;&nbsp;
                     <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
                         <option value="">ÇëÑ¡Ôñ</option>
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
-                <div class="jssel" style="z-index:98">
+                <div class="jssel" style="z-index:98;float: left;">
                     &nbsp;&nbsp;&nbsp;¿¼ºË×´Ì¬£º
                     <select name="base_status">
                         <option value=""    <?php if(isset($_REQUEST['base_status'])){?> selected="selected"<?php }?>>ÇëÑ¡Ôñ</option>
@@ -77,7 +77,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98">
+                <div class="jssel" style="z-index:98;float: left;">
                     &nbsp;&nbsp;&nbsp;Á÷³Ì×´Ì¬£º
                     <select name="user_assess_status" style="width: 150px;">
                         <option value=""    <?php if(isset($_REQUEST['user_assess_status']) && $_REQUEST['user_assess_status']===''){?> selected="selected"<?php }?>>ÇëÑ¡Ôñ</option>
@@ -87,7 +87,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98">
+                <div class="jssel" style="z-index:98;float: left;">
                     &nbsp;&nbsp;&nbsp;ÏÂÊô×´Ì¬£º
                     <select name="status">
                         <option value="1" <?php if(isset($_REQUEST['status']) && $_REQUEST['status']==1){?> selected="selected"<?php }?>>Ö±Êô</option>
@@ -95,7 +95,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98;margin-top: 5px;">
+                <div class="jssel" style="float: left;z-index:98;margin-top: 5px;">
                     ¿¼ºËÆµÂÊ£º
                     <select name="assess_period_type">
                         <option value="">ÇëÑ¡Ôñ</option>
@@ -108,7 +108,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98;margin-left: 20px;margin-top: 5px;">
+                <div class="jssel" style="z-index:98;margin-left: 20px;margin-top: 5px;float: left;">
                     ¿¼ºËÃû³Æ£º
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="ÇëÊäÈë¿¼ºËÃû³Æ"  style="margin-bottom: 3px;">
                 </div>
@@ -119,7 +119,7 @@
 
             </form>
         </div>
-
+        <div style="clear:both;background: none;border:none;"></div>
         <div class="mrtb10" >
             <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
                 <tr>
