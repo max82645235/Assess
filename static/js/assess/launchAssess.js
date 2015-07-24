@@ -10,15 +10,16 @@ Assess.prototype = {
             },
             dataType:'json',
             success:function(ret){
-                if(ret.status=='success'){
+                var opList = "";
+                if(bus_area_parent==''){
                     var opList = "<option value=''>«Î—°‘Ò</option>";
-                    var p_id = $("#bus_area_child_hidden").val();
-                    for(var i=0;i<ret.data.length;i++){
-                        var selected = (p_id==ret.data[i].value)?"selected=selected":"";
-                        opList+="<option value='"+ret.data[i].value+"' "+selected+">"+ret.data[i].name+"</option>";
-                    }
-                    $("#bus_area_child").html(opList);
                 }
+                var p_id = $("#bus_area_child_hidden").val();
+                for(var i=0;i<ret.data.length;i++){
+                    var selected = (p_id==ret.data[i].value)?"selected=selected":"";
+                    opList+="<option value='"+ret.data[i].value+"' "+selected+">"+ret.data[i].name+"</option>";
+                }
+                $("#bus_area_child").html(opList);
             }
         });
     },
@@ -325,7 +326,10 @@ Assess.prototype = {
         }
         var ajax_cache = this.delTrCache.indicator_ajax_cache;
         ajax_cache.replaceChildSelect = function(jSelectDom,data){
-            var opList = "<option value=''>«Î—°‘Ò</option>";
+            var opList = "";
+            if(indicator_parent==''){
+                 opList = "<option value=''>«Î—°‘Ò</option>";
+            }
             var p_id = jSelectDom.parent().find('.indicator_parent_hidden').val();
             for(var i=0;i<data.length;i++){
                 var selected = (p_id==data[i].childId)?"selected=selected":"";

@@ -65,13 +65,12 @@ if($_REQUEST['act']=='launchAssess'){
 
     require_once BATH_PATH."source/Widget/AssessAttrWidget.php";
     $assessAttrWidget = new AssessAttrWidget(new NewTpl());
-
     $tpl = new NewTpl('assessment/launchAssess.php',array(
         'record_info'=>$record_info,
         'relationUsers'=>$relationUsers,
         'attrTypeMaps'=>AssessDao::$attrTypeMaps,
         'assessAttrWidget'=>$assessAttrWidget,
-        'cfg'=>$cfg,
+        'bus_parent_list'=>$assessDao->getBusParentDropList(),
         'conditionUrl'=>$assessDao->getConditionParamUrl(array('a','m')),
         'mValid'=>$mValid
     ));

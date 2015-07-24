@@ -210,8 +210,8 @@ EOF;
                     <td>
                         <div class="jssel" style="z-index:98">
                             <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;" <?=$mValid->getDisableValid('bus_area_parent');?>>
-                                <?php foreach($cfg['tixi'] as $k=>$v){?>
-                                    <option value="<?=$k?>" <?php if(isset($record_info['base_info']['base_name']) && $record_info['base_info']['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v['title']?></option>
+                                <?php foreach($bus_parent_list as $k=>$v){?>
+                                    <option value="<?=$k?>" <?php if(isset($record_info['base_info']['base_name']) && $record_info['base_info']['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v?></option>
                                 <?php }?>
                             </select> &nbsp;&nbsp;
                             <input type="hidden" name="bus_area_parent_hidden" id="bus_area_parent_hidden" value="<?=isset($record_info['base_info']['bus_area_parent'])?$record_info['base_info']['bus_area_parent']:'';?>">

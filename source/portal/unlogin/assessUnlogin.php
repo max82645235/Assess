@@ -7,7 +7,7 @@
  */
 
 if($act=='ajaxBusClassify'){
-    global $cfg;
+    global $cfg,$p_tixi,$p_comp_dept;
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $validAuth = $_REQUEST['validAuth'];
@@ -16,7 +16,8 @@ if($act=='ajaxBusClassify'){
         $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                if(!$validAuth || $assessDao->validBusAuth($bus_area_parent,$k)){
+                $curTx = ($bus_area_parent== $p_tixi) && ($p_comp_dept == $k);
+                if($assessDao->validBusAuth($bus_area_parent,$k) || $curTx){
                     $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
                     $retData['data'][] = $tmp;
                 }

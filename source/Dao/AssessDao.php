@@ -454,11 +454,11 @@ class AssessDao extends BaseDao{
 
 
     public function getBusParentDropList(){
-        global $cfg;
+        global $cfg,$p_tixi;
         $dropList = array();
         $isRoot = getIsRootGroup();
         foreach($cfg['tixi'] as $k=>$v){
-            if($isRoot ||  $this->validBusAuth($k)){
+            if($isRoot ||  $k==$p_tixi || $this->validBusAuth($k)){
                 $dropList[$k] = $v['title'];
             }
         }
@@ -477,6 +477,7 @@ class AssessDao extends BaseDao{
         if(getIsRootGroup()){
             return true;
         }
+        $tixiAuth = $p_userinfo['tixi_auth'];
         if($p_userinfo['tixi_auth']){
             if(isset($p_userinfo['tixi_auth'][$parentId]) && count($p_userinfo['tixi_auth'][$parentId])>0){
                 $authStatus = true;
