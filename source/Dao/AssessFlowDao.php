@@ -252,7 +252,7 @@ class AssessFlowDao extends BaseDao{
                             break;
 
                         case 4://Ìá³ÉÀà
-                            $finalScore = $item['tc_name']*$item['finishCash'];
+                            $finalScore = $item['tc_name']*$item['finishCash']/100;
                             break;
                     }
                 }
@@ -399,4 +399,6 @@ class AssessFlowDao extends BaseDao{
         $result = $this->db->getAll($sql);
         return $result;
     }
+
+
 }

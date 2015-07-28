@@ -60,8 +60,6 @@
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
                     formData.plupFileList = AssessInstance.getPlugList();
-                    console.log(formData);
-                    return false;
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -74,6 +72,8 @@
                             }
                         }
                     });
+                }else{
+                    AssessInstance.scrollToErrorElement();
                 }
 
             });
@@ -121,6 +121,11 @@
                 }
 
                 if(valid){
+                    if(!AssessInstance.validAssessType()){
+                        return false;
+                    }
+
+
                     var status = $(this).attr('tag');
                     var formData = {
                         m:'myassessment',
@@ -136,11 +141,18 @@
                     if($(this).attr('sp')==1){
                         confirmMsg.next = '您确定此考核由员工设置么？';
                     }
+
+
+
                     formData.attrData = AssessInstance.getAttrData();
                     formData.base_id = $("#hidden_base_id").val();
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
                     formData.plupFileList = AssessInstance.getPlugList();
+                    var expectCalMsg = AssessInstance.addExpectCalMsg(formData.attrData.fromData);
+                    if(expectCalMsg){
+                        confirmMsg.next = expectCalMsg+confirmMsg.next;
+                    }
                     art.dialog.confirm(confirmMsg[status],function(){
                         $.ajax({
                             type:'post',
@@ -150,13 +162,15 @@
                             success:function(retData){
                                 if(retData.status=='success'){
                                     art.dialog({lock:true});
-                                    art.dialog.tips('保存成功',2);
+                                    art.dialog.tips('操作成功',2);
                                     var url = "<?=P_SYSPATH."index.php?m=myassessment&a=waitMeAssess&act=myStaffList&".$conditionUrl?>";
                                     AssessInstance.jump(url,2000);
                                 }
                             }
                         });
                     });
+                }else{
+                    AssessInstance.scrollToErrorElement();
                 }
 
             });
@@ -195,6 +209,7 @@
         <form action="" method="post" id="sub_form" class="clearfix" >
             <input type="hidden" id="hidden_user_id" value="<?=$record_info['relation']['userId']?>"/>
             <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
+            <input type="hidden" id="hidden_user_assess_status" value="<?=$record_info['relation']['user_assess_status']?>"/>
             <div class="baseinfo">
                 <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
@@ -252,17 +267,17 @@
 
             </div>
             <div class="kctjbot">
-                <input type="button" class="bluebtn" value="保存" id="saveBtn" tag="save" />
+                <input type="button" name="saveBtn" class="bluebtn" value="保存" id="saveBtn" tag="save" />
                 <?php if($record_info['relation']['user_assess_status']==0){?>
-                    <input type="button" class="bluebtn" value="由员工设置" id="nextBtn" tag="next" sp="1" />
-                    <input type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
+                    <input name="nextBtn" type="button" class="bluebtn" value="由员工创建计划" id="nextBtn" tag="next" sp="1" />
+                    <input name="startBtn"  type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
                 <?php }?>
 
                 <?php if(in_array($record_info['relation']['user_assess_status'],array(2,5))){?>
-                    <input type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
-                    <input type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" sp="3"/>
+                    <input name="nextBtn"   type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
+                    <input  name="backBtn"  type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" sp="3"/>
                 <?php }?>
-                <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
+                <input type="button" name="back" class="btn67" value="返回"  onclick="history.go(-1);"/>
             </div>
         </form>
     </div>

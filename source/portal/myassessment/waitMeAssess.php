@@ -11,6 +11,9 @@ require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
 require_once BATH_PATH.'source/Util/btnValid/LeaderValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'waitMeList':$_REQUEST['act'];
 checkUserAuthority();//验证act请求权限
+if(!leaderAuth()){
+    throw new Exception('no power to visit this page');
+}
 //待我审核列表页
 if($_REQUEST['act']=='waitMeList'){
     $assessDao = new AssessDao();
@@ -77,6 +80,9 @@ if($_REQUEST['act']=='myStaffList'){
 if($_REQUEST['act']=='leaderSetFlow'){
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
+    if(!leaderAuth($userId)){
+        throw new Exception('no power to visit this page');
+    }
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $mValid = new LeaderValid($base_id,$userId);
@@ -226,6 +232,9 @@ if($_REQUEST['act']=='singleAssessDiySet'){
 if($_REQUEST['act']=='viewFlow'){
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
+    if(!leaderAuth($userId)){
+        throw new Exception('no power to visit this page');
+    }
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
     $assessAttrWidget = new AssessAttrWidget(new NewTpl());
     $tpl = new NewTpl('waitMeAssess/viewFlow.php',array(
@@ -238,6 +247,9 @@ if($_REQUEST['act']=='viewFlow'){
 if($_REQUEST['act']=='changeCheckingStatus'){
     $userId = $_REQUEST['userId'];
     $baseId = $_REQUEST['base_id'];
+    if(!leaderAuth($userId)){
+        throw new Exception('no power to visit this page');
+    }
     $assessFlowDao = new AssessFlowDao();
     $assessFlowDao->changeCheckingStatus($userId,$baseId);
     die();
@@ -249,6 +261,9 @@ if($_REQUEST['act']=='leadViewStaffDetail'){
     $assessFlowDao = new AssessFlowDao();
     $base_id = $_REQUEST['base_id'];
     $userId = $_REQUEST['userId'];
+    if(!leaderAuth($userId)){
+        throw new Exception('no power to visit this page');
+    }
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
     $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
     $record_info['plupFileList'] = $assessFlowDao->getPlugFileList($record_info['relation']['rid']);
@@ -267,9 +282,12 @@ if($_REQUEST['act']=='leadViewStaffDetail'){
 if($_REQUEST['act']=='mulCopyCreateAssess'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
+    $userId = $_REQUEST['userId'];
+    if(!leaderAuth($userId)){
+        throw new Exception('no power to visit this page');
+    }
     if(isset($_REQUEST['ajax']) && $_REQUEST['ajax']==1){
         $base_id = $_REQUEST['base_id'];
-        $userId = $_REQUEST['userId'];
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
         $newUids = $_REQUEST['newUids'];
         try{

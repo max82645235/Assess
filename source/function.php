@@ -307,14 +307,52 @@ function get_authcode($string,$operation="DECODE",$key="",$expiry=0) {
     }
 }
 
-function checkUserAuthority(){
+function checkUserAuthority($filterActs=array()){
     global $m,$a;
     require_once BATH_PATH.'source/Util/Auth.php';
     $act = $_REQUEST['act'];
+    if($filterActs && in_array($act,$filterActs)){
+        return true;
+    }
     $auth = new Auth();
     $auth->addAuthItem($act,array('m'=>$m,'a'=>$a,'act'=>$act));
     if(!$auth->setIsMy(true)->validIsAuth($act)){
         throw new Exception('you have no power to visit this page!');
     }
 }
+
+function leaderAuth($staff_uid=''){
+    global $db;
+    global $ADODB_FETCH_MODE;
+    $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
+    $userId = getUserId();
+    if($userId){
+        $uidStr = '';
+        if(!isset($_SESSION['leadStaffList'])){
+            $sql = "select low_userId from sa_user_relation where super_userId={$userId}";
+            $rs = $db->getAll($sql);
+            if($rs){
+                $uids = '';
+                foreach($rs as $v){
+                    $uids.="{$v['low_userId']},";
+                }
+                $uidStr = $uids = substr($uids,0,-1);
+                $_SESSION['leadStaffList'] = $uids;
+            }
+        }else{
+
+            $uidStr = $_SESSION['leadStaffList'];
+        }
+        if($uidStr){
+            $uidArr = explode(',',$uidStr);
+            if($staff_uid && !in_array($staff_uid,$uidArr)){
+                return false;
+            }
+            return true;
+        }
+
+    }
+    return false;
+}
+
 ?>

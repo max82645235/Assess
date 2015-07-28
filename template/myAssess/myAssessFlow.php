@@ -50,6 +50,9 @@
             <?php if($record_info['relation']['user_assess_status']!=4){?>
                 $('#saveBtn').click(function(){
                     if($("#sub_form").valid()){
+                        if(!AssessInstance.validAssessType()){
+                            return false;
+                        }
                         var formData = {
                             m:'myassessment',
                             a:'myAssess',
@@ -71,11 +74,16 @@
                                 }
                             }
                         });
+                    }else{
+                        AssessInstance.scrollToErrorElement();
                     }
                 });
             <?php }?>
             $("#nextBtn").click(function(){
                 if($("#sub_form").valid()){
+                    if(!AssessInstance.validAssessType()){
+                        return false;
+                    }
                     var formData = {
                         m:'myassessment',
                         a:'myAssess',
@@ -96,13 +104,15 @@
                             success:function(retData){
                                 if(retData.status=='success'){
                                     art.dialog({lock:true});
-                                    art.dialog.tips('保存成功',2);
+                                    art.dialog.tips('提交成功',2);
                                     var url = "<?=P_SYSPATH."index.php?m=myassessment&a=myAssess&act=myAssessList&".$conditionUrl?>";
                                     AssessInstance.jump(url,2000);
                                 }
                             }
                         });
                     });
+                }else{
+                    AssessInstance.scrollToErrorElement();
                 }
             });
         });

@@ -319,7 +319,7 @@ EOF;
             </div>
             <div class="kctjbot">
                 <?php if(!isset($record_info['base_info']) ||$record_info['base_info']!=AssessDao::HrAssessOver){?>
-                    <input type="submit" class="bluebtn" value="È·¶¨" />
+                    <input type="submit" class="bluebtn" value="±£´æ" />
                 <?php }?>
 
                 <?php if(!isset($record_info['base_info']) || $record_info['base_info']['base_status']==AssessDao::HrAssessWait){?>

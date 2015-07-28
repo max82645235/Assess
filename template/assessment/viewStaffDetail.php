@@ -43,7 +43,7 @@
                     a:'launchList',
                     act:'hrAssessReject',
                     userId:userId,
-                    base_id,base_id
+                    base_id:base_id
                 };
 
                 art.dialog.prompt('请输入驳回理由！',function(reject){

@@ -523,11 +523,77 @@ Assess.prototype = {
         openUrl+= "&status="+status+"&base_id="+base_id+"&userId="+userId;
         art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
     },
+
+    //plugpload插件
     plugFileList:[],
     pushPlugFile:function(fileInfo){
         this.plugFileList.push(fileInfo);
     },
     getPlugList:function(){
         return this.plugFileList;
+    },
+
+    //考核类型校验
+    validAssessType:function(){
+        if(!$("#attr_type_checkboxes_td input:checked").val()){
+            alert('考核类型必填');
+            return false;
+        }
+        return true;
+    },
+    //滚动到valid未通过的第一个元素
+    scrollToErrorElement:function(){
+        if($.myValidate.errorList.length!=0){
+            var element = $.myValidate.errorList[0].element;
+            var winScrollTop = $(window).scrollTop();
+            var eleTop = $(element).offset().top;
+            if(winScrollTop>0 && winScrollTop>eleTop){
+                $('html, body').animate({
+                    scrollTop: eleTop-60
+                }, 500);
+            }
+        }
+    },
+    //获取预计得分信息
+    addExpectCalMsg:function(formData){
+        if($("#hidden_user_assess_status").val()==5){
+            var attr_type = parseInt(formData.type);
+            var score = 0;
+            switch(attr_type){
+                case 1:
+                            var commsionData = formData.handlerData.commission.table_data;
+                            var jobData = formData.handlerData.job.table_data;
+                            if(commsionData.length>0){
+                                for(var i=0;i<commsionData.length;i++){
+                                    score+= commsionData[i].leadScore*commsionData[i].qz/100;
+                                }
+                            }
+                            if(jobData.length>0){
+                                for(var i=0;i<jobData.length;i++){
+                                    score+= jobData[i].leadScore*jobData[i].qz/100;
+                                }
+                            }
+
+                    break;
+
+
+                case 2:
+                            var scoreData = formData.handlerData.score.table_data;
+                            if(scoreData.length>0){
+                                for(var i=0;i<scoreData.length;i++){
+                                    score+= scoreData[i].cash*scoreData[i].leadScore;
+                                }
+                            }
+                    break;
+
+                case 3:
+                            var targetData = formData.handlerData.target.table_data;
+                            score = targetData[0].tc_name*targetData[0].finishCash/100;
+                    break;
+            }
+            var retMsg = "预计最终得分：<span style='color: red;'>"+score+"</span> !";
+            return retMsg;
+        }
     }
+
 };

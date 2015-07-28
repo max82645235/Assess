@@ -11,7 +11,8 @@
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Util/btnValid/HrValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'launchAssess':$_REQUEST['act'];
-checkUserAuthority();//验证act请求权限
+$filterActs = array('autoUserName','selectUserList');
+checkUserAuthority($filterActs);//验证act请求权限
 if($_REQUEST['act']=='launchAssess'){
     $base_id = getgpc('base_id'); //考核表主键
     $user_id = getUserId();//当前用户身份Id

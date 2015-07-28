@@ -150,7 +150,6 @@
                             <td><?=AssessDao::$HrAssessBaseStatus[$data['base_status']]?></td>
                             <td>
                                 <a href="?m=myassessment&a=waitMeAssess&act=myStaffList&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">考核员工</a>
-                                <a href="?m=myassessment&a=waitMeAssess&act=mulAssessDiySet&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">由员工创建计划</a>
                             </td>
                         </tr>
                     <?php }?>

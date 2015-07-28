@@ -9,7 +9,8 @@ require_once BATH_PATH.'source/Dao/AssessDao.php';
 require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
 require_once BATH_PATH.'source/Util/btnValid/StaffValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'myAssessList':$_REQUEST['act'];
-checkUserAuthority();//验证act请求权限
+$filterActs = array('triggerStatusUpdate');
+checkUserAuthority($filterActs);//验证act请求权限
 //我的考核列表页
 if($_REQUEST['act']=='myAssessList'){
     $assessDao = new AssessDao();
@@ -128,12 +129,12 @@ if($_REQUEST['act']=='myAssessFlow'){
 }
 
 
-//hr查看具体成员考核进程
+//查看具体考核进程
 if($_REQUEST['act']=='staffViewStaffDetail'){
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $base_id = $_REQUEST['base_id'];
-    $userId = $_REQUEST['userId'];
+    $userId = getUserId();
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
 
     $record_info['base'] = $assessDao->getAssessBaseRecord($base_id);
