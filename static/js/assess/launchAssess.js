@@ -556,7 +556,9 @@ Assess.prototype = {
     },
     //获取预计得分信息
     addExpectCalMsg:function(formData){
-        if($("#hidden_user_assess_status").val()==5){
+        var assess_status = $("#hidden_user_assess_status").val();
+        if(assess_status==5 || assess_status==4){
+            var scoreName = (assess_status==4)?'selfScore':'leadScore';
             var attr_type = parseInt(formData.type);
             var score = 0;
             switch(attr_type){
@@ -565,12 +567,12 @@ Assess.prototype = {
                             var jobData = formData.handlerData.job.table_data;
                             if(commsionData.length>0){
                                 for(var i=0;i<commsionData.length;i++){
-                                    score+= commsionData[i].leadScore*commsionData[i].qz/100;
+                                    score+= commsionData[i][scoreName]*commsionData[i].qz/100;
                                 }
                             }
                             if(jobData.length>0){
                                 for(var i=0;i<jobData.length;i++){
-                                    score+= jobData[i].leadScore*jobData[i].qz/100;
+                                    score+= jobData[i][scoreName]*jobData[i].qz/100;
                                 }
                             }
 
@@ -581,7 +583,7 @@ Assess.prototype = {
                             var scoreData = formData.handlerData.score.table_data;
                             if(scoreData.length>0){
                                 for(var i=0;i<scoreData.length;i++){
-                                    score+= scoreData[i].cash*scoreData[i].leadScore;
+                                    score+= scoreData[i].cash*scoreData[i][scoreName];
                                 }
                             }
                     break;

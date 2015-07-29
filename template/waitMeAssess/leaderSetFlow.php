@@ -48,6 +48,11 @@
             });
 
             $('#saveBtn').click(function(){
+                if(!AssessInstance.validAssessType()){
+                    return false;
+                }
+
+
                 if($("#sub_form").valid()){
                     var formData = {
                         m:'myassessment',
@@ -121,11 +126,9 @@
                 }
 
                 if(valid){
-                    if(!AssessInstance.validAssessType()){
+                    if($(this).attr('sp')!=1 && !AssessInstance.validAssessType()){
                         return false;
                     }
-
-
                     var status = $(this).attr('tag');
                     var formData = {
                         m:'myassessment',
@@ -269,7 +272,7 @@
             <div class="kctjbot">
                 <input type="button" name="saveBtn" class="bluebtn" value="保存" id="saveBtn" tag="save" />
                 <?php if($record_info['relation']['user_assess_status']==0){?>
-                    <input name="nextBtn" type="button" class="bluebtn" value="由员工创建计划" id="nextBtn" tag="next" sp="1" />
+                    <input name="nextBtn" type="button" class="bluebtn" value="由员工创建" id="nextBtn" tag="next" sp="1" />
                     <input name="startBtn"  type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
                 <?php }?>
 

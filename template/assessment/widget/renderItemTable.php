@@ -1,5 +1,4 @@
 <?php $totalScore = 0;?>
-<p class="tjtip">¿¼ºË±¨±í</p>
 <?php if($assessAttrType==1){?>
     <?php
         require_once BATH_PATH.'source/Dao/IndicatorDao.php';

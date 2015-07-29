@@ -45,7 +45,7 @@ class AssessFlowDao extends BaseDao{
     static $UserAssessFontColorMaps = array(
         '0'=>'#FF4500', //³È
         '1'=>"#CD8500", //»Æ
-        '2'=>"#B3EE3A",  //ÂÌ
+        '2'=>"#51a351",  //ÂÌ
         '4'=>'#7EC0EE', //Çà
         '5'=>"#AB82FF", //×Ï
     );

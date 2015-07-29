@@ -163,11 +163,12 @@
                     <?=$assessAttrWidget->renderItemTable($record_info)?>
 
                     <!--下载区-->
+                    <p class="tjtip">考核报表</p>
                     <?=$assessAttrWidget->getDownloadArea($record_info['plupFileList'])?>
                 </div>
             </div>
             <div class="kctjbot">
-                <?php if($record_info['relation']['user_assess_status']>=AssessFlowDao::AssessRealSuccess && $auth->setIsMy(true)->validIsAuth('hrAssessReject')){?>
+                <?php if($record_info['relation']['user_assess_status']>=AssessFlowDao::AssessRealSuccess && isset($auth) && $auth->setIsMy(true)->validIsAuth('hrAssessReject')){?>
                     <input type="button" id="hrRejectBtn" class="bluebtn" value="审查驳回"  />
                 <?php }?>
                 <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>

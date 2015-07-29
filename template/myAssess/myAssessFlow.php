@@ -81,6 +81,7 @@
             <?php }?>
             $("#nextBtn").click(function(){
                 if($("#sub_form").valid()){
+                    var confirmMsg = '您确定提交考核审核申请么';
                     if(!AssessInstance.validAssessType()){
                         return false;
                     }
@@ -95,7 +96,12 @@
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
                     formData.plupFileList = AssessInstance.getPlugList();
-                    art.dialog.confirm('您确定提交考核审核申请么？',function(){
+                    var expectCalMsg = AssessInstance.addExpectCalMsg(formData.attrData.fromData);
+                    if(expectCalMsg){
+                        confirmMsg = expectCalMsg+confirmMsg;
+                    }
+
+                    art.dialog.confirm(confirmMsg,function(){
                         $.ajax({
                             type:'post',
                             url:'/salary/index.php',
@@ -150,6 +156,7 @@
         <form action="" method="post" id="sub_form" class="clearfix" >
             <input type="hidden" id="hidden_user_id" value="<?=$record_info['relation']['userId']?>"/>
             <input type="hidden" id="hidden_base_id" value="<?=$record_info['relation']['base_id']?>"/>
+            <input type="hidden" id="hidden_user_assess_status" value="<?=$record_info['relation']['user_assess_status']?>"/>
             <div class="baseinfo">
                 <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>

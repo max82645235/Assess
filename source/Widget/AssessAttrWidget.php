@@ -94,6 +94,7 @@ class AssessAttrWidget{
             return false;
         }
         self::$compareStatus = $compareStatus;
+
         $renderPath = BATH_PATH.'template/assessment/widget/renderItemTable.php';
         $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('itemInfo'=>$itemList,'widget'=>$this,'assessAttrType'=>$assessAttrType,'relation'=>$record_info['relation']));
@@ -161,7 +162,7 @@ class AssessAttrWidget{
     public function compareHistory($record_info){
         $renderPath = BATH_PATH."template/assessment/widget/compareHistory.php";
         $this->tpl->set_tpl($renderPath);
-        $this->tpl->set_data(array('record_info'=>$record_info));
+        $this->tpl->set_data(array('record_info'=>$record_info,'widget'=>$this));
         $this->tpl->render();
     }
 
