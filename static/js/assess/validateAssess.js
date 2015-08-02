@@ -85,14 +85,14 @@ $(function(){
     $.validator.addMethod('totalQz',function(value,element,arg){
         var cntQz = 0;
         var emptyStatus = false;
-        $(".attr_form_1[flag=1] .sm_xsmbadd tr").each(function(){
+        $(".attr_form_1[flag=1] .sm_xsmbadd").children('tbody').children('tr:not(.ext_assess_tr)').each(function(){
             if($(this).find('td:eq(1) input[tagname=qz]').val()!=''){
                 cntQz+=parseInt($(this).find('td:eq(1) input[tagname=qz]').val());
                 emptyStatus = true;
             }
         });
 
-        $(".attr_form_1[flag=2] .sm_xsmbadd tr").each(function(){
+        $(".attr_form_1[flag=2] .sm_xsmbadd").children('tbody').children('tr:not(.ext_assess_tr)').each(function(){
             if($(this).find('td:eq(1) input[tagname=job_qz]').val()!=''){
                 cntQz+=parseInt($(this).find('td:eq(1) input[tagname=job_qz]').val());
                 emptyStatus = true;
