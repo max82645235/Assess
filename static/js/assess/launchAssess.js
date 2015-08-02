@@ -84,7 +84,7 @@ Assess.prototype = {
             formSubTag:1,
             subFormData:subFormData
         };
-
+        //console.log(data);return false;
         $.ajax({
             type:'post',
             url:'/salary/index.php',
@@ -166,34 +166,52 @@ Assess.prototype = {
             c_j_handler:function(){
                 //量化指标类
                 var c_data = {table_data:[]};
-                var c_table = $(".attr_form_1[flag=1] table");
-                c_table.find("tr:visible").each(function(){
-                    var tmp = {};
-                    tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
-                    tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
-                    tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
-                    tmp.qz = $(this).find("input[tagname=qz]").val();
-                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
-                    tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
-                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
-                    if(tmp.qz && tmp.indicator_child){
+                var c_table = $(".attr_form_1[flag=1] table.sm_xsmbadd");
+                var tmp = {};
+                console.log(c_table.children('tbody').children("tr:visible"));
+                c_table.children('tbody').children("tr:visible").each(function(){
+                    if($(this).hasClass('ext_assess_tr')){
+                        tmp.reachTime = $(this).find('input.hasDatepicker').val();
+                        tmp.sourceData = $(this).find('input.sourceData').val();
+                        tmp.detailTxt = $(this).find('textarea.detailCommisonTextarea').val();
+                        tmp.assessStad = $(this).find('textarea.assessStad').val();
+                        tmp.selfAssess = $(this).find('textarea.selfAssess').val();
+                        tmp.leadAssess = $(this).find('textarea.leadAssess').val();
                         c_data['table_data'].push(tmp);
+                        tmp = {};
+                    }else{
+                        tmp.indicator_parent = $(this).find("select[name=indicator_parent]").val();
+                        tmp.indicator_child = $(this).find("select[name=indicator_child]").val();
+                        tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
+                        tmp.qz = $(this).find("input[tagname=qz]").val();
+                        tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                        tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
+                        tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     }
                 });
 
                 //工作任务类
                 var j_data =  {table_data:[]};
-                var j_table = $(".attr_form_1[flag=2] table");
-                j_table.find("tr:visible").each(function(k,v){
-                    var tmp = {};
-                    tmp.job_name = $(this).find("input[tagname=job_name]").val();
-                    tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
-                    tmp.qz = $(this).find("input[tagname=job_qz]").val();
-                    tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
-                    tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
-                    tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
-                    if(tmp.qz &&tmp.job_name){
+                var j_table = $(".attr_form_1[flag=2] table.sm_xsmbadd");
+                tmp = {};
+                console.log(j_table.children('tbody').children("tr:visible"));
+                j_table.children('tbody').children("tr:visible").each(function(k,v){
+                    if($(this).hasClass('ext_assess_tr')){
+                        tmp.reachTime = $(this).find('input.hasDatepicker').val();
+                        tmp.sourceData = $(this).find('input.sourceData').val();
+                        tmp.detailTxt = $(this).find('textarea.detailJobTextarea').val();
+                        tmp.assessStad = $(this).find('textarea.assessStad').val();
+                        tmp.selfAssess = $(this).find('textarea.selfAssess').val();
+                        tmp.leadAssess = $(this).find('textarea.leadAssess').val();
                         j_data['table_data'].push(tmp);
+                        tmp = {};
+                    }else{
+                        tmp.job_name = $(this).find("input[tagname=job_name]").val();
+                        tmp.zbyz = $(this).find("input[tagname=zbyz]").val();
+                        tmp.qz = $(this).find("input[tagname=job_qz]").val();
+                        tmp.selfScore = $(this).find("input[tagname=selfScore]").val();
+                        tmp.selfAssess = $(this).find("input[tagname=selfAssess]").val();
+                        tmp.leadScore = $(this).find("input[tagname=leadScore]").val();
                     }
                 });
                 return {commission:c_data,job:j_data};
@@ -243,18 +261,38 @@ Assess.prototype = {
 
     /*添加指标*/
     addItem:function(jDom,type){
-        var itemContainer = jDom.parent().find('.kctjcon:eq(0) .sm_div table');
-        var len = itemContainer.find('tr').length;
+        var itemContainer = jDom.parent().find('.kctjcon:eq(0) .sm_div table.sm_xsmbadd');
+        var len = itemContainer.find('tr.tpl_tr').length;
         if( len>0){
             var clonedItemDom = itemContainer.find('tr.tpl_tr');
             var cDom = $.extend(true,{}, clonedItemDom);
             var html  = cDom.html().replace(new RegExp(/(\[@\])/g),len);
             itemContainer.append("<tr>"+html+"</tr>");
+
         }else if(this.delTrCache[type] !=undefined){
             var cDom = this.delTrCache[type];
-            itemContainer.append("<tr>"+cDom.html()+"</tr>");
+            itemContainer.append("<tr class=\"tpl_tr\">"+cDom.html()+"</tr>");
         }
         this.clearItemData(itemContainer.find('tr:last'),type);
+
+        itemContainer.copyExtTr = function(trTpl){
+            var timeStaft = new Date().getTime();
+            var extTr = trTpl.html().replace(new RegExp(/(-_-)/g),timeStaft).replace('hasDatepicker','');
+            itemContainer.append("<tr class='ext_assess_tr'>"+extTr+"</tr>");
+            var datepickerInput = $("#time_new_"+type+timeStaft);
+            datepickerInput.datepicker(); //日历控件实例化
+            var ext_assess_tr = datepickerInput.parents('.ext_assess_tr');
+            ext_assess_tr.find('input.hasDatepicker').val('');
+            ext_assess_tr.find('.sourceData').val('');
+            ext_assess_tr.find('tr textarea').each(function(){
+                $(this).val('');
+            });
+        }
+        if(itemContainer.find('tr.ext_assess_tr_tpl').length>0){
+            itemContainer.copyExtTr(itemContainer.find('tr.ext_assess_tr_tpl'));
+        }else if(this.delExtTrCache[type] !=undefined){
+            itemContainer.copyExtTr(this.delExtTrCache[type]);
+        }
     },
 
     /*清空克隆item节点里面的数据*/
@@ -295,6 +333,7 @@ Assess.prototype = {
     },
 
     delTrCache:{},
+    delExtTrCache:{},
     //删除item节点
     delItemDom:function(dBtn,type){
         var find = '';
@@ -303,8 +342,7 @@ Assess.prototype = {
         }else if(type==3){
             find = 'td:eq(0) input';
         }
-
-        if($(dBtn).parents('table').find('tr').length==1){
+        if($(dBtn).parents('table.sm_xsmbadd tbody').children('tr:not(.ext_assess_tr)').length==1){
             var name = $(dBtn).parents('tr').find(find).attr('name');
             var reg_new = /^.*_new_.*$/;
             var reg_old = /^.*_old_.*$/;
@@ -314,8 +352,19 @@ Assess.prototype = {
                 $(dBtn).parents('tr').find(find).attr('name',name);
                 this.delTrCache[type]=  $.extend(true,{}, $(dBtn).parents('tr'));
             }
+
         }
-        $(dBtn).parents('tr').remove();
+        if($(dBtn).parents('tr').next().hasClass('ext_assess_tr')){
+            if(this.delExtTrCache[type]==undefined){
+                this.delExtTrCache[type] = $(dBtn).parents('table').find('tr.ext_assess_tr_tpl');
+            }
+            $(dBtn).parents('tr').next().fadeTo('fast',0,function(){
+                $(this).remove();
+            });
+        }
+        $(dBtn).parents('tr').fadeTo('fast',0,function(){
+            $(this).remove();
+        });
     },
     triggerIndicatorSelect:function(jSelectDom){
         var jSelectDom =jSelectDom;
