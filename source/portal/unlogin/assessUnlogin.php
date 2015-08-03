@@ -82,5 +82,11 @@ if($_REQUEST['act']== 'getUserAssessInfo'){
     $flowDao = new AssessFlowDao();
     $oaObj = new OaUserAssess($uid,$flowDao);
     $assessInfo = $oaObj->getAssessInfo();
+    if($_REQUEST['debug']==1){
+        echo "<pre>";
+        print_r($assessInfo);
+        echo "</pre>";
+        exit;
+    }
     echo serialize($assessInfo);
 }

@@ -67,7 +67,7 @@ class OaUserAssess{
                 $cnRes[$key]['link'] = "?m=myassessment&a=myAssess&act=myAssessList&user_assess_status={$data['user_assess_status']}&base_name=".urlencode($data['base_name']);
                 if($data['rejectStatus']>0){
                     //增加驳回中文状态
-                    $cnRes[$key]['rejectStatusCn'] = AssessFlowDao::$rejectTextMapsForStaff[$data['rejectStatus']];
+                    $cnRes[$key]['baseName'] = $cnRes[$key]['baseName']."(".AssessFlowDao::$rejectTextMapsForStaff[$data['rejectStatus']].")";
                 }
             }
         }
@@ -87,17 +87,23 @@ class OaUserAssess{
         }
         $userIdInCond = implode(',',$lowList);
         $assessStatusMapIn = '0,2,5'; //待我创建计划 ，待我审核计划,待我评估确认
-        $sql = "select a.userId,b.username,a.user_assess_status,a.base_Id,c.base_name from sa_assess_user_relation as a
+        $sql = "select a.userId,b.username,a.user_assess_status,a.rejectStatus,a.base_Id,c.base_name from sa_assess_user_relation as a
                 inner join sa_user as b on a.userId=b.userId and a.userId in ({$userIdInCond}) and a.user_assess_status in ({$assessStatusMapIn}) inner join sa_assess_base as c on a.base_id=c.base_id order by a.base_id desc";
         $relationList = $this->db->getAll($sql);
         foreach($relationList as $relationData){
+            $rejectCn = '';
+            if($relationData['rejectStatus']>0){
+                //增加驳回中文状态
+                $rejectCn = "(".AssessFlowDao::$rejectTextMapsForLead[$relationData['rejectStatus']].")";
+            }
             $baseId = $relationData['base_Id'];
             $leadInfo[$baseId][] = array(
-                'baseName'=>$relationData['base_name'],
+                'baseName'=>$relationData['base_name'].$rejectCn,
                 'userName'=>$relationData['username'],
                 'assessStatusCn'=> AssessFlowDao::$UserAssessStatusByLeader[$relationData['user_assess_status']],
                 'link'=>"?m=myassessment&a=waitMeAssess&act=myStaffList&base_id={$baseId}&username=".urlencode($relationData['username'])
             );
+
         }
 
         return $leadInfo;
