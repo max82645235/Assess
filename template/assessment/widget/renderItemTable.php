@@ -150,7 +150,7 @@
             <td <?=$widget->getDifferShow(4,array('index'=>0,'attr'=>'tc_name'));?>><?=$itemList[0]['tc_name']?>%</td>
             <td ><?=$itemList[0]['finishCash']?></td>
             <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
-            <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']:''?></td>
+            <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']/100:''?></td>
         </tr>
     </table>
 
@@ -171,7 +171,7 @@
         <tr>
             <td><?=($itemData['rpType']==1)?'½±Àø':'³Í·£';?> </td>
             <td ><?=$itemData['rpIntro']?></td>
-            <td><?=($itemData['rpType']==1)?'+':'-';?><?=$itemData['rpUnitValue']?></td>
+            <td ><?=($itemData['rpType']==1)?'<span style="color: red;">+</span>':'<span style="color: green;">-</span>';?><?=$itemData['rpUnitValue']?></td>
             <td><?=($itemData['unitType']==1)?'Ôª':'%';?> </td>
         </tr>
     <?php }?>

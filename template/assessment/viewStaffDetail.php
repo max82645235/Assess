@@ -156,15 +156,22 @@
                 </table>
             </div>
             <div class="pad25">
-                <?=$assessAttrWidget->compareHistory($record_info);?>
+                <?php
+                     $compareHtml = $assessAttrWidget->compareHistory($record_info);
+                     echo $compareHtml;
+                ?>
 
                 <div class="attr_content">
                     <!--考核属性表格-->
-                    <?=$assessAttrWidget->renderItemTable($record_info)?>
-
+                    <?php
+                        if($compareHtml==''){
+                            $assessAttrWidget->renderItemTable($record_info);
+                        }
+                    ?>
                     <!--下载区-->
-                    <p class="tjtip">考核报表</p>
-                    <?=$assessAttrWidget->getDownloadArea($record_info['plupFileList'])?>
+                    <?php if($record_info['plupFileList']){?>
+                        <?=$assessAttrWidget->getDownloadArea($record_info['plupFileList'])?>
+                    <?php }?>
                 </div>
             </div>
             <div class="kctjbot">

@@ -45,6 +45,7 @@ if($act =='ajaxIndicatorClassify'){
 
 if($act =='uploadFile'){
     require_once BATH_PATH . 'source/uploadFile.php';
+    //print_r($_FILES);
     $uf = new UploadFile("file");//upfile为上传空间file的name属性
     $uf->setFileType("image|office|rar");
     $uf->setSaveDir("/salary/");
@@ -57,5 +58,18 @@ if($act =='uploadFile'){
         $jsonArr['error'] = 1;
     }
     echo json_encode($jsonArr);
+    die();
+}
+
+if($act== 'downFile'){
+    ini_set('display_errors','on');
+    error_reporting(E_ALL & ~E_NOTICE);
+    require_once BATH_PATH . 'source/Util/DownloadFile.php';
+    $filePath = urldecode($_REQUEST['filePath']);
+    $download = new DownloadFile('php,exe,html',false);
+     if(!$download->downloadfile($filePath))
+     {
+          echo $download->geterrormsg();
+     }
     die();
 }

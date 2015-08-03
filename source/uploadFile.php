@@ -17,9 +17,8 @@ var_dump($rtnMSG);//$rtnMSG="success" 文件上传成功
  */
 class UploadFile
 {
-
     var $strInputName;//上传的file输入框name属性
-    var $intMaxSize=204800;//200k //允许上传的最大文件大小(单位：B)
+    var $intMaxSize=10480000;//200k //允许上传的最大文件大小(单位：B)
     var $strFileType="image";//允许上传的文件类型（以|线分割）（image代表所有图片文件，office代表办公文件）
     var $strSaveDir;//文件存放路径（请尽量使用默认值：/database/webroot/upload/+当前年+/+当前月+/+当前日;例如：/database/webroot/upload/2008/06/11/）
     var $strUploadType="ftp";//文件上传方式，默认为ftp上传，如果需要以程序方式上传，请设置其值为非“ftp”
@@ -64,7 +63,7 @@ class UploadFile
 
 
     var $strImageType="jpg|jpeg|png|pjpeg|gif|bmp|dib|x-png|tif|tiff|wmf|dwg|dxf|svg|svgz|emf|emz";
-    var $strOfficeType="doc|dot|rtf|txt|pwi|psw|pwd|wps|wtf|xls|xlt|csv|xlw|wk4|wk3|wk1|wd1|wks|wq1|dbf|prn|dif|slk|xla|mdb|adp|mda|mdw|mde|ade|dbf|tab|asc|ppt|pot|pps|ppa|rtf|mpp|mpt|vsd|vtx|vss|vsx|vst|vtx|vsw|pdf";
+    var $strOfficeType="doc|dot|rtf|txt|pwi|psw|pwd|wps|wtf|xls|xlt|csv|xlw|wk4|wk3|wk1|wd1|wks|wq1|dbf|prn|dif|slk|xla|mdb|adp|mda|mdw|mde|ade|dbf|tab|asc|ppt|pot|pps|ppa|rtf|mpp|mpt|vsd|vtx|vss|vsx|vst|vtx|vsw|pdf|docx";
     var $strRarType="rar|zip";
 
 	//2011-9-1 原图截取

@@ -12,7 +12,7 @@
                 <td class="left"><?=$fileInfo['cName']?></td>
                 <td><?=substr($fileInfo['createTime'],0,10)?></td>
                 <td>
-                    <a class="bjwrt" href="<?=$fileInfo['filePath']?>">обть</a>
+                    <a class="bjwrt" href="?m=unlogin&a=assessUnlogin&act=downFile&filePath=<?=urlencode($fileInfo['filePath'])?>">обть</a>
                 </td>
             </tr>
         <?php }?>

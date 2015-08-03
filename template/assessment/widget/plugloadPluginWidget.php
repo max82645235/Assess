@@ -26,24 +26,24 @@
             // User can upload no more then 20 files in one go (sets multiple_queues to false)
             max_file_count: 20,
 
-            chunk_size: '1mb',
+            chunk_size: '10mb',
 
             // Resize images on clientside if we can
-            resize : {
+/*            resize : {
                 width : 200,
                 height : 200,
                 quality : 90,
                 crop: true // crop to exact dimensions
-            },
+            },*/
 
             filters : {
                 // Maximum file size
-                max_file_size : '1000mb',
+                max_file_size : '10mb',
                 // Specify what files to browse for
                 mime_types: [
                     {title : "Image files", extensions : "jpg,gif,png"},
                     {title : "Zip files", extensions : "zip,rar"},
-                    {title : "Doc files", extensions : "doc,psw,pwd,xls,csv,xlt,vsd,ppt,pdf"}
+                    {title : "Doc files", extensions : "doc,psw,pwd,xls,csv,xlt,vsd,ppt,pdf,docx"}
                 ]
             },
 
@@ -74,9 +74,6 @@
                     if(dataObj.error==0){
                         Assess.prototype.pushPlugFile({url:dataObj.url,cName:file.name});
                     }
-                },
-                Error: function(up, err) {
-                    document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
                 }
             }
         });
