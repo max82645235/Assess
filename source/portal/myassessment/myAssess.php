@@ -79,7 +79,6 @@ if($_REQUEST['act']=='myAssessFlow'){
             $historyData = array();
             $userRelationRecord = $assessDao->getUserRelationRecord($userId,$base_id);
             $userRelationRecord['assess_attr_type'] = $_REQUEST['attrData']['fromData']['type'];
-
             $nextStatus = $_REQUEST['status']=='next';
             if($_REQUEST['status']=='next'){
                 $userRelationRecord['user_assess_status'] = $userRelationRecord['user_assess_status']+1;

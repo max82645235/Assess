@@ -1,4 +1,23 @@
-<?php $totalScore = 0;?>
+<?php
+    $totalScore = 0;
+    if(!function_exists('spanFullStr')){
+        function spanFullStr($str){
+            $subStr = substr($str,0,12);
+            return "<span class='detailSpan' full=\"".$str."\" style=\"cursor:pointer;\">[查看]</span>";
+        }
+    }
+
+?>
+<script>
+    $(function(){
+        $(".detailSpan").click(function(){
+            var fullTxt = $(this).attr('full');
+            if(fullTxt){
+                art.dialog.alert(fullTxt);
+            }
+        });
+    });
+</script>
 <?php if($assessAttrType==1){?>
     <?php
         require_once BATH_PATH.'source/Dao/IndicatorDao.php';
@@ -6,13 +25,18 @@
     ?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
         <tr>
-            <th width="15%">考核类型</th>
-            <th width="20%">考核项</th>
-            <th width="10%">权重</th>
-            <th width="10%">自评分</th>
-            <th width="25%">自我评价</th>
-            <th width="10%">实际评分</th>
-            <th width="15%">汇总评分</th>
+            <th width="8%">考核类型</th>
+            <th width="10%">考核项</th>
+            <th width="8%">具体任务</th>
+            <th width="8%">评价标准</th>
+            <th width="8%">达成时间</th>
+            <th width="8%">权重</th>
+            <th width="8%">数据来源</th>
+            <th width="8%">自评分</th>
+            <th width="8%">自我评价</th>
+            <th width="8%">领导评分</th>
+            <th width="8%">上级评价</th>
+            <th width="8%">汇总评分</th>
         </tr>
         <?php foreach($itemInfo as $item){?>
             <?php $itemList = unserialize($item['itemData']);?>
@@ -40,10 +64,16 @@
                             echo $indicatorInfo;
                             ?>
                         </td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'detailTxt'));?>><?=($data['detailTxt'])?spanFullStr($data['detailTxt']):'';?></td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'assessStad'));?>><?=($data['assessStad'])?spanFullStr($data['assessStad']):'';?></td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'reachTime'));?>><?=($data['reachTime'])?$data['reachTime']:'';?></td>
                         <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
+                        <td <?=$widget->getDifferShow(1,array('index'=>$key,'attr'=>'sourceData'));?>><?=($data['sourceData'])?$data['sourceData']:'';?></td>
+
                         <td ><?=$data['selfScore']?></td>
-                        <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
+                        <td class="left"><?=($data['selfAssess'])?spanFullStr($data['selfAssess']):'';?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
+                        <td class="left"><?=($data['leadAssess'])?spanFullStr($data['leadAssess']):'';?></td>
                         <td>
                             <?php
                                 if($data['qz'] && $data['leadScore']){
@@ -67,10 +97,15 @@
                             </td>
                         <?php }?>
                         <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'job_name'));?>><?=$data['job_name']?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'detailTxt'));?>><?=($data['detailTxt'])?spanFullStr($data['detailTxt']):'';?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'assessStad'));?>><?=($data['assessStad'])?spanFullStr($data['assessStad']):'';?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'reachTime'));?>><?=($data['reachTime'])?$data['reachTime']:'';?></td>
                         <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'qz'));?>><?=($data['qz'])?$data['qz'].'%':'';?></td>
+                        <td <?=$widget->getDifferShow(2,array('index'=>$key,'attr'=>'sourceData'));?>><?=($data['sourceData'])?$data['sourceData']:'';?></td>
                         <td ><?=$data['selfScore']?></td>
-                        <td class="left"><?=($data['selfAssess'])?$data['selfAssess']:'';?></td>
+                        <td class="left"><?=($data['selfAssess'])?spanFullStr($data['selfAssess']):'';?></td>
                         <td><?=($data['leadScore'])?$data['leadScore']:'';?></td>
+                        <td class="left"><?=($data['leadAssess'])?spanFullStr($data['leadAssess']):'';?></td>
                         <td>
                             <?php
                                  if($data['qz'] && $data['leadScore']){
@@ -84,7 +119,7 @@
             <?php }?>
         <?php }?>
         <tr>
-            <td colspan="6">合计分</td>
+            <td colspan="11">合计分</td>
             <td><?=(intval($totalScore))?intval($totalScore):'';?></td>
         </tr>
     </table>
@@ -98,7 +133,7 @@
             <th width="15%">考核项</th>
             <th width="10%">自评分</th>
             <th width="15%">自我评价</th>
-            <th width="10%">实际评分</th>
+            <th width="10%">领导评分</th>
             <th width="15%">汇总评分</th>
         </tr>
         <?php foreach($itemList as $key=>$data){?>

@@ -68,7 +68,8 @@ class AssessFlowDao extends BaseDao{
         $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
         $searchResult = $this->assessDao->getBaseSearchHandlerList('sa_assess_base',$searchParam);
         //附加领导对应的员工的baseIdList
-        if($baseIdList = $this->getBaseIdsForLeader($searchParam)){
+        $userId = getUserId();
+        if($baseIdList = $this->getBaseIdsForLeader($searchParam,$userId)){
             $searchResult['sqlWhere'].= " AND sa_assess_base.base_id in (".implode(',',$baseIdList).")";
         }else{
             $searchResult['sqlWhere'].= ' AND 1=0 ';
@@ -88,15 +89,15 @@ class AssessFlowDao extends BaseDao{
     }
 
     //获取领导相关的baseIds
-    public function getBaseIdsForLeader($params){
+    public function getBaseIdsForLeader($params,$userId){
         $status = $params['status'];
         $baseIdList = array();
-        $curUserId = getUserId();
+        $curUserId = $userId;
         $addStatusSql = "and a.status=$status ";//隶属领导状态
         if(isset($params['user_assess_status']) && $params['user_assess_status']!==''){
             $addStatusSql.=" and b.user_assess_status={$params['user_assess_status']}";
         }
-        $getRelationBaseIdSql = "select c.base_id,c.base_status from sa_user_relation as a
+        $getRelationBaseIdSql = "select c.base_id,c.base_status,c.base_name from sa_user_relation as a
                                  inner join sa_assess_user_relation as b on a.super_userId={$curUserId} and a.low_userId=b.userId  $addStatusSql
                                  inner join sa_assess_base as c on b.base_Id=c.base_Id  group  by  c.base_id";
         $result = $this->db->getAll($getRelationBaseIdSql);
@@ -110,6 +111,12 @@ class AssessFlowDao extends BaseDao{
             }
         }
         return $baseIdList;
+    }
+
+    public function getBaseIdsList($baseIds){
+        $sql = "select * from sa_assess_base where base_id in ({$baseIds})";
+        $result = $this->db->getAll($sql);
+        return $result;
     }
 
     //获取某一考核下领导的下属员工
@@ -224,6 +231,7 @@ class AssessFlowDao extends BaseDao{
             $where = " rid={$relationRecord['rid']}";
             unset($relationRecord['rid']);
             unset($relationRecord['username']);
+            $relationRecord['updateTime'] = date("Y-m-d H:i:s");
             $sql = self::get_update_sql('sa_assess_user_relation',$relationRecord,$where);
             $this->db->Execute($sql);
             $conditionUrl = $this->getConditionParamUrl(array('act'));
@@ -279,14 +287,14 @@ class AssessFlowDao extends BaseDao{
             if($userId){
                 $addSql = " and userId in ({$userId})";
             }
-            $updateSql = "update sa_assess_user_relation set user_assess_status=1 where base_id={$baseId}   and user_assess_status=0 and rid in ({$rids}) {$addSql}";
+            $updateSql = "update sa_assess_user_relation set user_assess_status=1,updateTime='".date("Y-m-d H:i:s")."' where base_id={$baseId}   and user_assess_status=0 and rid in ({$rids}) {$addSql}";
             $this->db->Execute($updateSql);
             return true;
         }
     }
 
     public function triggerStatusUpdate($base_id,$userId){
-        $sql = "update sa_assess_user_relation set user_assess_status=4 where base_id={$base_id} and userId ={$userId} and user_assess_status=3";
+        $sql = "update sa_assess_user_relation set user_assess_status=4,updateTime='".date("Y-m-d H:i:s")."' where base_id={$base_id} and userId ={$userId} and user_assess_status=3";
         $this->db->Execute($sql);
     }
 
@@ -356,26 +364,30 @@ class AssessFlowDao extends BaseDao{
         return $rpData;
     }
 
+
+    static $rejectTextMapsForLead = array(
+        '1'=>'已驳回',
+        '2'=>'重审'
+    );
     static function rejectTableMarkForLead($rejectStatus){
         $html = '';
         if($rejectStatus>0){
-            $textMaps = array(
-                '1'=>'已驳回',
-                '2'=>'重审'
-            );
+            $textMaps = self::$rejectTextMapsForLead;
             $font = $textMaps[$rejectStatus];
             $html = "<span style='color: red;'>&nbsp;[$font]</span>";
         }
         return $html;
     }
 
+
+    static $rejectTextMapsForStaff = array(
+        '1'=>'被驳回',
+        '2'=>'待重审'
+    );
     static function rejectTableMarkForStaff($rejectStatus){
         $html = '';
         if($rejectStatus>0){
-            $textMaps = array(
-                '1'=>'被驳回',
-                '2'=>'待重审'
-            );
+            $textMaps = self::$rejectTextMapsForStaff;
             $font = $textMaps[$rejectStatus];
             $html = "<span style='color: red;'>&nbsp;[$font]</span>";
         }

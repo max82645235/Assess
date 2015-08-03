@@ -5,7 +5,7 @@
 ?>
 <style>
     .ext_commission_table{width: 100%;}
-    .ext_commission_table .w5{width: 5%;}
+    .ext_commission_table .w5{width: 10%;}
     .ext_commission_table .w40{width: 40%;}
     .ext_commission_table .textarea150{width: 100%;height: 150px;}
     .ext_commission_table .input{width: 100%;padding:0 5px;color:#676767;height:24px;line-height:24px;border:1px solid #dedede;vertical-align:middle;}
@@ -59,7 +59,7 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
-                                <td width="40%">
+                                <td width="25%">
                                     <em class="c-yel">*</em>
                                     <select <?=$widget->disabled()?>  onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator_parent">
                                         <?php if($indicatorList){?>
@@ -75,14 +75,14 @@
                                     <input <?=$widget->disabled()?> type="hidden" name="indicator_child_hidden" class="indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
                                 </td>
 
-                                <td width="30%" class="sm_xsmbadd_td2">
+                                <td width="25%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
                                         <input  style="margin-left: 32px;" <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width105 j-notnull {validate:{totalQz:true }}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
-                                    <td width="10%" class="sm_xsmbadd_td2">
+                                    <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
                                             <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="selfScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
@@ -90,7 +90,7 @@
                                     </td>
                                 <?php }?>
                                 <?php if(isset($scoreList['leadScore'])){?>
-                                    <td width="10%" class="sm_xsmbadd_td2">
+                                    <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
                                             <input  type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="leadScore_old_<?=$key?>"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
@@ -119,7 +119,7 @@
                                                 <td class="w5"><em class="c-yel">*</em>达成时间</td>
                                                 <td  class="w40">
                                                     <div class="data" style="margin-right:6px;">
-                                                        <input type="text" readonly="readonly" name="time_old_<?=$key?>" id="time_old_c_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 {validate:{required:true}}"  />
+                                                        <input  <?=$widget->disabled()?> type="text" readonly="readonly" name="time_old_<?=$key?>" id="time_old_c_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 {validate:{required:true}}"  />
                                                     </div>
                                                     <script  type="text/javascript">
                                                         $(function(){
@@ -128,17 +128,17 @@
                                                     </script>
                                                 <td class="w5">数据来源</td>
                                                 <td  class="w40">
-                                                    <input type="text" name="sourceData" class="input sourceData" value="<?=$itemData['sourceData']?>">
+                                                    <input  <?=$widget->disabled()?> type="text" name="sourceData" class="input sourceData" value="<?=$itemData['sourceData']?>">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="w5">具体任务</td>
                                                 <td class="w40">
-                                                    <textarea  class="textarea150 detailCommisonTextarea" ><?=$itemData['detailTxt']?></textarea>
+                                                    <textarea   <?=$widget->disabled()?> class="textarea150 detailCommisonTextarea" ><?=$itemData['detailTxt']?></textarea>
                                                 </td>
                                                 <td class="w5">评价标准</td>
                                                 <td  class="w40">
-                                                    <textarea  class="textarea150 assessStad" ><?=$itemData['assessStad']?></textarea>
+                                                    <textarea  <?=$widget->disabled()?>  class="textarea150 assessStad" ><?=$itemData['assessStad']?></textarea>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -167,7 +167,7 @@
 
                 <!--权重评分tr模板 start-->
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
-                    <td width="40%">
+                    <td width="25%">
                         <em class="c-yel">*</em>
                         <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
                             <?php if($indicatorList){?>
@@ -181,14 +181,14 @@
                         </select>
                     </td>
 
-                    <td width="30%" class="sm_xsmbadd_td2">
+                    <td width="25%" class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input style="margin-left: 32px;" <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true}}" />&nbsp;%
                         </div>
                     </td>
                     <?php if(isset($scoreList['selfScore'])){?>
-                        <td width="10%" class="sm_xsmbadd_td2">
+                        <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 自评分：</span>
                                 <input type="text" value=""  tagname="selfScore" name="selfScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true }}" />
@@ -196,7 +196,7 @@
                         </td>
                     <?php }?>
                     <?php if(isset($scoreList['leadScore'])){?>
-                        <td width="10%" class="sm_xsmbadd_td2">
+                        <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 领导评分：</span>
                                 <input type="text" value="" tagname="leadScore" name="leadScore_new_[@]"  class="width40 j-notnull {validate:{required:true,percent:true}}" />

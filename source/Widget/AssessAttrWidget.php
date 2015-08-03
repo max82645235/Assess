@@ -163,13 +163,12 @@ class AssessAttrWidget{
         $renderPath = BATH_PATH."template/assessment/widget/compareHistory.php";
         $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('record_info'=>$record_info,'widget'=>$this));
-        $this->tpl->render();
+        return $this->tpl->getRender();
     }
 
     //ÉÏ´«²å¼ş
     public function pluploadPlugin($plupFileList){
         $renderPath = BATH_PATH."template/assessment/widget/plugloadPluginWidget.php";
-        $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('plupFileList'=>$plupFileList,'widget'=>$this));
         $this->tpl->render();
     }

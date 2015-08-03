@@ -141,6 +141,7 @@ class DownloadFile
         $this->xlq_filetype['ppt']='application/vnd.ms-powerpoint';
         $this->xlq_filetype['xls']='application/vnd.ms-excel';
         $this->xlq_filetype['doc']='application/msword';
+        $this->xlq_filetype['docx']='application/msword';
         $this->xlq_filetype['exe']='application/octet-stream';
         $this->xlq_filetype['rar']='application/octet-stream';
         $this->xlq_filetype['js']="javascript/js";
@@ -186,6 +187,7 @@ class DownloadFile
         $this->xlq_filetype['gif']="image/gif";
         $this->xlq_filetype['jpeg']="image/pjpeg";
         $this->xlq_filetype['jpg']="image/pjpeg";
+        $this->xlq_filetype['png']="image/png";
         $this->xlq_filetype['jpe']="image/pjpeg";
         $this->xlq_filetype['ras']="image/x-cmu-raster";
         $this->xlq_filetype['pbm']="image/x-portable-bitmap";

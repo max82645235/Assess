@@ -1,3 +1,10 @@
+<style>
+    .ext_commission_table{width: 100%;}
+    .ext_commission_table .w5{width: 10%;}
+    .ext_commission_table .w40{width: 40%;}
+    .ext_commission_table .textarea150{width: 100%;height: 150px;}
+    .ext_commission_table .input{width: 100%;padding:0 5px;color:#676767;height:24px;line-height:24px;border:1px solid #dedede;vertical-align:middle;}
+</style>
 <div class="attr_form_1" flag="2" style="<?php if(!$renderData){?>display: none;<?php }?>">
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">工作任务类</b></p>
@@ -12,20 +19,20 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr>
-                                <td width="40%">
+                                <td width="25%">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>工作任务名称： </span>
                                         <input  <?=$widget->disabled()?> type="text" value="<?=$itemData['job_name']?>" tagname="job_name" name="job_name_old_<?=$key?>" class="width160 j-notnull {validate:{job_name:true}}" />
                                     </div>
                                 </td>
-                                <td width="30%" class="sm_xsmbadd_td2">
+                                <td width="25%" class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
                                         <input   <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="job_qz" name="job_qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
-                                    <td width="10%" class="sm_xsmbadd_td2">
+                                    <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 自评分：</span>
                                             <input  type="text" value="<?=$itemData['selfScore']?>" tagname="selfScore" name="job_selfScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
@@ -33,7 +40,7 @@
                                     </td>
                                 <?php }?>
                                 <?php if(isset($scoreList['leadScore'])){?>
-                                    <td width="10%" class="sm_xsmbadd_td2">
+                                    <td width="15%" class="sm_xsmbadd_td2">
                                         <div class="smfl">
                                             <span><em class="c-yel">*</em> 领导评分：</span>
                                             <input type="text" value="<?=$itemData['leadScore']?>" tagname="leadScore" name="job_leadScore_old_<?=$key?>"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />
@@ -63,7 +70,7 @@
                                                 <td class="w5"><em class="c-yel">*</em>达成时间</td>
                                                 <td  class="w40">
                                                     <div class="data" style="margin-right:6px;">
-                                                        <input readonly="readonly"  type="text"  name="time_old_<?=$key?>" id="time_old_j_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 reachTime {validate:{required:true}}"  />
+                                                        <input  <?=$widget->disabled()?>  readonly="readonly"  type="text"  name="time_old_<?=$key?>" id="time_old_j_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 reachTime {validate:{required:true}}"  />
                                                     </div>
                                                     <script  type="text/javascript">
                                                         $(function(){
@@ -72,17 +79,17 @@
                                                     </script>
                                                 <td class="w5">数据来源</td>
                                                 <td  class="w40">
-                                                    <input type="text" name="sourceData" class="input sourceData" value="<?=$itemData['sourceData']?>">
+                                                    <input  <?=$widget->disabled()?> type="text" name="sourceData" class="input sourceData" value="<?=$itemData['sourceData']?>">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="w5">具体任务</td>
                                                 <td class="w40">
-                                                    <textarea  class="textarea150 detailJobTextarea"><?=$itemData['detailTxt']?></textarea>
+                                                    <textarea  <?=$widget->disabled()?>  class="textarea150 detailJobTextarea"><?=$itemData['detailTxt']?></textarea>
                                                 </td>
                                                 <td class="w5">评价标准</td>
                                                 <td  class="w40">
-                                                    <textarea  class="textarea150 assessStad" ><?=$itemData['assessStad']?></textarea>
+                                                    <textarea  <?=$widget->disabled()?>  class="textarea150 assessStad" ><?=$itemData['assessStad']?></textarea>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -111,20 +118,20 @@
 
                 <!--权重评分模板tr start-->
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
-                    <td width="40%">
+                    <td width="25%">
                         <div class="smfl">
                             <span><em class="c-yel">*</em>工作任务名称： </span>
                             <input type="text" value="" tagname="job_name" name="job_name_new_[@]" class="width160 j-notnull {validate:{job_name:true }}" />
                         </div>
                     </td>
-                    <td width="30%" class="sm_xsmbadd_td2">
+                    <td width="25%" class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input type="text"  style="margin-left: 32px;" value="" tagname="job_qz" name="job_qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true }}" />&nbsp;%
                         </div>
                     </td>
                     <?php if(isset($scoreList['selfScore'])){?>
-                        <td width="10%" class="sm_xsmbadd_td2">
+                        <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 自评分：</span>
                                 <input type="text" value="" tagname="selfScore" name="job_selfScore_new_[@]"  class="width40 j-notnull required {validate:{required:true,percent:true}}" />
@@ -132,7 +139,7 @@
                         </td>
                     <?php }?>
                     <?php if(isset($scoreList['leadScore'])){?>
-                        <td width="10%" class="sm_xsmbadd_td2">
+                        <td width="15%" class="sm_xsmbadd_td2">
                             <div class="smfl">
                                 <span><em class="c-yel">*</em> 领导评分：</span>
                                 <input type="text" value="" tagname="leadScore" name="job_leadScore_new_[@]"  class="width40 j-notnull  {validate:{required:true,percent:true}}" />

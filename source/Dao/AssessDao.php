@@ -247,6 +247,7 @@ class AssessDao extends BaseDao{
     public function triggerUserNewAttrTypeUpdate($userRelationRecord=array(),$delStatus=false){
         $tbl = "`".DB_PREFIX."assess_user_relation`";
         $where = " rid={$userRelationRecord['rid']}";
+        $userRelationRecord['updateTime'] = date("Y-m-d H:i:s");
         $sql = self::get_update_sql($tbl,$userRelationRecord,$where);
         if($userRelationRecord){
             $this->db->Execute($sql);
@@ -292,6 +293,7 @@ class AssessDao extends BaseDao{
                 $tmpArr['userId'] = $userId;
                 $tmpArr['base_id'] = $base_id;
                 $tmpArr['assess_attr_type'] = $baseRecord['assess_attr_type'];
+                $tmpArr['updateTime'] = date("Y-m-d H:i:s");
                 $findRecordSql = "select * from {$tbl} where userId = {$userId} and  base_id = {$base_id}";
                 if(!$findRecord = $this->db->GetRow($findRecordSql)){
                     $tmpArr['user_assess_status'] = 0;
