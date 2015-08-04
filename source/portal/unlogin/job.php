@@ -48,11 +48,12 @@ if($act=='reachCopyDayAssess'){
         $findBaseRecord['base_start_date'] = date('Y-m-d');
         $findBaseRecord['base_end_date'] = AssessDao::getAssessBaseEndDate($findBaseRecord['assess_period_type'],$findBaseRecord['base_start_date']);
         $findBaseRecord['staff_sub_start_date'] = date('Y-m-d',strtotime('+'.$findBaseRecord['assess_period_type'].' month',strtotime($findBaseRecord['staff_sub_start_date'])));
+        $yearMonthArr = $assessDao->getAssessYearMonth($findBaseRecord['base_start_date']);
+        $findBaseRecord['base_name'] = $findBaseRecord['base_name']."(".$yearMonthArr['assess_year']."-".$yearMonthArr['assess_month'].")";
         $assessDao->copyAssessDbHandler($findBaseRecord);
         $sql = "update sa_assess_base set isNew=0 where base_id={$baseId}";
         $dbRes = $db->Execute($sql);
         $resStatus = ($dbRes)?'success':'fail';
-        var_dump($resStatus);
         admin_log('按周期生成新考核脚本_'.$resStatus,'bindid',$baseId);
     }
 }

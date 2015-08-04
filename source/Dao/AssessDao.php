@@ -74,7 +74,7 @@ class AssessDao extends BaseDao{
         return date('Y-m-d',strtotime('+'.$periodType.' month',strtotime($startDate))-1);
     }
 
-    protected function getAssessYearMonth($base_start_date){
+    public  function getAssessYearMonth($base_start_date){
         if(preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/",$base_start_date)){
             $tmpArr = explode('-',$base_start_date);
             $ret = array();
@@ -96,19 +96,18 @@ class AssessDao extends BaseDao{
         global $p_uid;
         try{
             $tableSafeAttr = array(
-                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status','assess_year','assess_month'
+                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status'
             );
             $tbl = "`".DB_PREFIX."assess_base`";
             $baseRecord['base_end_date'] = self::getAssessBaseEndDate($baseRecord['assess_period_type'],$baseRecord['base_start_date']);
-            $yearMonthArr = $this->getAssessYearMonth($baseRecord['base_start_date']);
-            if($yearMonthArr){
-                $baseRecord = array_merge($baseRecord,$yearMonthArr);
-            }
-
             foreach($baseRecord as $key=>$attr){
                 if(!in_array($key,$tableSafeAttr)){
                     unset($baseRecord[$key]);
                 }
+            }
+            $yearMonthArr = $this->getAssessYearMonth($baseRecord['base_start_date']);
+            if($yearMonthArr){
+                $baseRecord = array_merge($baseRecord,$yearMonthArr);
             }
 
 
