@@ -119,7 +119,7 @@
                                                 <td class="w5"><em class="c-yel">*</em>达成时间</td>
                                                 <td  class="w40">
                                                     <div class="data" style="margin-right:6px;">
-                                                        <input  <?=$widget->disabled()?> type="text" readonly="readonly" name="time_old_<?=$key?>" id="time_old_c_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 {validate:{required:true}}"  />
+                                                        <input  <?=$widget->disabled()?> type="text" readonly="readonly" name="time_old_<?=$key?>" id="time_old_c_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 {validate:{required:true,dateFormat:true}}"  />
                                                     </div>
                                                     <script  type="text/javascript">
                                                         $(function(){
@@ -226,7 +226,7 @@
                                     <td class="w5"><em class="c-yel">*</em>达成时间</td>
                                     <td  class="w40">
                                         <div class="data" style="margin-right:6px;">
-                                            <input readonly="readonly"  type="text"  name="time_new-_-" id="time_new_1_-_-" value="" class="width135 reachTime {validate:{required:true}}"  />
+                                            <input readonly="readonly"  type="text"  name="time_new-_-" id="time_new_1_-_-" value="" class="width135 reachTime {validate:{required:true,dateFormat:true}}"  />
                                         </div>
                                         <script  type="text/javascript">
                                             $(function(){

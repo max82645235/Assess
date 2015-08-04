@@ -52,6 +52,9 @@
                     return false;
                 }
 
+                if(!AssessInstance.validTrEmpty()){
+                    return false;
+                }
 
                 if($("#sub_form").valid()){
                     var formData = {
@@ -129,6 +132,11 @@
                     if($(this).attr('sp')!=1 && !AssessInstance.validAssessType()){
                         return false;
                     }
+
+                    if(!AssessInstance.validTrEmpty()){
+                        return false;
+                    }
+
                     var status = $(this).attr('tag');
                     var formData = {
                         m:'myassessment',

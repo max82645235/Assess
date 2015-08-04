@@ -85,7 +85,6 @@ Assess.prototype = {
             formSubTag:1,
             subFormData:subFormData
         };
-        //console.log(data);return false;
         $.ajax({
             type:'post',
             url:'/salary/index.php',
@@ -169,7 +168,6 @@ Assess.prototype = {
                 var c_data = {table_data:[]};
                 var c_table = $(".attr_form_1[flag=1] table.sm_xsmbadd");
                 var tmp = {};
-                console.log(c_table.children('tbody').children("tr:visible"));
                 c_table.children('tbody').children("tr:visible").each(function(){
                     if($(this).hasClass('ext_assess_tr')){
                         tmp.reachTime = $(this).find('input.hasDatepicker').val();
@@ -195,7 +193,6 @@ Assess.prototype = {
                 var j_data =  {table_data:[]};
                 var j_table = $(".attr_form_1[flag=2] table.sm_xsmbadd");
                 tmp = {};
-                console.log(j_table.children('tbody').children("tr:visible"));
                 j_table.children('tbody').children("tr:visible").each(function(k,v){
                     if($(this).hasClass('ext_assess_tr')){
                         tmp.reachTime = $(this).find('input.hasDatepicker').val();
@@ -518,28 +515,32 @@ Assess.prototype = {
         });
 
         if(this.getLeadDirectSetValue()==0){
-            var attrType = this.getAttrTypeCheckedValue();
-            var trStatus = true;
-            if(attrType==1){
-                if($(".attr_form_1[flag=1] table").find("tr:visible").length==0 && $(".attr_form_1[flag=2] table").find("tr:visible").length==0){
-                    trStatus = false;
-                }
-            }else if(attrType==2){
-                if($(".attr_form_2[flag=3] table").find("tr:visible").length==0){
-                    trStatus = false;
-                }
-            }else if(attrType==3){
-                if($(".attr_form_3[flag=4] table").find("tr:visible").length==0){
-                    trStatus = false;
-                }
+            status = this.validTrEmpty();
+
+        }
+        return status;
+    },
+    validTrEmpty:function(){
+        var attrType = this.getAttrTypeCheckedValue();
+        var trStatus = true;
+        if(attrType==1){
+            if($(".attr_form_1[flag=1] table").find("tr:visible").length==0 && $(".attr_form_1[flag=2] table").find("tr:visible").length==0){
+                trStatus = false;
             }
-            if(!trStatus){
-                alert('ÇëÌí¼Ó¿¼ºËÏî£¡');
-                status =false;
+        }else if(attrType==2){
+            if($(".attr_form_2[flag=3] table").find("tr:visible").length==0){
+                trStatus = false;
+            }
+        }else if(attrType==3){
+            if($(".attr_form_3[flag=4] table").find("tr:visible").length==0){
+                trStatus = false;
             }
         }
+        if(!trStatus){
+            alert('ÇëÌí¼Ó¿¼ºËÏî£¡');
+        }
 
-        return status;
+        return trStatus;
     },
     addRpItem:function(){
         var tr = $("#reward_punish_form table tr:hidden");

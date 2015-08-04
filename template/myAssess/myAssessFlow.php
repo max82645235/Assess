@@ -53,6 +53,10 @@
                         if(!AssessInstance.validAssessType()){
                             return false;
                         }
+
+                        if(!AssessInstance.validTrEmpty()){
+                            return false;
+                        }
                         var formData = {
                             m:'myassessment',
                             a:'myAssess',
@@ -85,6 +89,11 @@
                     if(!AssessInstance.validAssessType()){
                         return false;
                     }
+
+                    if(!AssessInstance.validTrEmpty()){
+                        return false;
+                    }
+
                     var formData = {
                         m:'myassessment',
                         a:'myAssess',

@@ -54,12 +54,13 @@ if($_REQUEST['act']=='myAssessFlow'){
     if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
+        $attrTypeList = array();
         foreach($_REQUEST['attrData']['fromData']['handlerData'] as $key=>$data){
             $tmp = array();
             $tmp['base_id'] = $base_id;
             $tmp['weight'] = (isset($data['weight']))?$data['weight']:'';
             $tmp['userId'] = $userId;
-            $tmp['attr_type'] = $attrRecordType[$key];
+            $attrTypeList[] = $tmp['attr_type'] = $attrRecordType[$key];
             $tmp['cash'] = isset($data['cash'])?$data['cash']:'';
             if(is_array($data['table_data'])){
                 foreach($data['table_data'] as $i=>$tt){
@@ -92,15 +93,16 @@ if($_REQUEST['act']=='myAssessFlow'){
                     $userRelationRecord['rpData'] = serialize($assessFlowDao->formatRpItem($_REQUEST['rpItem']));
                 }
 
-                //待我汇报状态 可以附件上传保存
+                //附件上传保存
                 if($_REQUEST['plupFileList']){
                     $assessDao->plugFileSave($_REQUEST['plupFileList'],$userRelationRecord['rid']);
                 }
             }
-            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,false);//更新user_relation表 assess_attr_type状态
+            $assessItemRecord = $assessFlowDao->getUserAssessItemRecord($base_id,$userId);
+            $delStatus = (count($assessItemRecord)!=count($attrTypeList))?true:false; //当发现提交过来的数量和原item表条数不一致时需要删除item数据
+            $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);//更新user_relation表 assess_attr_type状态
             $assessDao->setAssessUserItemRecord($uids,$attrRecord); //更新user_item表
             $assessDao->triggerUserItemHistoryWrite($historyData,$assessFlowDao);//当$historyData存在时需要触发对比逻辑，写入前后差异到更新user_relation表 diffData字段
-
         }catch (Exception $e){
             throw new Exception('500');
         }
