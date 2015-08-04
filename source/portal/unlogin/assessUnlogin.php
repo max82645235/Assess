@@ -74,19 +74,3 @@ if($act== 'downFile'){
     die();
 }
 
-//获取相关用户考核信息，为oa系统提供api接口
-if($_REQUEST['act']== 'getUserAssessInfo'){
-    require_once BATH_PATH . 'source/Util/OaUserAssess.php';
-    require_once BATH_PATH . 'source/Dao/AssessFlowDao.php';
-    $uid = $_REQUEST['uid'];
-    $flowDao = new AssessFlowDao();
-    $oaObj = new OaUserAssess($uid,$flowDao);
-    $assessInfo = $oaObj->getAssessInfo();
-    if($_REQUEST['debug']==1){
-        echo "<pre>";
-        print_r($assessInfo);
-        echo "</pre>";
-        exit;
-    }
-    echo serialize($assessInfo);
-}

@@ -12,7 +12,7 @@ $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 
 //更改提报状态
-if($act=='checkingAssessUpdate'){
+if($a=='checkingAssessUpdate'){
     //获取今天所有需要提报的考核
     $base_status = 2; //考核中
     $sql = "select * from sa_assess_base where staff_sub_start_date=curdate() and base_status={$base_status}";
@@ -38,7 +38,7 @@ if($act=='checkingAssessUpdate'){
 }
 
 //复制达到按周期生成新考核
-if($act=='reachCopyDayAssess'){
+if($a=='reachCopyDayAssess'){
     $assessDao = new AssessDao();
     $sql = "select * from sa_assess_base where create_on_month_status=1 and base_end_date='".date("Y-m-d",strtotime("-1 day"))."' and isNew=1";
     $baseRecord = $db->getAll($sql);

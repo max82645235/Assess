@@ -11,9 +11,6 @@ require_once BATH_PATH.'source/Dao/AssessFlowDao.php';
 require_once BATH_PATH.'source/Util/btnValid/LeaderValid.php';
 $_REQUEST['act'] = (!isset($_REQUEST['act']))?'waitMeList':$_REQUEST['act'];
 checkUserAuthority();//验证act请求权限
-if(!leaderAuth()){
-    throw new Exception('no power to visit this page');
-}
 //待我审核列表页
 if($_REQUEST['act']=='waitMeList'){
     $assessDao = new AssessDao();

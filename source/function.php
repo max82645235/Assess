@@ -317,7 +317,8 @@ function checkUserAuthority($filterActs=array()){
     $auth = new Auth();
     $auth->addAuthItem($act,array('m'=>$m,'a'=>$a,'act'=>$act));
     if(!$auth->setIsMy(true)->validIsAuth($act)){
-        throw new Exception('you have no power to visit this page!');
+        echo "读不起,您没有权限访问该页面！";
+        die();
     }
 }
 
