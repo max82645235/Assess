@@ -81,28 +81,6 @@ if($_REQUEST['act']=='launchAssess'){
 }
 
 
-//部门二级分类
-/*if($_REQUEST['act']=='ajaxBusClassify'){
-    global $cfg;
-    ini_set('display_errors','on');
-    if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
-        $bus_area_parent = $_REQUEST['bus_area_parent'];
-        $validAuth = $_REQUEST['validAuth'];
-        $retData = array('data'=>array());
-        $assessDao = new AssessDao();
-        if(isset($cfg['tixi'][$bus_area_parent])){
-            foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                if(!$validAuth || $assessDao->validBusAuth($bus_area_parent,$k)){
-                    $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
-                    $retData['data'][] = $tmp;
-                }
-            }
-            $retData['status'] = 'success';
-        }
-        echo json_encode($retData);
-        die();
-    }
-}*/
 
 if($_REQUEST['act']=='ajaxIndicatorClassify'){
     if(isset($_GET['indicator_parent'])){

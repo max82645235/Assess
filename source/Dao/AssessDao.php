@@ -401,47 +401,54 @@ class AssessDao extends BaseDao{
         }
     }
 
+
+
     //克隆考核数据
     public function copyAssessRecord($baseId,Auth $auth){
         $findRecordSql = "select * from sa_assess_base where base_id = {$baseId}";
         if($findBaseRecord = $this->db->GetRow($findRecordSql)){
             $isMy = $findBaseRecord['userId'] == getUserId();
             if($auth->setIsMy($isMy)->validIsAuth('cloneAssess')){
-                //克隆数据-start
-                $unsetBaseAttr = array('base_id','base_status','uid','userId','create_time','update_time','publish_date');
-                foreach($findBaseRecord as $k=>$v){
-                    if(in_array($k,$unsetBaseAttr)){
-                        unset($findBaseRecord[$k]);
-                    }
-                }
-                $relationRecords = $this->getRelatedUserRecord($baseId);
-                $uids = array();
-                if($relationRecords){
-                    foreach($relationRecords as $record){
-                        $uids[] =$record['userId'];
-                    }
-                }
-                if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
-                    $baseRecord = $this->getAssessBaseRecord($base_id);
-                    $this->setAssessUserRelation($uids,$baseRecord); //设置考核人员关系表
-                    if($findBaseRecord['lead_direct_set_status']==0){ //没有勾选直接由领导设置时
-                        $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
-                        $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
-                        if($findAttrRecords){
-                            foreach($findAttrRecords as $k=>$record){
-                                $findAttrRecords[$k]['base_id'] = $base_id;
-                                unset($findAttrRecords[$k]['attr_id']);
-                            }
-                            if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
-                                $this->setAssessUserItemRecord($uids,$attrResult);
-                            }
-                        }
-                    }
-                }
-                //克隆数据-end
+                $this->copyAssessDbHandler($findBaseRecord);
             }
-
         }
+    }
+
+    //克隆考核数据具体数据库操作
+    public function copyAssessDbHandler($findBaseRecord){
+        //克隆数据-start
+        $baseId = $findBaseRecord['base_id'];
+        $unsetBaseAttr = array('base_id','base_status','uid','userId','create_time','update_time','publish_date','isNew');
+        foreach($findBaseRecord as $k=>$v){
+            if(in_array($k,$unsetBaseAttr)){
+                unset($findBaseRecord[$k]);
+            }
+        }
+        $relationRecords = $this->getRelatedUserRecord($baseId);
+        $uids = array();
+        if($relationRecords){
+            foreach($relationRecords as $record){
+                $uids[] =$record['userId'];
+            }
+        }
+        if($base_id = $this->setAssessBaseRecord($findBaseRecord)){
+            $baseRecord = $this->getAssessBaseRecord($base_id);
+            $this->setAssessUserRelation($uids,$baseRecord); //设置考核人员关系表
+            if($findBaseRecord['lead_direct_set_status']==0){ //没有勾选直接由领导设置时
+                $findAttrRecordSql = " select * from sa_assess_attr where base_id={$baseId} ";
+                $findAttrRecords = $this->db->GetAll($findAttrRecordSql);
+                if($findAttrRecords){
+                    foreach($findAttrRecords as $k=>$record){
+                        $findAttrRecords[$k]['base_id'] = $base_id;
+                        unset($findAttrRecords[$k]['attr_id']);
+                    }
+                    if($attrResult = $this->setAssessAttrRecord($findAttrRecords)){
+                        $this->setAssessUserItemRecord($uids,$attrResult);
+                    }
+                }
+            }
+        }
+        //克隆数据-end
     }
 
     //获取base_id相关人
@@ -682,5 +689,13 @@ class AssessDao extends BaseDao{
             $sql = self::get_insert_sql($tbl,$record);
             $this->db->Execute($sql);
         }
+    }
+
+    //获取今天所有需要提报的考核
+    public function getTodayAllCheckingAssess(){
+        $base_status = self::HrAssessChecking;
+        $sql = "select * from sa_assess_base where staff_sub_start_date=curdate() and base_status={$base_status}";
+        $res = $this->db->getAll($sql);
+        return $res;
     }
 }
