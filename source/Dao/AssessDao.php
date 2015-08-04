@@ -134,7 +134,8 @@ class AssessDao extends BaseDao{
             }else{
                 $baseRecord['base_status'] = self::HrAssessWait;
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
-                $baseRecord['uid'] = $p_uid;
+                $uid = (isset($p_uid))?$p_uid:'sys';
+                $baseRecord['uid'] = ($baseRecord['uid'])?$baseRecord['uid']:$uid;
                 $baseRecord['userId'] = getUserId();
                 $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);
@@ -691,11 +692,4 @@ class AssessDao extends BaseDao{
         }
     }
 
-    //获取今天所有需要提报的考核
-    public function getTodayAllCheckingAssess(){
-        $base_status = self::HrAssessChecking;
-        $sql = "select * from sa_assess_base where staff_sub_start_date=curdate() and base_status={$base_status}";
-        $res = $this->db->getAll($sql);
-        return $res;
-    }
 }
