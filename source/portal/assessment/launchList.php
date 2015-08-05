@@ -123,9 +123,9 @@ if($_REQUEST['act']=='hrViewStaffList'){
     $base_Id = $_REQUEST['base_id'];
     $assessBaseRecord = $assessDao->getAssessBaseRecord($base_Id);
     $resultList = $assessDao->getStaffListForHrSql($_REQUEST);
-    $pageurl = '?m='.$m.'&a='.$a.$resultList['pageConditionUrl'];
+    $pageurl = '?m='.$m.'&a='.$a.'&'.$assessDao->getConditionParamUrl(array('m','a'));
     $getStaffSql = $resultList['staffListSql'];
-    $countSql = " count(a.*)";
+    $countSql = " count(*)";
     $countSql = str_replace('[*]',$countSql,$getStaffSql);
     $count = $db->GetOne($countSql);
     $page = isset($_GET['pn']) ? (int)$_GET['pn'] : 1;
@@ -136,6 +136,9 @@ if($_REQUEST['act']=='hrViewStaffList'){
     $findSql = " a.*,b.user_assess_status,b.base_id,b.score";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
     $findSql.= " limit {$offset},{$limit}";
+    if($_GET['test']){
+        echo $findSql;
+    }
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('assessment/hrViewStaffList.php',array(
         'tableData'=>$tableData,

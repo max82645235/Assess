@@ -49,9 +49,9 @@ if($_REQUEST['act']=='myStaffList'){
     $assessFlowDao = new AssessFlowDao();
     $_REQUEST['status'] = (!isset($_REQUEST['status']))?1:$_REQUEST['status'];//下属状态
     $resultList = $assessFlowDao->getStaffListForLeaderSql($_REQUEST);
-    $pageurl = '?m='.$m.'&a='.$a.$resultList['pageConditionUrl'];
+    $pageurl = '?m='.$m.'&a='.$a.'&'.$assessDao->getConditionParamUrl(array('m','a'));
     $getStaffSql = $resultList['staffListSql'];
-    $countSql = " count(a.*)";
+    $countSql = " count(*)";
     $countSql = str_replace('[*]',$countSql,$getStaffSql);
     $count = $db->GetOne($countSql);
     $page = isset($_GET['pn']) ? (int)$_GET['pn'] : 1;
@@ -60,7 +60,7 @@ if($_REQUEST['act']=='myStaffList'){
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
     $findSql = " a.*,b.user_assess_status,b.base_id,b.score,b.rejectStatus,b.rpData";
-    $findSql = str_replace('[*]',$findSql,$getStaffSql);
+    $findSql = str_replace('[*]',$findSql,$getStaffSql." limit {$offset},{$limit}");
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
         'tableData'=>$tableData,

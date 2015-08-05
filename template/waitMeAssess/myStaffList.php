@@ -115,9 +115,9 @@
                     </th>
                     <th  width="100"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
-                    <th width="200" style="text-align: center;">流程状态</th>
+                    <th width="150" style="text-align: center;">流程状态</th>
                     <th width="150" style="text-align: center;">绩效评分</th>
-                    <th width="200" style="text-align: center;">奖惩</th>
+                    <th width="150" style="text-align: center;">奖惩</th>
                     <th  width="150" style="text-align: center;">操作</th>
                 </tr>
                 <?php

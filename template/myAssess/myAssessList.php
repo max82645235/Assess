@@ -110,9 +110,7 @@
                                         </span>
                                 <?php }?>
 
-                                <?php if($data['user_assess_status']==3){?>
-                                <a href="?m=myassessment&a=myAssess&act=triggerStatusUpdate&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt"  style="color: #ff3333">更改到提报时</a>
-                                <?php }?>
+
                             </td>
                         </tr>
                     <?php }?>

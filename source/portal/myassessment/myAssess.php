@@ -153,7 +153,8 @@ if($_REQUEST['act']=='staffViewStaffDetail'){
 
 //更改到提报时
 if($_REQUEST['act']=='triggerStatusUpdate'){
-    $assessFlowDao = new AssessFlowDao();
+    die();
+/*    $assessFlowDao = new AssessFlowDao();
     $assessDao = new AssessDao();
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
@@ -161,6 +162,6 @@ if($_REQUEST['act']=='triggerStatusUpdate'){
     $assessDao->checkAssessAllUserSubbingStatus($base_id);
     $conditionUrl = $assessFlowDao->getConditionParamUrl(array('act'));
     $location = P_SYSPATH."index.php?act=myAssessList&$conditionUrl";
-    header("Location: $location");
+    header("Location: $location");*/
 
 }
