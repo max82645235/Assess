@@ -265,11 +265,11 @@ Assess.prototype = {
             var clonedItemDom = itemContainer.find('tr.tpl_tr');
             var cDom = $.extend(true,{}, clonedItemDom);
             var html  = cDom.html().replace(new RegExp(/(\[@\])/g),len);
-            itemContainer.append("<tr>"+html+"</tr>");
+            itemContainer.append("<tr class='yellow'>"+html+"</tr>");
 
         }else if(this.delTrCache[type] !=undefined){
             var cDom = this.delTrCache[type];
-            itemContainer.append("<tr class=\"tpl_tr\">"+cDom.html()+"</tr>");
+            itemContainer.append("<tr class=\"tpl_tr yellow\">"+cDom.html()+"</tr>");
         }
         this.clearItemData(itemContainer.find('tr:last'),type);
 

@@ -49,6 +49,7 @@ $(function(){
 
     $.validator.addMethod('dateFormat',function(value, element, arg){
         var dateReg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+        console.log(element);
         if(dateReg.test(value)){
             return true;
         }
@@ -75,7 +76,7 @@ $(function(){
 
     $.validator.addMethod('job_name',function(value,element,arg){
         if(value==''){
-           if($(element).parents('tr').find('input[tagname=job_qz]').val()!=''){
+           if($(element).parents('tr.yellow').find('input[tagname=job_qz]').val()!=''){
                return false;
            }
         }

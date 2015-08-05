@@ -8,7 +8,15 @@
     .ext_commission_table .w5{width: 10%;}
     .ext_commission_table .w40{width: 40%;}
     .ext_commission_table .textarea150{width: 100%;height: 150px;}
-    .ext_commission_table .input{width: 100%;padding:0 5px;color:#676767;height:24px;line-height:24px;border:1px solid #dedede;vertical-align:middle;}
+    .ext_commission_table .input{width: 95%;padding:0 5px;color:#676767;height:24px;line-height:24px;border:1px solid #dedede;vertical-align:middle;}
+    .padding0{padding:0 0;}
+    .attr_form_1 .commission .yellow{background-color: #FFDEAD;}
+    .attr_form_1 .commission .sm_div{
+        background: #fff;
+        border: 1px solid #9a9a9a;
+        border-bottom: 0;
+    }
+    .ext_assess_tr{border-bottom:1px solid #B3EE3A;}
 </style>
 <script>
     $(function(){
@@ -49,16 +57,16 @@
     <div class="rtop">
         <p class="icon1"><b class="sm_blue">量化指标类</b></p>
     </div>
-    <div class="kctjcon">
-        <div class="sm_div mlr30">
-            <table class="sm_xsmbadd" width="100%">
+    <div class="kctjcon commission">
+        <div class="sm_div mlr30 padding0">
+            <table class="sm_xsmbadd commission" width="100%">
                 <?php
                 if(isset($renderData['itemData']) && $renderData['itemData']){
                     $itemDataList = unserialize($renderData['itemData']);
                     ?>
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
-                            <tr>
+                            <tr class="yellow">
                                 <td width="25%">
                                     <em class="c-yel">*</em>
                                     <select <?=$widget->disabled()?>  onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator_parent">
@@ -119,7 +127,7 @@
                                                 <td class="w5"><em class="c-yel">*</em>达成时间</td>
                                                 <td  class="w40">
                                                     <div class="data" style="margin-right:6px;">
-                                                        <input  <?=$widget->disabled()?> type="text" readonly="readonly" name="time_old_<?=$key?>" id="time_old_c_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 {validate:{required:true,dateFormat:true}}"  />
+                                                        <input  <?=$widget->disabled()?> type="text"  name="c_time_old_<?=$key?>" id="time_old_c_<?=$key?>" value="<?=$itemData['reachTime']?>" class="width135 {validate:{dateFormat:true}}"  />
                                                     </div>
                                                     <script  type="text/javascript">
                                                         $(function(){
@@ -128,31 +136,31 @@
                                                     </script>
                                                 <td class="w5">数据来源</td>
                                                 <td  class="w40">
-                                                    <input  <?=$widget->disabled()?> type="text" name="sourceData" class="input sourceData" value="<?=$itemData['sourceData']?>">
+                                                    <input  <?=$widget->disabled()?> type="text" name="c_sourceData_old_<?=$key?>" class="input sourceData {validate:{required:true}}" value="<?=$itemData['sourceData']?>">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="w5">具体任务</td>
                                                 <td class="w40">
-                                                    <textarea   <?=$widget->disabled()?> class="textarea150 detailCommisonTextarea" ><?=$itemData['detailTxt']?></textarea>
+                                                    <textarea   <?=$widget->disabled()?> name="c_detailTxt_<?=$key?>" class="textarea150 detailCommisonTextarea {validate:{required:true}}" ><?=$itemData['detailTxt']?></textarea>
                                                 </td>
                                                 <td class="w5">评价标准</td>
                                                 <td  class="w40">
-                                                    <textarea  <?=$widget->disabled()?>  class="textarea150 assessStad" ><?=$itemData['assessStad']?></textarea>
+                                                    <textarea  <?=$widget->disabled()?> name="c_assessStad_<?=$key?>" class="textarea150 assessStad {validate:{required:true}}" ><?=$itemData['assessStad']?></textarea>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <?php if(isset($scoreList['selfScore'])){?>
                                                     <td class="w5"><em class="c-yel">*</em>自我评价</td>
                                                     <td  class="w40">
-                                                        <textarea  class="textarea150 selfAssess" ><?=$itemData['selfAssess']?></textarea>
+                                                        <textarea  name="c_selfScore_<?=$key?>" class="textarea150 selfAssess {validate:{required:true}}" ><?=$itemData['selfAssess']?></textarea>
                                                     </td>
                                                 <?php }?>
 
                                                 <?php if(isset($scoreList['leadScore'])){?>
                                                     <td class="w5"><em class="c-yel">*</em>领导评价</td>
                                                     <td  class="w40">
-                                                        <textarea class="textarea150 leadAssess"><?=$itemData['leadAssess']?></textarea>
+                                                        <textarea  name="c_leadAssess_<?=$key?>"   class="textarea150 leadAssess {validate:{required:true}}"><?=$itemData['leadAssess']?></textarea>
                                                     </td>
                                                 <?php }?>
                                             </tr>
@@ -166,7 +174,7 @@
                 <?php }?>
 
                 <!--权重评分tr模板 start-->
-                <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr">
+                <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr yellow">
                     <td width="25%">
                         <em class="c-yel">*</em>
                         <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
@@ -226,7 +234,7 @@
                                     <td class="w5"><em class="c-yel">*</em>达成时间</td>
                                     <td  class="w40">
                                         <div class="data" style="margin-right:6px;">
-                                            <input readonly="readonly"  type="text"  name="time_new-_-" id="time_new_1_-_-" value="" class="width135 reachTime {validate:{required:true,dateFormat:true}}"  />
+                                            <input   type="text"  name="c_time_new-_-" id="time_new_1_-_-" value="" class="width135 reachTime {validate:{dateFormat:true}}"  />
                                         </div>
                                         <script  type="text/javascript">
                                             $(function(){
@@ -235,31 +243,31 @@
                                         </script>
                                     <td class="w5">数据来源</td>
                                     <td  class="w40">
-                                        <input type="text" name="sourceData" class="input sourceData">
+                                        <input type="text" name="c_sourceData_new_-_-" class="input sourceData {validate:{required:true}}">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="w5">具体任务</td>
                                     <td class="w40">
-                                        <textarea   class="textarea150 detailCommisonTextarea"></textarea>
+                                        <textarea  name="c_detailTxt_new_-_-"  class="textarea150 detailCommisonTextarea {validate:{required:true}}"></textarea>
                                     </td>
                                     <td class="w5">评价标准</td>
                                     <td  class="w40">
-                                        <textarea   class="textarea150 assessStad"></textarea>
+                                        <textarea   name="c_assessStad_new_-_-"   class="textarea150 assessStad {validate:{required:true}}"></textarea>
                                     </td>
                                 </tr>
                                 <tr>
                                     <?php if(isset($scoreList['selfScore'])){?>
                                         <td class="w5"><em class="c-yel">*</em>自我评价</td>
                                         <td  class="w40">
-                                            <textarea class="textarea150 selfAssess"></textarea>
+                                            <textarea name="c_selfScore_new_-_-"  class="textarea150 selfAssess {validate:{required:true}}"></textarea>
                                         </td>
                                     <?php }?>
 
                                     <?php if(isset($scoreList['leadScore'])){?>
                                         <td class="w5"><em class="c-yel">*</em>领导评价</td>
                                         <td  class="w40">
-                                            <textarea class="textarea150 leadAssess"></textarea>
+                                            <textarea name="c_leadScore_-_-"   class="textarea150 leadAssess {validate:{required:true}}"></textarea>
                                         </td>
                                     <?php }?>
                                 </tr>
