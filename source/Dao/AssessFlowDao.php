@@ -341,7 +341,7 @@ class AssessFlowDao extends BaseDao{
         $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username from sa_assess_user_relation as a
                 inner join sa_assess_base as b on a.base_id=b.base_id
                 inner join sa_user as c on a.userId=c.userId
-                where 1=1 {$addSql} group  by a.base_id ";
+                where 1=1 {$addSql} group  by a.base_id,a.userId ";
         $retData = $this->db->GetAll($sql);
         return $retData;
     }

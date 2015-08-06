@@ -11,6 +11,22 @@ global $ADODB_FETCH_MODE;
 $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
 require_once BATH_PATH.'source/Dao/AssessDao.php';
 
+if($_REQUEST['key'] != md5('job_key')){
+    exit;
+}
+
+if($a == 'refresh_relation'){
+    if(!$_REQUEST['uid']){
+        halt("error input");
+    }
+
+    $uid = $_REQUEST['uid'];
+
+    refresh_relation($uid);
+
+    halt("OK");
+}
+
 //更改提报状态
 if($a=='checkingAssessUpdate'){
     //获取今天所有需要提报的考核

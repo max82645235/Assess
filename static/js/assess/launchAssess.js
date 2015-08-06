@@ -8,19 +8,21 @@ Assess.prototype = {
             data:{
                 m:'unlogin',a:'assessUnlogin',act:'ajaxBusClassify',bus_area_parent:bus_area_parent,validAuth:validAuth
             },
-            dataType:'json',
             success:function(ret){
                 var opList = "";
                 if(bus_area_parent==''){
                     var opList = "<option value=''>«Î—°‘Ò</option>";
                 }
                 var p_id = $("#bus_area_child_hidden").val();
-                for(var i=0;i<ret.data.length;i++){
-                    var selected = (p_id==ret.data[i].value)?"selected=selected":"";
-                    opList+="<option value='"+ret.data[i].value+"' "+selected+">"+ret.data[i].name+"</option>";
+                if(ret.status=='success'){
+                    for(var i=0;i<ret.data.length;i++){
+                        var selected = (p_id==ret.data[i].value)?"selected=selected":"";
+                        opList+="<option value='"+ret.data[i].value+"' "+selected+">"+ret.data[i].name+"</option>";
+                    }
                 }
                 $("#bus_area_child").html(opList);
-            }
+            },
+            dataType:'json'
         });
     },
 

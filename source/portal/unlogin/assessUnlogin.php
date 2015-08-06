@@ -5,13 +5,12 @@
  * Date: 15-7-24
  * Time: ÉÏÎç9:54
  */
-
 if($act=='ajaxBusClassify'){
     global $cfg,$p_tixi,$p_comp_dept;
+    $retData = array('data'=>array(),'status'=>'empty');
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $validAuth = $_REQUEST['validAuth'];
-        $retData = array('data'=>array());
         require_once BATH_PATH . 'source/Dao/AssessDao.php';
         $assessDao = new AssessDao();
         if(isset($cfg['tixi'][$bus_area_parent])){
@@ -24,12 +23,13 @@ if($act=='ajaxBusClassify'){
             }
             $retData['status'] = 'success';
         }
-        echo json_encode($retData);
-        die();
     }
+    echo json_encode($retData);
+    die();
 }
 
 if($act =='ajaxIndicatorClassify'){
+    $retData = array('status'=>'empty');
     if(isset($_GET['indicator_parent'])){
         $indicator_parent = $_GET['indicator_parent'];
         $retData = array();
@@ -37,9 +37,9 @@ if($act =='ajaxIndicatorClassify'){
         $ind_dao = new IndicatorDao();
         $retData['data'] = $ind_dao->getIndicatorChildList($indicator_parent);
         $retData['status'] = 'success';
-        echo json_encode($retData);
-        die();
     }
+    echo json_encode($retData);
+    die();
 }
 
 

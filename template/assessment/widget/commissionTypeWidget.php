@@ -67,7 +67,7 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr class="yellow">
-                                <td width="25%">
+                                <td >
                                     <em class="c-yel">*</em>
                                     <select <?=$widget->disabled()?>  onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator_parent">
                                         <?php if($indicatorList){?>
@@ -83,7 +83,7 @@
                                     <input <?=$widget->disabled()?> type="hidden" name="indicator_child_hidden" class="indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
                                 </td>
 
-                                <td width="25%" class="sm_xsmbadd_td2">
+                                <td  class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
                                         <input  style="margin-left: 32px;" <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width105 j-notnull {validate:{totalQz:true }}" />&nbsp;%
@@ -175,7 +175,7 @@
 
                 <!--权重评分tr模板 start-->
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr yellow">
-                    <td width="25%">
+                    <td >
                         <em class="c-yel">*</em>
                         <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
                             <?php if($indicatorList){?>
@@ -189,7 +189,7 @@
                         </select>
                     </td>
 
-                    <td width="25%" class="sm_xsmbadd_td2">
+                    <td  class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input style="margin-left: 32px;" <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true}}" />&nbsp;%

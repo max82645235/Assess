@@ -26,13 +26,13 @@
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
                             <tr class="yellow">
-                                <td width="25%">
+                                <td >
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em>工作任务名称： </span>
                                         <input  <?=$widget->disabled()?> type="text" value="<?=$itemData['job_name']?>" tagname="job_name" name="job_name_old_<?=$key?>" class="width160 j-notnull {validate:{job_name:true}}" />
                                     </div>
                                 </td>
-                                <td width="25%" class="sm_xsmbadd_td2">
+                                <td  class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
                                         <input   <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="job_qz" name="job_qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
@@ -125,13 +125,13 @@
 
                 <!--权重评分模板tr start-->
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr yellow">
-                    <td width="25%">
+                    <td >
                         <div class="smfl">
                             <span><em class="c-yel">*</em>工作任务名称： </span>
                             <input type="text" value="" tagname="job_name" name="job_name_new_[@]" class="width160 j-notnull {validate:{job_name:true }}" />
                         </div>
                     </td>
-                    <td width="25%" class="sm_xsmbadd_td2">
+                    <td  class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
                             <input type="text"  style="margin-left: 32px;" value="" tagname="job_qz" name="job_qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true }}" />&nbsp;%
