@@ -89,7 +89,7 @@
                     var s = $("#username").val();
                     var pid = $("#bus_area_parent").val();
                     var cid = $("#bus_area_child").val();
-
+                    var tid = $("#bus_area_third").val();
                     if(pid==''|| cid==''){
                         $("#username").removeClass('ui-autocomplete-loading');
                         $("#bus_area_child").addClass('redBorder');
@@ -106,7 +106,8 @@
                         data:{
                             s:s,
                             pid:pid,
-                            cid:cid
+                            cid:cid,
+                            tid:tid
                         },
                         success:  function( data ) {
                             $("#username").removeClass('ui-autocomplete-loading');
@@ -145,13 +146,15 @@
 
                 var pid = $("#bus_area_parent").val();
                 var cid = $("#bus_area_child").val();
+                var tid = $("#bus_area_third").val();
                 var uids = $("#uids").val();
 
                 art.dialog.data('pid', pid);
                 art.dialog.data('cid', cid);
                 art.dialog.data('uids', uids);
+                art.dialog.data('tid',tid);
                 var openUrl  = '<?=P_SYSPATH."index.php?m=assessment&a=launchAssess&act=selectUserList"?>';
-                openUrl+= "&pid="+pid+"&cid="+cid+"&uids="+uids;
+                openUrl+= "&pid="+pid+"&cid="+cid+"&tid="+tid+"&uids="+uids;
                 art.dialog.open(openUrl,{height:'500px',width:'700px',lock: true});
             });
 
@@ -221,6 +224,12 @@ EOF;
                             <select id="bus_area_child" name="bus_area_child" style="width: 150px;" <?=$mValid->getDisableValid('bus_area_child');?>>
                             </select>
                             <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($record_info['base_info']['bus_area_child'])?$record_info['base_info']['bus_area_child']:'';?>">
+                        </div>
+
+                        <div class="jssel" style="z-index:49">
+                            <select id="bus_area_third" name="bus_area_third" style="width: 150px;" <?=$mValid->getDisableValid('bus_area_third');?>>
+                            </select>
+                            <input type="hidden" name="bus_area_third_hidden" id="bus_area_third_hidden" value="<?=isset($record_info['base_info']['bus_area_third'])?$record_info['base_info']['bus_area_third']:'';?>">
                         </div>
                     </td>
                 </tr>

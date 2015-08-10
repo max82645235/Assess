@@ -28,6 +28,35 @@ if($act=='ajaxBusClassify'){
     die();
 }
 
+if($act=='ajaxBusThirdClassify'){
+    global $cfg,$p_tixi,$p_comp_dept;
+    $retData = array('data'=>array(),'status'=>'empty');
+    if(isset($_REQUEST['bus_area_parent']) && isset($_REQUEST['bus_area_child']) && isset($cfg['tixi'])){
+        $bus_area_parent = $_REQUEST['bus_area_parent'];
+        $bus_area_child = $_REQUEST['bus_area_child'];
+        $validAuth = $_REQUEST['validAuth'];
+        require_once BATH_PATH . 'source/Dao/AssessDao.php';
+        $assessDao = new AssessDao();
+        if(isset($cfg['tixi'][$bus_area_parent])){
+            foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
+                $curTx = ($bus_area_parent== $p_tixi) && ($p_comp_dept == $k);
+                if($bus_area_child== $k && $curTx){
+                    if(isset($cfg['tixi'][$bus_area_parent]['thirdList'])){
+                        foreach($cfg['tixi'][$bus_area_parent]['thirdList']  as $tId=>$data){
+                            $tmp = array('value'=>$tId,'name'=>iconv('GBK','UTF-8',$data));
+                            $retData['data'][] = $tmp;
+                        }
+                    }
+                    break;
+                }
+            }
+            $retData['status'] = 'success';
+        }
+    }
+    echo json_encode($retData);
+    die();
+}
+
 if($act =='ajaxIndicatorClassify'){
     $retData = array('status'=>'empty');
     if(isset($_GET['indicator_parent'])){

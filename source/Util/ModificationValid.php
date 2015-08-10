@@ -29,7 +29,7 @@ class ModificationValid{
             'base_name','base_start_date','staff_sub_start_date',
         ),
         'flowElement'=>array(
-            'assess_period_type','create_on_month_status','bus_area_parent','bus_area_child',
+            'assess_period_type','create_on_month_status','bus_area_parent','bus_area_child','bus_area_third',
             'username','adduser','selectUserList',
             'uids','lead_direct_set_status','assess_attr_type'
         )

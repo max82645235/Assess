@@ -67,6 +67,13 @@
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
+                <div class="jssel" style="z-index:49;float: left;">
+                    &nbsp;&nbsp;
+                    <select id="bus_area_third" name="bus_area_third" style="width: 150px;">
+                        <option value="">ÇëÑ¡Ôñ</option>
+                    </select>
+                    <input type="hidden" name="bus_area_third_hidden" id="bus_area_third_hidden" value="<?=isset($_REQUEST['bus_area_third'])?$_REQUEST['bus_area_third']:'';?>">
+                </div>
                 <div class="jssel" style="z-index:98;float: left;">
                     &nbsp;&nbsp;&nbsp;¿¼ºË×´Ì¬£º
                     <select name="base_status">

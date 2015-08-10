@@ -25,6 +25,32 @@ Assess.prototype = {
             dataType:'json'
         });
     },
+    triggerBusThirdSelect:function(validAuth){
+        var bus_area_parent =  $("#bus_area_parent").val();
+        var bus_area_child = $("#bus_area_child").val();
+        $.ajax({
+            type:'get',
+            url:'/salary/index.php',
+            data:{
+                m:'unlogin',a:'assessUnlogin',act:'ajaxBusThirdClassify',bus_area_parent:bus_area_parent,bus_area_child:bus_area_child,validAuth:validAuth
+            },
+            success:function(ret){
+                var opList = "";
+                if(bus_area_parent==''){
+                    var opList = "<option value=''>«Î—°‘Ò</option>";
+                }
+                var p_id = $("#bus_area_third_hidden").val();
+                if(ret.status=='success'){
+                    for(var i=0;i<ret.data.length;i++){
+                        var selected = (p_id==ret.data[i].value)?"selected=selected":"";
+                        opList+="<option value='"+ret.data[i].value+"' "+selected+">"+ret.data[i].name+"</option>";
+                    }
+                }
+                $("#bus_area_third").html(opList);
+            },
+            dataType:'json'
+        });
+    },
 
     initHide:function(){
         if(this.getLeadDirectSetValue()){
@@ -113,6 +139,7 @@ Assess.prototype = {
                 'base_name',
                 'bus_area_parent',
                 'bus_area_child',
+                'bus_area_third',
                 'uids',
                 'assess_period_type',
                 'base_start_date',
