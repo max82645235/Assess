@@ -64,6 +64,27 @@
                      }
                 );
             });
+
+            $("#zip_assess_btn").click(function(){
+                AssessInstance.tableBtnHandler($('#table_style'),
+                    function(jInput){
+                        var status = jInput.parent().find('.table_item_status').val();
+                        if(status>=4){
+                            return true;
+                        }else{
+                            alert('请确保选中项都为考核完状态！');
+                            return false;
+                        }
+                    },
+                    function(selectedItem){
+                        AssessInstance.zipDownload({
+                            baseList:selectedItem,
+                            userList:[],
+                            pos:'onLaunchList'
+                        },'hr');
+                    }
+                );
+            });
         });
     </script>
 </head>
@@ -161,7 +182,7 @@
                                 ?>
                                     <input type="checkbox" class="table_item_checkbox" tag="<?=$data['base_id']?>"
                                            <?php if(!$canEdit){?>disabled="disabled" <?php }?>>
-                                    <Input type="hidden" class="table_item_status" value="<?=$data['base_status']?>">
+                                    <input type="hidden" class="table_item_status" value="<?=$data['base_status']?>">
                             </td>
                             <td class="left"><?=$data['base_name']?></td>
                             <td ><?=AssessDao::$AssessPeriodTypeMaps[$data['assess_period_type']]?></td>
@@ -204,8 +225,11 @@
                 <?php if($auth->setIsMy(true)->validIsAuth('publishAssess')){?>
                      <input type="button" name="" value="考核发布" class="btn139" id="publish_assess_btn" style="cursor:pointer;">
                 <?php }?>
-            </div>
 
+                <?php if($auth->setIsMy(true)->validIsAuth('hrZipAssessPackage')){?>
+                    <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;">
+                <?php }?>
+            </div>
         </div>
     </div>
 </div>

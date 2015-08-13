@@ -29,6 +29,28 @@
         }
     </style>
 </head>
+<script>
+    $("#zip_assess_btn").click(function(){
+        Assess.tableBtnHandler($('#table_style'),
+        function(jInput){
+            var status = jInput.parent().find('.table_item_status').val();
+            if(status>=6){
+                return true;
+            }else{
+                alert('请确保选中考核人都为考核完状态！');
+                return false;
+            }
+        },
+        function(selectedItem){
+            var baseId = $("#base_id").val();
+            Assess.zipDownload({
+                baseList:[baseId],
+                userList:selectedItem,
+                pos:'onHrViewStaffList'
+            },'hr');
+        });
+    });
+</script>
 <body>
 <div class="bg">
     <div class="rtop">
@@ -79,6 +101,7 @@
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
+                                <input type="hidden" class="table_item_status" value="<?=$data['user_assess_status']?>">
                             </td>
                             <td ><?=$data['username']?></td>
                             <td class="left"><?=$data['deptlist']?></td>
@@ -95,6 +118,11 @@
             <p class="pagenum">
                 <?=$page_nav?>
             </p>
+            <div>
+                <?php if($auth->setIsMy(true)->validIsAuth('hrZipAssessPackage')){?>
+                    <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;">
+                <?php }?>
+            </div>
         </div>
     </div>
 </div>

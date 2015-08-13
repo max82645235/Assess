@@ -146,13 +146,25 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $assessDao->checkAssessAllUserCheckingStatus($base_id);
                 }
 
-                if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealSuccess){
-                    $assessDao->checkAssessAllUserSuccessStatus($base_id);
-                }
-
                 //附件上传保存
                 if($_REQUEST['plupFileList']){
                     $assessDao->plugFileSave($_REQUEST['plupFileList'],$userRelationRecord['rid']);
+                }
+
+                if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealSuccess){
+                    $assessDao->checkAssessAllUserSuccessStatus($base_id);
+                    //如果为量化指标类型 需要生成excel文件
+                    if($userRelationRecord['assess_attr_type']==1){
+                        require_once BATH_PATH."source/Util/AssessExcel.php";
+                        $dirPath = BATH_PATH.'upload/'.$base_id;
+                        $salt = AssessExcel::getExcelSaltKey($base_id,$userId);
+                        $excelPath = $dirPath."/".AssessExcel::getEncodeFileName($userId,$salt);
+                        if(!file_exists($excelPath)){
+                            $assessExcelData = $assessFlowDao->getAssessDataForExcel($base_id,$userId);
+                            AssessExcel::setExcelData($assessExcelData);
+                            AssessExcel::createExcel($base_id,$userId);
+                        }
+                    }
                 }
             }
         }catch (Exception $e){
@@ -310,4 +322,51 @@ if($_REQUEST['act']=='mulCopyCreateAssess'){
     ));
     $tpl->render();
     die();
+}
+
+//lead 用zip方式打包考核相关excel和上传文件
+if($_REQUEST['act']=='leadZipAssessPackage'){
+    require_once BATH_PATH."source/Util/ZipAssessFile/TemLoadFile.php";
+    require_once BATH_PATH."source/Util/ZipAssessFile/AssessZip.php";
+    $baseList = explode(',',$_REQUEST['baseList']);
+    $userList = explode(',',$_REQUEST['userList']);
+    $pos = $_REQUEST['pos'];
+    $assessFlowDao = new AssessFlowDao();
+    $tmpLoadFile = new TemLoadFile('','');
+    //在待我考核列表
+    if($pos=='onWaitMeList'){
+        if(is_array($baseList)){
+            foreach($baseList as $key=>$baseId){
+                $userList = $assessFlowDao->getAssessMyStaffUserList($baseId);
+                $tmpLoadFile->setBaseInfo($baseId,$userList);
+                $tmpLoadFile->run();
+            }
+            $tmpDirPath = $tmpLoadFile->createTmpDir();
+            AssessZip::zipToLoad($tmpDirPath);
+        }
+    }
+
+    //在考核员工列表
+    if($pos=='onMyStaffList'){
+        if(is_array($baseList) && count($baseList)==1){
+            $baseId = $baseList[0];
+            if(is_array($userList) && $userList){
+                $tmpLoadFile->setBaseInfo($baseId,$userList);
+                $tmpLoadFile->run();
+                $tmpDirPath = $tmpLoadFile->createTmpDir();
+                AssessZip::zipToLoad($tmpDirPath);
+            }
+        }
+    }
+
+    //在查看考核具体页
+    if($pos=='onLeaderSetFlow'){
+        $baseId = $baseList[0];
+        $tmpLoadFile->setBaseInfo($baseId,$userList);
+        $tmpLoadFile->run();
+        $tmpDirPath = $tmpLoadFile->createTmpDir();
+        AssessZip::zipToLoad($tmpDirPath);
+    }
+    die();
+
 }

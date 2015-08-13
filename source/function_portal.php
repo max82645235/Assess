@@ -320,6 +320,10 @@ function utfToGbk($str){
     return $str;
 }
 
+function gbkToUtf($str){
+    return  iconv('GBK','UTF-8//IGNORE',$str);
+}
+
 function refresh_relation($uid){
     global $db;
 

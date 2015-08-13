@@ -9,6 +9,28 @@
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
 </head>
+<script>
+    $("#zip_assess_btn").click(function(){
+        Assess.tableBtnHandler($('#table_style'),
+            function(jInput){
+                var status = jInput.parents('tr').attr('assess_status');
+                if(status>=6){
+                    return true;
+                }else{
+                    alert('请保证勾选项都已完成考核！');
+                    return false;
+                }
+            },
+            function(selectedItem){
+                Assess.zipDownload({
+                    baseList:selectedItem,
+                    userList:[],
+                    pos:'onMyAssessList'
+                },'staff');
+            }
+        );
+    });
+</script>
 <body>
 <div class="bg">
     <div class="rtop">
@@ -75,7 +97,7 @@
                 ?>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
-                        <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
+                        <tr class="<?=($k%2)?'bgfff':'bgf0';?>" assess_status="<?=$data['user_assess_status']?>">
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['base_id']?>" >
                             </td>
@@ -120,6 +142,9 @@
             <p class="pagenum">
                 <?=$page_nav?>
             </p>
+            <div>
+                <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;">
+            </div>
         </div>
     </div>
 </div>

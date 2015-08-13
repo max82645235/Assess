@@ -44,6 +44,27 @@
                 );
             });
 
+            $("#zip_assess_btn").click(function(){
+                AssessInstance.tableBtnHandler($('#table_style'),
+                    function(jInput){
+                        var status = jInput.parents('tr').attr('assess_status');
+                        if(status>=6){
+                            return true;
+                        }else{
+                            alert('请保证勾选项都已完成考核！');
+                            return false;
+                        }
+                    },
+                    function(selectedItem){
+                        var base_id = $("#base_id").val();
+                        AssessInstance.zipDownload({
+                            baseList:[base_id],
+                            userList:[selectedItem],
+                            pos:'onMyStaffList'
+                        },'lead');
+                    }
+                );
+            });
         });
     </script>
     <style>
@@ -178,6 +199,7 @@
             <div>
                 <input type="hidden" id="syspath" value="<?=P_SYSPATH?>">
                 <input type="button" name=""  value="由员工创建计划" class="btn139" id="assess_user_diy_set" style="cursor:pointer;cursor:pointer;background-position:0px -649px;width: 120px;">
+                <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;">
             </div>
         </div>
     </div>

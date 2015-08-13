@@ -188,6 +188,7 @@ if($_REQUEST['act']=='hrAssessReject'){
         $record_info['user_assess_status'] = AssessFlowDao::AssessRealLeadView;
         $record_info['rejectText'] = iconv('UTF-8','GBK//IGNORE',$_REQUEST['reject']);
         $record_info['rejectStatus'] = 2;
+        //var_dump($record_info);exit;
         $assessDao->triggerUserNewAttrTypeUpdate($record_info,false);
         $result['status'] = 'success';
     }
@@ -195,3 +196,67 @@ if($_REQUEST['act']=='hrAssessReject'){
     die();
 }
 
+//hr 用zip方式打包考核相关excel和上传文件
+if($_REQUEST['act']=='hrZipAssessPackage'){
+    require_once BATH_PATH."source/Util/ZipAssessFile/TemLoadFile.php";
+    require_once BATH_PATH."source/Util/ZipAssessFile/AssessZip.php";
+    $baseList = explode(',',$_REQUEST['baseList']);
+    $userList = explode(',',$_REQUEST['userList']);
+    $pos = $_REQUEST['pos'];
+    if(isset($_REQUEST['reportList'])){
+        $reportList = explode(',',$_REQUEST['reportList']);
+    }
+    $assessDao = new AssessDao();
+    $tmpLoadFile = new TemLoadFile('','');
+
+    //在考核管理列表页
+    if($pos=='onLaunchList'){
+        if(is_array($baseList)){
+            foreach($baseList as $key=>$baseId){
+                $userList = $assessDao->getRelatedUserList($baseId);
+                $tmpLoadFile->setBaseInfo($baseId,$userList);
+                $tmpLoadFile->run();
+            }
+            $tmpDirPath = $tmpLoadFile->createTmpDir();
+            AssessZip::zipToLoad($tmpDirPath);
+        }
+    }
+
+    //在查看考核人员列表页
+    if($pos=='onHrViewStaffList'){
+        if(is_array($baseList) && count($baseList)==1){
+            $baseId = $baseList[0];
+            if(is_array($userList) && $userList){
+                $tmpLoadFile->setBaseInfo($baseId,$userList);
+                $tmpLoadFile->run();
+                $tmpDirPath = $tmpLoadFile->createTmpDir();
+                AssessZip::zipToLoad($tmpDirPath);
+            }
+        }
+    }
+
+    //在查看考核具体页
+    if($pos=='onHrViewStaffDetail'){
+        $baseId = $baseList[0];
+        $tmpLoadFile->setBaseInfo($baseId,$userList);
+        $tmpLoadFile->run();
+        $tmpDirPath = $tmpLoadFile->createTmpDir();
+        AssessZip::zipToLoad($tmpDirPath);
+    }
+
+    //在报表列表页
+    if($pos=='onAssessReportList'){
+        if($reportList){
+            foreach($reportList as $report){
+                $baseId = $report['baseId'];
+                $userId = $report['userId'];
+                $tmpLoadFile->setBaseInfo($baseId,$userId);
+                $tmpLoadFile->run();
+            }
+            $tmpDirPath = $tmpLoadFile->createTmpDir();
+            AssessZip::zipToLoad($tmpDirPath);
+        }
+    }
+
+    die();
+}

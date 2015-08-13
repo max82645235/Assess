@@ -5,7 +5,7 @@
  * Date: 15-7-24
  * Time: 上午9:54
  */
-if($act=='ajaxBusClassify'){
+if($_REQUEST['act']=='ajaxBusClassify'){
     global $cfg,$p_tixi,$p_comp_dept;
     $retData = array('data'=>array(),'status'=>'empty');
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
@@ -28,7 +28,7 @@ if($act=='ajaxBusClassify'){
     die();
 }
 
-if($act =='ajaxIndicatorClassify'){
+if($_REQUEST['act'] =='ajaxIndicatorClassify'){
     $retData = array('status'=>'empty');
     if(isset($_GET['indicator_parent'])){
         $indicator_parent = $_GET['indicator_parent'];
@@ -41,9 +41,7 @@ if($act =='ajaxIndicatorClassify'){
     echo json_encode($retData);
     die();
 }
-
-
-if($act =='uploadFile'){
+if($_REQUEST['act'] =='uploadFile'){
     require_once BATH_PATH . 'source/uploadFile.php';
     //print_r($_FILES);
     $uf = new UploadFile("file");//upfile为上传空间file的name属性
@@ -61,9 +59,7 @@ if($act =='uploadFile'){
     die();
 }
 
-if($act== 'downFile'){
-    ini_set('display_errors','on');
-    error_reporting(E_ALL & ~E_NOTICE);
+if($_REQUEST['act']== 'downFile'){
     require_once BATH_PATH . 'source/Util/DownloadFile.php';
     $filePath = urldecode($_REQUEST['filePath']);
     $download = new DownloadFile('php,exe,html',false);

@@ -249,8 +249,9 @@ class AssessDao extends BaseDao{
         $where = " rid={$userRelationRecord['rid']}";
         $userRelationRecord['updateTime'] = date("Y-m-d H:i:s");
         $sql = self::get_update_sql($tbl,$userRelationRecord,$where);
+
         if($userRelationRecord){
-            $this->db->Execute($sql);
+           $this->db->Execute($sql);
         }
 
         if($delStatus){
@@ -393,7 +394,7 @@ class AssessDao extends BaseDao{
                     $tmpRecord = $this->db->GetOne($sql);
                     if($tmpRecord>0){
                         $delSql = "delete from sa_assess_user_item where base_id={$baseId}";
-                        $this->db->GetOne($delSql);
+                        $this->db->Execute($delSql);
                     }
                 }
                 return true;
@@ -689,6 +690,18 @@ class AssessDao extends BaseDao{
             $sql = self::get_insert_sql($tbl,$record);
             $this->db->Execute($sql);
         }
+    }
+
+    //获取考核相关人userList
+    public function getRelatedUserList($baseId){
+        $userList = array();
+        $records = $this->getRelatedUserRecord($baseId);
+        if($records){
+            foreach($records as $record){
+                $userList[] = $record['userId'];
+            }
+        }
+        return $userList;
     }
 
 }

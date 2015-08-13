@@ -165,3 +165,37 @@ if($_REQUEST['act']=='triggerStatusUpdate'){
     header("Location: $location");*/
 
 }
+
+
+//staff 用zip方式打包考核相关excel和上传文件
+if($_REQUEST['act']=='staffZipAssessPackage'){
+    require_once BATH_PATH."source/Util/ZipAssessFile/TemLoadFile.php";
+    require_once BATH_PATH."source/Util/ZipAssessFile/AssessZip.php";
+    $baseList = explode(',',$_REQUEST['baseList']);
+    $userList = getUserId();
+    $pos = $_REQUEST['pos'];
+    $assessFlowDao = new AssessFlowDao();
+    $tmpLoadFile = new TemLoadFile('','');
+    //在待我考核列表
+    if($pos=='onMyAssessList'){
+        if(is_array($baseList)){
+            foreach($baseList as $key=>$baseId){
+                $tmpLoadFile->setBaseInfo($baseId,$userList);
+                $tmpLoadFile->run();
+            }
+            $tmpDirPath = $tmpLoadFile->createTmpDir();
+            AssessZip::zipToLoad($tmpDirPath);
+        }
+    }
+
+    //在查看考核具体页
+    if($pos=='onMyAssessFlow'){
+        $baseId = $baseList[0];
+        $tmpLoadFile->setBaseInfo($baseId,$userList);
+        $tmpLoadFile->run();
+        $tmpDirPath = $tmpLoadFile->createTmpDir();
+        AssessZip::zipToLoad($tmpDirPath);
+    }
+
+    die();
+}

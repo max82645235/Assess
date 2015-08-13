@@ -648,6 +648,22 @@ Assess.prototype = {
             var retMsg = "预计最终得分：<span style='color: red;'>"+score+"</span> !";
             return retMsg;
         }
-    }
+    },
+    zipDownload:function(data,role){
+        var baseList = data.baseList
+        var userList = data.userList;
+        if(data.reportList==undefined){
+            data.reportList = [];
+        }
+        var reportList = data.reportList;
+        if(role=='hr'){
+            var url = "http://221.231.141.162/salary/index.php?m=assessment&a=launchList&act=hrZipAssessPackage&pos="+data.pos+"&baseList="+data.baseList.join(',')+"&userList"+data.userList.join(',')+"&reportList="+data.reportList.join(',');
+        }else if(role=='lead'){
+            var url = "http://221.231.141.162/salary/index.php?m=myassessment&a=waitMeAssess&act=leadZipAssessPackage&pos="+data.pos+"&baseList="+data.baseList.join(',')+"&userList"+data.userList.join(',');
+        }else if(role=='staff'){
+            var url = "http://221.231.141.162/salary/index.php?m=myassessment&a=myAssess&act=staffZipAssessPackage&pos="+data.pos+"&baseList="+data.baseList.join(',')+"&userList"+data.userList.join(',');
+        }
 
+        window.open(url);
+    }
 };

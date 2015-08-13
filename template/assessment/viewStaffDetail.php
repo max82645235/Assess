@@ -67,6 +67,18 @@
                     });
                 });
             });
+
+            $("#zip_assess_btn").click(function(){
+                var role = $(this).attr('role');
+                var baseId = $("#hidden_base_id").val();
+                var userId = $("#hidden_user_id").val();
+                var posMap = {hr:'onHrViewStaffList',lead:'onLeaderSetFlow',staff:'onMyAssessFlow'};
+                Assess.zipDownload({
+                    baseList:[baseId],
+                    userList:[userId],
+                    pos:posMap[role]
+                },role);
+            });
         });
     </script>
 </head>
@@ -177,6 +189,13 @@
             <div class="kctjbot">
                 <?php if($record_info['relation']['user_assess_status']>=AssessFlowDao::AssessRealSuccess && isset($auth) && $auth->setIsMy(true)->validIsAuth('hrAssessReject')){?>
                     <input type="button" id="hrRejectBtn" class="bluebtn" value="审查驳回"  />
+                <?php }?>
+
+                <?php $roles = array('hr','lead','staff')?>
+                <?php foreach($roles as $role){?>
+                    <?php if($_REQUEST['act']==$role.'ViewStaffDetail' && $record_info['relation']['user_assess_status']>=AssessFlowDao::AssessRealSuccess && isset($auth) && $auth->setIsMy(true)->validIsAuth($role.'ZipAssessPackage')){?>
+                            <input type="button" id="zip_assess_btn" class="bluebtn" value="考核导出" role="<?=$role?>" />
+                        <?php }?>
                 <?php }?>
                 <input type="button" class="btn67" value="返回"  onclick="history.go(-1);"/>
             </div>

@@ -63,6 +63,17 @@ class AssessFlowDao extends BaseDao{
         $this->assessDao = $assessDao;
     }
 
+
+    static  $flowInstance;
+    static  function getInstance(){
+        if(!self::$flowInstance){
+            self::$flowInstance = new AssessFlowDao();
+        }
+        return self::$flowInstance;
+    }
+
+
+
     public function waitMeSearchHandlerList($searchParam){
         $searchResult = array();
         $searchParam = $this->filterConditionParam($searchParam,array('byme_status'));
@@ -414,8 +425,86 @@ class AssessFlowDao extends BaseDao{
 
     public function getPlugFileList($rid){
         $sql = "select * from sa_upload_file where rid={$rid}";
-        $result = $this->db->getAll($sql);
+        $result = $this->db->GetAll($sql);
         return $result;
+    }
+
+    public function getPlugFileListByUserId($baseId,$userId){
+        $sql = "select a.* from sa_upload_file as a inner join sa_assess_user_relation on a.rid=b=rid and b.userId={$userId} and b.baseId={$baseId}";
+        $result = $this->db->GetAll($sql);
+        return $result;
+    }
+
+
+
+    public function getAssessDataForExcel($baseId,$userId){
+        require_once BATH_PATH.'source/Dao/IndicatorDao.php';
+        $ind_dao = new IndicatorDao();
+        $assessData = array();
+        //获取考核基本信息
+        $sql = "select b.base_start_date,b.base_end_date,b.base_name,c.username, c.deptlist,c.dept from sa_assess_user_relation  as a
+                inner join sa_assess_base as b on a.base_Id=b.base_id
+                inner join sa_user as c on a.userId=c.userId where a.base_Id={$baseId} and a.userId={$userId} limit 1";
+        $userRecord = $this->db->GetRow($sql);
+        $assessData['baseInfo']['dep'] = str_replace($userRecord['dept'],'',$userRecord['deptlist']);
+        $assessData['baseInfo']['depGroup'] =  $userRecord['dept'];
+        $assessData['baseInfo']['name'] = $userRecord['username'];
+        $assessData['baseInfo']['period'] = $userRecord['base_start_date']."~".$userRecord['base_end_date'];
+        //获取领导姓名
+        $sql = "select  a.username from sa_user as a inner join  sa_user_relation as b on a.userId=b.super_userId and b.low_userId={$userId} and b.status=1";
+        $res = $this->db->GetRow($sql);
+        $assessData['baseInfo']['leaderName'] = $res['username'];
+
+        //获取具体考核信息
+        $itemRecord = $this->getUserAssessItemRecord($baseId,$userId);
+        if($itemRecord){
+            foreach($itemRecord as $record){
+                $itemData = unserialize($record['itemData']);
+                $tmpArr = array();
+                $tmpArr['itemCtn'] = count($itemData);
+                foreach($itemData as $k=>$d){
+                    if($record['attr_type']==1){
+                        $pInfo = $ind_dao->getSingleType($d['indicator_parent']);
+                        $cInfo = $ind_dao->getSingleIndicatorChild($d['indicator_child']);
+                        $indicatorInfo = $pInfo['type']."-".$cInfo['title'];
+                        $itemData[$k]['detailName'] = $indicatorInfo;
+                    }else if($record['attr_type']==2){
+                        $itemData[$k]['detailName'] = $d['job_name'];
+                    }
+                }
+                $tmpArr['itemList'] = $itemData;
+                $assessData['attrList'][] = $tmpArr;
+            }
+        }
+        return $assessData;
+    }
+
+    public function getMyStaffList($leadUserId,$status=''){
+        $staffList = array();
+        $addSql = ($status)? " and status={$status}":'';
+        $sql = "select low_userId from sa_user_relation where super_userId={$leadUserId}  {$addSql}";
+        $res = $this->db->GetAll($sql);
+        if($res){
+            foreach($res as $data){
+                $staffList[] = $data['low_userId'];
+            }
+        }
+        return $staffList;
+    }
+
+
+    public function getAssessMyStaffUserList($baseId,$status='1'){
+        $leadUserId = getUserId();
+        $userList = array();
+        $staffList = $this->getMyStaffList($leadUserId,$status);
+        $sql = "select userId from sa_assess_user_relation where base_id={$baseId} and userId in (".implode(',',$staffList).")";
+        $res = $this->db->GetAll($sql);
+        if($res){
+            foreach($res as $data){
+                $userList = $data['userId'];
+            }
+        }
+        return $userList;
     }
 
 
