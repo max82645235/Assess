@@ -41,6 +41,7 @@ if($a == 'update_user'){
     }
     else{
         $info['uid'] = $uid;
+        $info['gid'] = 1;
 
         $info['lastlogin'] = time();
         $info['dateline'] = time();
@@ -76,6 +77,7 @@ if($a == 'del_user'){
 
     $info = array();
     $info['gid'] = 0;
+    $info['status'] = 0;
 
     $sql = get_update_sql("`".DB_PREFIX."user`",$info,"uid='".$uid."'");
     $db->Execute($sql);
