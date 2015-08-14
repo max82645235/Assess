@@ -332,6 +332,7 @@ function loadThirdBus(){
         $memcache = Mcache::getInstance();
         $cacheData = $memcache->get($cacheKey);
         if($cacheData===false){
+
             $api_url = P_OA_API."&a=get_dept_list";
             $apiRes = get_api_content($api_url);
             $cacheData = serialize($apiRes);

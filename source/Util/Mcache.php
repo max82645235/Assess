@@ -5,7 +5,6 @@
  */
 class Mcache{
     private static $_instance;
-    private static $_connect_type='';
     private $_memcache;
 
     /**
@@ -13,7 +12,7 @@ class Mcache{
      */
     private function __construct(){
         if(!class_exists('Memcached')){
-            throw new Exception('Class Memcache not exists ');
+            throw new Exception('Class Memcached not exists ');
         }
         $this->_memcache = new Memcached();
         $host = '127.0.0.1';

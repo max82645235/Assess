@@ -98,7 +98,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98;float: left;">
+                <div class="jssel" style="z-index:98;float: left;margin-top: 5px;">
                     &nbsp;&nbsp;&nbsp;ÏÂÊô×´Ì¬£º
                     <select name="status">
                         <option value="1" <?php if(isset($_REQUEST['status']) && $_REQUEST['status']==1){?> selected="selected"<?php }?>>Ö±Êô</option>
@@ -106,7 +106,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="float: left;z-index:98;margin-top: 5px;">
+                <div class="jssel" style="float: left;z-index:98;margin-top: 5px;margin-left: 10px;">
                     ¿¼ºËÆµÂÊ£º
                     <select name="assess_period_type">
                         <option value="">ÇëÑ¡Ôñ</option>

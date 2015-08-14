@@ -5,7 +5,6 @@
  * Date: 15-7-24
  * Time: ионГ9:54
  */
-
 if($_REQUEST['act']=='ajaxBusClassify'){
     global $cfg,$p_tixi,$p_comp_dept;
     loadThirdBus();
