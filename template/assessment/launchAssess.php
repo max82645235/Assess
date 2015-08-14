@@ -83,6 +83,11 @@
                 AssessInstance.triggerBusSelect(1);
             });
 
+            //业务部门二级分类选择
+            $("#bus_area_child").change(function(){
+                AssessInstance.triggerBusThirdSelect(1);
+            });
+
             //考核人模糊搜索
             $("#username").autocomplete({
                 source: function( request, response ) {
@@ -226,7 +231,7 @@ EOF;
                             <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($record_info['base_info']['bus_area_child'])?$record_info['base_info']['bus_area_child']:'';?>">
                         </div>
 
-                        <div class="jssel" style="z-index:49">
+                        <div class="jssel" style="z-index:49;margin-left: 20px;">
                             <select id="bus_area_third" name="bus_area_third" style="width: 150px;" <?=$mValid->getDisableValid('bus_area_third');?>>
                             </select>
                             <input type="hidden" name="bus_area_third_hidden" id="bus_area_third_hidden" value="<?=isset($record_info['base_info']['bus_area_third'])?$record_info['base_info']['bus_area_third']:'';?>">

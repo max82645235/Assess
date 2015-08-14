@@ -134,7 +134,7 @@ class AssessDao extends BaseDao{
                 $baseRecord['base_status'] = self::HrAssessWait;
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
                 $uid = (isset($p_uid))?$p_uid:'sys';
-                $baseRecord['uid'] = ($baseRecord['uid'])?$baseRecord['uid']:$uid;
+                $baseRecord['uid'] = (isset($baseRecord['uid']))?$baseRecord['uid']:$uid;
                 $baseRecord['userId'] = getUserId();
                 $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);

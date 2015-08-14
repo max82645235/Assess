@@ -17,6 +17,10 @@
                 AssessInstance.triggerBusSelect(1);
             });
 
+            $("#bus_area_child").change(function(){
+                AssessInstance.triggerBusThirdSelect(1);
+            });
+
             $("#copy_assess_btn").click(function(){
                 AssessInstance.tableBtnHandler($('#table_style'),
                     true,
@@ -117,7 +121,7 @@
                        <option value="2"<?php if(isset($_REQUEST['byme_status']) && $_REQUEST['byme_status']==2){?> selected="selected"<?php }?>>È«²¿</option>
                     </select>
                 </div>
-                <div class="jssel" style="z-index:98">
+                <div class="jssel" style="z-index:98;margin-top: 5px;">
                     &nbsp;&nbsp;&nbsp;¿¼ºËÆµÂÊ£º
                     <select name="assess_period_type">
                         <option value="">ÇëÑ¡Ôñ</option>
@@ -129,7 +133,7 @@
                         <?php }?>
                     </select>
                 </div>
-                <div class="sechk jssel" style="margin-top: 5px;float: left;width: 235px;">
+                <div class="sechk jssel" style="margin-top: 5px;float: left;width: 235px;margin-left: 10px;">
                     ¿¼ºËÃû³Æ£º
                     <input type="text" value="<?=(isset($_REQUEST['base_name']))?$_REQUEST['base_name']:'';?>" name="base_name" id="base_name" class="width135" placeholder="ÇëÊäÈë¿¼ºËÃû³Æ"  style="margin-bottom: 3px;">
                 </div>

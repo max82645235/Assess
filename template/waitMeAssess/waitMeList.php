@@ -17,6 +17,10 @@
                 AssessInstance.triggerBusSelect(1);
             });
 
+            $("#bus_area_child").change(function(){
+                AssessInstance.triggerBusThirdSelect(1);
+            });
+
             $("#assess_diy_set").click(function(){
                 AssessInstance.tableBtnHandler($('#table_style'),
                     true,

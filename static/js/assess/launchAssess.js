@@ -11,7 +11,7 @@ Assess.prototype = {
             success:function(ret){
                 var opList = "";
                 if(bus_area_parent==''){
-                    var opList = "<option value=''>«Î—°‘Ò</option>";
+                     opList = "<option value=''>«Î—°‘Ò</option>";
                 }
                 var p_id = $("#bus_area_child_hidden").val();
                 if(ret.status=='success'){
@@ -21,6 +21,7 @@ Assess.prototype = {
                     }
                 }
                 $("#bus_area_child").html(opList);
+                $("#bus_area_child").trigger('change');
             },
             dataType:'json'
         });
@@ -35,10 +36,7 @@ Assess.prototype = {
                 m:'unlogin',a:'assessUnlogin',act:'ajaxBusThirdClassify',bus_area_parent:bus_area_parent,bus_area_child:bus_area_child,validAuth:validAuth
             },
             success:function(ret){
-                var opList = "";
-                if(bus_area_parent==''){
-                    var opList = "<option value=''>«Î—°‘Ò</option>";
-                }
+                var opList = "<option value=''>«Î—°‘Ò</option>";
                 var p_id = $("#bus_area_third_hidden").val();
                 if(ret.status=='success'){
                     for(var i=0;i<ret.data.length;i++){

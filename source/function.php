@@ -308,7 +308,7 @@ function get_authcode($string,$operation="DECODE",$key="",$expiry=0) {
 }
 
 function checkUserAuthority($filterActs=array()){
-    global $m,$a,$cfg;
+    global $m,$a;
     require_once BATH_PATH.'source/Util/Auth.php';
     $act = $_REQUEST['act'];
     if($filterActs && in_array($act,$filterActs)){
@@ -320,20 +320,34 @@ function checkUserAuthority($filterActs=array()){
         echo "读不起,您没有权限访问该页面！";
         die();
     }
-
-    //获取部门3级联动数组
-    $depList = array();
-    if(!isset($_COOKIE['depList'])){
-        $api_url = P_OA_API."&a=get_userinfo&uid=";
-        $depList = get_api_content($api_url);
-        $cookieData = serialize($depList);
-        setcookie('depList',$cookieData,time()+3600);
-    }else{
-        $depList = unserialize($_COOKIE['depList']);
-    }
-    $cfg['tixi'] = $depList;
-
+    loadThirdBus();
 }
+
+function loadThirdBus(){
+    global $cfg;
+    require_once BATH_PATH.'source/Util/Mcache.php';
+    $cacheKey = P_OA_API."&a=get_dept_list";
+    $depList = array();
+    try{
+        $memcache = Mcache::getInstance();
+        $cacheData = $memcache->get($cacheKey);
+        if($cacheData===false){
+            $api_url = P_OA_API."&a=get_dept_list";
+            $apiRes = get_api_content($api_url);
+            $cacheData = serialize($apiRes);
+            if($apiRes){
+                $memcache->set($cacheKey,$cacheData);
+            }
+        }
+        $depList = unserialize($cacheData);
+    }catch (Exception $e){
+        $api_url = P_OA_API."&a=get_dept_list&uid=";
+        $depList = get_api_content($api_url);
+    }
+
+    $cfg['tixi'] = $depList;
+}
+
 
 function leaderAuth($staff_uid=''){
     global $db;
