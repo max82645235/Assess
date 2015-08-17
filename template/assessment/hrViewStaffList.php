@@ -30,24 +30,26 @@
     </style>
 </head>
 <script>
-    $("#zip_assess_btn").click(function(){
-        Assess.tableBtnHandler($('#table_style'),
-        function(jInput){
-            var status = jInput.parent().find('.table_item_status').val();
-            if(status>=6){
-                return true;
-            }else{
-                alert('请确保选中考核人都为考核完状态！');
-                return false;
-            }
-        },
-        function(selectedItem){
-            var baseId = $("#base_id").val();
-            Assess.zipDownload({
-                baseList:[baseId],
-                userList:selectedItem,
-                pos:'onHrViewStaffList'
-            },'hr');
+    $(function(){
+        $("#zip_assess_btn").click(function(){
+            Assess.prototype.tableBtnHandler($('#table_style'),
+                function(jInput){
+                    var status = jInput.parent().find('.table_item_status').val();
+                    if(status>=6){
+                        return true;
+                    }else{
+                        alert('请确保选中考核人都为考核完状态！');
+                        return false;
+                    }
+                },
+                function(selectedItem){
+                    var baseId = $("#base_id").val();
+                    Assess.prototype.zipDownload({
+                        baseList:[baseId],
+                        userList:selectedItem,
+                        pos:'onHrViewStaffList'
+                    },'hr');
+                });
         });
     });
 </script>

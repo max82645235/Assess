@@ -70,3 +70,16 @@ if($_REQUEST['act']== 'downFile'){
     die();
 }
 
+if($_REQUEST['act']=='test'){
+
+    require_once BATH_PATH . 'source/Util/DownloadFile.php';
+    $filePath = "E:\\www\\salary/tmp/1439542587812/1439542587.zip";
+    $download = new DownloadFile('php,exe,html',false);
+    $download->setFileInLocal();
+    if(!$download->downloadfile($filePath))
+    {
+        echo $download->geterrormsg();
+    }
+    die();
+
+}

@@ -136,15 +136,16 @@ if($_REQUEST['act']=='hrViewStaffList'){
     $findSql = " a.*,b.user_assess_status,b.base_id,b.score";
     $findSql = str_replace('[*]',$findSql,$getStaffSql);
     $findSql.= " limit {$offset},{$limit}";
-    if($_GET['test']){
-        echo $findSql;
-    }
+
+    $auth = new Auth();
+    $auth->addAuthItem('hrZipAssessPackage',array('m'=>$m,'a'=>$a,'act'=>'hrZipAssessPackage'));
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('assessment/hrViewStaffList.php',array(
         'tableData'=>$tableData,
         'page_nav'=>$page_nav,
         'pageConditionUrl'=>$resultList['pageConditionUrl'],
-        'assessBaseRecord'=>$assessBaseRecord
+        'assessBaseRecord'=>$assessBaseRecord,
+        'auth'=>$auth
     ));
     $tpl->render();
     die();
@@ -203,9 +204,6 @@ if($_REQUEST['act']=='hrZipAssessPackage'){
     $baseList = explode(',',$_REQUEST['baseList']);
     $userList = explode(',',$_REQUEST['userList']);
     $pos = $_REQUEST['pos'];
-    if(isset($_REQUEST['reportList'])){
-        $reportList = explode(',',$_REQUEST['reportList']);
-    }
     $assessDao = new AssessDao();
     $tmpLoadFile = new TemLoadFile('','');
 
@@ -246,10 +244,11 @@ if($_REQUEST['act']=='hrZipAssessPackage'){
 
     //在报表列表页
     if($pos=='onAssessReportList'){
-        if($reportList){
-            foreach($reportList as $report){
-                $baseId = $report['baseId'];
-                $userId = $report['userId'];
+        $userList = explode(',',$_REQUEST['userList']);
+        $baseList = explode(',',$_REQUEST['baseList']);
+        if($userList && $baseList){
+            foreach($baseList as $k=>$baseId){
+                $userId = $userList[$k];
                 $tmpLoadFile->setBaseInfo($baseId,$userId);
                 $tmpLoadFile->run();
             }
@@ -257,6 +256,5 @@ if($_REQUEST['act']=='hrZipAssessPackage'){
             AssessZip::zipToLoad($tmpDirPath);
         }
     }
-
     die();
 }

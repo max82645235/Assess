@@ -227,7 +227,7 @@
                 <?php }?>
 
                 <?php if($auth->setIsMy(true)->validIsAuth('hrZipAssessPackage')){?>
-                    <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;">
+                    <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;margin-left: 12px;">
                 <?php }?>
             </div>
         </div>

@@ -49,7 +49,6 @@ $(function(){
 
     $.validator.addMethod('dateFormat',function(value, element, arg){
         var dateReg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-        console.log(element);
         if(dateReg.test(value)){
             return true;
         }

@@ -7,7 +7,44 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
-    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>'
+    <script>
+        $(function(){
+            $("#zip_assess_btn").click(function(){
+                Assess.prototype.tableBtnHandler($('#table_style'),
+                    function(jInput){
+                        var status = jInput.parent().find('.table_item_status').val();
+                        if(status>=6){
+                            return true;
+                        }else{
+                            alert('请确保选中项都为考核完状态！');
+                            return false;
+                        }
+                    },
+                    function(selectedItem){
+                        var index = 0;
+                        var baseList = [];
+                        var userList = [];
+                        $("#table_style tbody tr:gt(0)").each(function(k,v){
+                            var rid = $(this).find('td:eq(0) input.table_item_checkbox').attr('tag');
+                            if($.inArray(rid,selectedItem)>=0){
+                                baseList[index]= $(this).find('td:eq(0) input.table_item_checkbox').attr('baseId');
+                                userList[index] = $(this).find('td:eq(0) input.table_item_checkbox').attr('userId');
+                                index++;
+                            }
+
+                        });
+
+                        Assess.prototype.zipDownload({
+                            baseList:baseList,
+                            userList:userList,
+                            pos:'onAssessReportList'
+                        },'hr');
+                    }
+                );
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="bg">
@@ -16,7 +53,7 @@
     </div>
     <div class="pad25">
         <div class="brdbt zykc" style="height: 30px;">
-            <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 92%;">
+            <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 100%;">
                 <input type="hidden" name="m" value="report">
                 <input type="hidden" name="a" value="assessReport">
                 <input type="hidden" name="act" value="assessReportList">
@@ -67,12 +104,20 @@
                 <div class="jssel" style="z-index:98;margin-bottom: 3px;">
                     &nbsp;<input type="submit" value="搜索" class="btn48">
                 </div>
+
+                <div class="jssel" style="z-index:98;margin-bottom: 3px;">
+                    &nbsp; <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;margin-left: 12px;">
+                </div>
+
             </form>
         </div>
 
         <div class="mrtb10" >
             <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style" >
                 <tr >
+                    <th width="50" style="text-align: center;" >
+                        <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
+                    </th>
                     <th width="100" style="text-align: center;">考核人姓名</th>
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核时间</th>
@@ -84,6 +129,10 @@
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
+                            <td>
+                                <input type="checkbox" class="table_item_checkbox" tag="<?=$data['rid']?>" baseId="<?=$data['base_id']?>" userId="<?=$data['userId']?>">
+                                <input type="hidden" class="table_item_status" value="<?=$data['user_assess_status']?>">
+                            </td>
                             <td ><?=$data['username']?></td>
                             <td ><?=AssessDao::$AssessPeriodTypeMaps[$data['assess_period_type']]?></td>
                             <td>

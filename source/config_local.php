@@ -36,26 +36,28 @@ $cfg = array(
 );
 
 $cfg['POWER'] = array(
-    'setting' => array(
-        'name' => "考核设置",
-        'detail' => array('indicator_type' => '量化指标分类','indicator_list' => '量化指标管理'),
-        'indicator_type' => array('edit' => '编辑','del' => '删除'),
-        'indicator_list' => array('edit' => '编辑','del' => '删除'),
-    ),
     'assessment' => array(
-        'name' => "考核管理",
-        'detail' => array('launchList'=>'考核管理','launchAssess'=>'发起考核'),
-        'launchList' => array('edit' => '编辑'),
+        'name' => "HR考核管理",
+        'detail' => array('launchAssess'=>'创建考核计划','launchList'=>'考核计划列表'),
+        'launchAssess'=>array('launchAssess' => '编辑'),
+        'launchList' => array('launchList'=>'列表','launchAssess' => '编辑','cloneAssess'=>'复制','publishAssess'=>'发布','hrViewStaffList'=>'查看考核成员列表','hrViewStaffDetail'=>'查看成员考核信息','hrAssessReject'=>'驳回','hrZipAssessPackage'=>'考核导出'),
     ),
     'myassessment' => array(
         'name' => "我的考核",
         'detail' => array('waitMeAssess' => '待我考核','myAssess' => '我的考核'),
-        'addmem' => array('edit' => '编辑'),
+        'waitMeAssess'=>array('waitMeList' => '考核审核列表','myStaffList'=>'考核员工列表','leaderSetFlow'=>"设置考核流程",'singleAssessDiySet'=>'员工自设(单)','mulAssessDiySet'=>'员工自设（多）','viewFlow'=>'查看','changeCheckingStatus'=>'状态变更','leadViewStaffDetail'=>'查看员工考核流程','mulCopyCreateAssess'=>'批量复制待我创建','leadZipAssessPackage'=>'考核导出'),
+        'myAssess' => array('myAssessList'=>'我的列表','myAssessFlow' => '提审','staffViewStaffDetail'=>'查看','staffZipAssessPackage'=>'考核导出'),
     ),
     'report' => array(
         'name' => "报表统计",
         'detail' => array('assessReport' => '绩效报表'),
         'assessReport' => array('assessReportList' => '绩效列表'),
+    ),
+    'setting' => array(
+        'name' => "系统设置",
+        'detail' => array('indicator_type' => '量化指标分类','indicator_list' => '量化指标管理'),
+        'indicator_type' => array('edit' => '编辑','del' => '删除'),
+        'indicator_list' => array('edit' => '编辑','del' => '删除'),
     ),
     'auth' => array(
         'name' => "权限管理",
@@ -69,6 +71,7 @@ $cfg['POWER'] = array(
         'list' => array(),
     ),
 );
+
 
 $cfg['audit_status'] = array(
     '1' => '未审核',

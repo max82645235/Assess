@@ -10,26 +10,29 @@
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
 </head>
 <script>
-    $("#zip_assess_btn").click(function(){
-        Assess.tableBtnHandler($('#table_style'),
-            function(jInput){
-                var status = jInput.parents('tr').attr('assess_status');
-                if(status>=6){
-                    return true;
-                }else{
-                    alert('请保证勾选项都已完成考核！');
-                    return false;
+    $(function(){
+        $("#zip_assess_btn").click(function(){
+            Assess.prototype.tableBtnHandler($('#table_style'),
+                function(jInput){
+                    var status = jInput.parents('tr').attr('assess_status');
+                    if(status>=6){
+                        return true;
+                    }else{
+                        alert('请保证勾选项都已完成考核！');
+                        return false;
+                    }
+                },
+                function(selectedItem){
+                    Assess.prototype.zipDownload({
+                        baseList:selectedItem,
+                        userList:[],
+                        pos:'onMyAssessList'
+                    },'staff');
                 }
-            },
-            function(selectedItem){
-                Assess.zipDownload({
-                    baseList:selectedItem,
-                    userList:[],
-                    pos:'onMyAssessList'
-                },'staff');
-            }
-        );
+            );
+        });
     });
+
 </script>
 <body>
 <div class="bg">

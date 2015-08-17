@@ -17,6 +17,7 @@ class DownloadFile
     var $Filter=array();
     var $filename='';
     var $mineType='';
+    var $inLocal = false;
     var $xlq_filetype=array();
 
     function __construct($fileFilter='',$isdebug=true)
@@ -41,15 +42,23 @@ class DownloadFile
         $this->filename=$filename;
     }
 
+    function setFileInLocal(){
+        $this->inLocal = true;
+    }
+
     function downloadfile($filename)
     {
         $this->setfilename($filename);
         if($this->filecheck())
         {
-            $fileInfo  = get_headers($filename,true);
+           if($this->inLocal){
+               $fileInfo['Content-Length']  = filesize($this->filename);
+           }else{
+               $fileInfo  = get_headers($this->filename,true);
+           }
             $fn = array_pop( explode( '/', strtr( $this->filename, '\\', '/' ) ) );
             $chunk = 10 * 1024 * 1024;
-            ob_get_flush();
+            ob_get_clean();
             header( "Pragma: public" );
             header( "Expires: 0" ); // set expiration time
             header( "Cache-Component: must-revalidate, post-check=0, pre-check=0" );
@@ -100,7 +109,7 @@ class DownloadFile
     function filecheck()
     {
         $filename=$this->filename;
-        if($this->checkRemoteFileExists($filename))
+        if($this->inLocal || $this->checkRemoteFileExists($filename))
         {
             $filetype=strtolower(array_pop(explode('.',$filename)));
             if(in_array($filetype,$this->Filter))

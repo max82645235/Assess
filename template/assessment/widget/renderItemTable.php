@@ -2,7 +2,6 @@
     $totalScore = 0;
     if(!function_exists('spanFullStr')){
         function spanFullStr($str){
-            $subStr = substr($str,0,12);
             return "<span class='detailSpan' full=\"".$str."\" style=\"cursor:pointer;\">[²é¿´]</span>";
         }
     }

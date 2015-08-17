@@ -126,16 +126,16 @@ class TemLoadFile{
         $time = time();
         $dirPath = BATH_PATH."tmp/".$time.rand(0,1000);
         mkdir($dirPath);
-        for($i=1;$i<=$this->curIndex;$i++){
+        for($i=1;$i<$this->curIndex;$i++){
             $this->getCnReflect($i);
             $refList = $this->baseInfoList[$i]['ref'];
             foreach($this->baseInfoList[$i]['base'] as $info){
-                $curBaseDir = $dirPath."/".$refList['assess'][$info['baseId']];
+                $curBaseDir = $dirPath."/".$refList['assess'][$info['baseId']]."_".$info['baseId'];
                 if(!is_dir($curBaseDir)){
                     mkdir($curBaseDir);
                 }
                 foreach($this->filePushList[$i][$info['baseId']] as $k=>$data){
-                    foreach($data as $i=>$d){
+                    foreach($data as $ii=>$d){
                         //更换excel中文文件名
                         if($k=='excel'){
                             $d['cPath'] = str_replace("[##]",$refList['assess'][$info['baseId']]."_".$refList['user'][$d['userId']],$d['cPath']);
