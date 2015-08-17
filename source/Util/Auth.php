@@ -23,6 +23,7 @@ class Auth{
             $this->setIsMy(false);
             return true;
         }
+        return false;
     }
 
     protected function getIsMy(){

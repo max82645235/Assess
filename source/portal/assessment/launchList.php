@@ -37,6 +37,7 @@ if($_REQUEST['act']=='launchList'){
     $auth->addAuthItem('cloneAssess',array('m'=>$m,'a'=>$a,'act'=>'cloneAssess'));
     $auth->addAuthItem('publishAssess',array('m'=>$m,'a'=>$a,'act'=>'publishAssess'));
     $auth->addAuthItem('hrViewPublish',array('m'=>$m,'a'=>$a,'act'=>'hrViewStaffList'));
+    $auth->addAuthItem('hrZipAssessPackage',array('m'=>$m,'a'=>$a,'act'=>'hrZipAssessPackage'));
 
     $tpl = new NewTpl('assessment/launchList.php',array(
         'tableData'=>$tableData,

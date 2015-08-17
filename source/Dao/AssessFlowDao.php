@@ -507,9 +507,4 @@ class AssessFlowDao extends BaseDao{
         return $userList;
     }
 
-    public function getPlugFileListByUserId($baseId,$userId){
-        $sql = "select * from sa_upload_file where userId={$userId} and base_id=$baseId";
-        $result = $this->db->getAll($sql);
-        return $result;
-    }
 }
