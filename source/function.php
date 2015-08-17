@@ -320,7 +320,35 @@ function checkUserAuthority($filterActs=array()){
         echo "读不起,您没有权限访问该页面！";
         die();
     }
+    loadThirdBus();
 }
+
+function loadThirdBus(){
+    global $cfg;
+    require_once BATH_PATH.'source/Util/Mcache.php';
+    $cacheKey = P_OA_API."&a=get_dept_list";
+    $depList = array();
+    try{
+        $memcache = Mcache::getInstance();
+        $cacheData = $memcache->get($cacheKey);
+        if($cacheData===false){
+
+            $api_url = P_OA_API."&a=get_dept_list";
+            $apiRes = get_api_content($api_url);
+            $cacheData = serialize($apiRes);
+            if($apiRes){
+                $memcache->set($cacheKey,$cacheData);
+            }
+        }
+        $depList = unserialize($cacheData);
+    }catch (Exception $e){
+        $api_url = P_OA_API."&a=get_dept_list&uid=";
+        $depList = get_api_content($api_url);
+    }
+
+    $cfg['tixi'] = $depList;
+}
+
 
 function leaderAuth($staff_uid=''){
     global $db;

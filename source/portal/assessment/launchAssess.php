@@ -105,9 +105,14 @@ if($_REQUEST['act']=='autoUserName'){
 if($_REQUEST['act']=='selectUserList'){
     $pid = $_REQUEST['pid'];
     $cid = $_REQUEST['cid'];
+    $tid = $_REQUEST['tid'];
     $uids = explode(',',$_REQUEST['uids']);
     $assessDao = new AssessDao();
-    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid} and status=1 order by deptlist desc";
+    $extSql = '';
+    if($tid){
+        $extSql = " and did={$tid}";
+    }
+    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid} and status=1 $extSql order by deptlist desc";
     $userList = $assessDao->db->GetAll($sql);
     $tpl = new NewTpl('assessment/selectUserList.php',array(
         'userList'=>$userList,

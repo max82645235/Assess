@@ -22,7 +22,7 @@
                     var s = $("#username").val();
                     var pid = $("#bus_area_parent").val();
                     var cid = $("#bus_area_child").val();
-
+                    var tid = $("#bus_area_third").val();
                     if(pid==''|| cid==''){
                         $("#username").removeClass('ui-autocomplete-loading');
                         return false;
@@ -111,6 +111,7 @@
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
                 <input type="hidden" name="bus_area_parent" id="bus_area_parent" value="<?=$pid?>">
                 <input type="hidden" name="bus_area_child" id="bus_area_child" value="<?=$cid?>">
+                <input type="hidden" name="bus_area_third" id="bus_area_third" value="<?=$tid?>">
                 <div class="sechk" style="margin-top: 5px;clear: both;float: left;">
                     ¿¼ºËÈËĞÕÃû£º<input type="text" value="" name="username" id="username" class="width135" placeholder="ÇëÊäÈë¿¼ºËÈË"  >
                 </div>

@@ -96,7 +96,7 @@ class AssessDao extends BaseDao{
         global $p_uid;
         try{
             $tableSafeAttr = array(
-                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status'
+                'base_id','base_name','base_start_date','bus_area_parent','bus_area_child','bus_area_third','lead_direct_set_status','staff_sub_start_date','uid','assess_attr_type','assess_period_type','base_end_date','base_status','userId','create_on_month_status'
             );
             $tbl = "`".DB_PREFIX."assess_base`";
             $baseRecord['base_end_date'] = self::getAssessBaseEndDate($baseRecord['assess_period_type'],$baseRecord['base_start_date']);
@@ -134,7 +134,7 @@ class AssessDao extends BaseDao{
                 $baseRecord['base_status'] = self::HrAssessWait;
                 $baseRecord['create_time'] = date("Y-m-d H:i:s");
                 $uid = (isset($p_uid))?$p_uid:'sys';
-                $baseRecord['uid'] = ($baseRecord['uid'])?$baseRecord['uid']:$uid;
+                $baseRecord['uid'] = (isset($baseRecord['uid']))?$baseRecord['uid']:$uid;
                 $baseRecord['userId'] = getUserId();
                 $sql = self::get_insert_sql($tbl,$baseRecord);
                 $this->db->Execute($sql);
@@ -333,12 +333,24 @@ class AssessDao extends BaseDao{
         }
 
         if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
-            if(!$conditionParams['bus_area_parent'] || $this->validBusAuth($conditionParams['bus_area_parent'],$conditionParams['bus_area_child'])){
+            if(isset($conditionParams['bus_area_parent']) && $this->validBusAuth($conditionParams['bus_area_parent'],$conditionParams['bus_area_child'])){
                 $sqlWhere.=" AND $tableName.bus_area_child={$conditionParams['bus_area_child']} ";
             }else{
                 $sqlWhere.=" AND 1=0 ";
             }
             $pageConditionUrl.="&bus_area_child=".$conditionParams['bus_area_child'];
+        }
+
+        if(isset($conditionParams['bus_area_third']) && $conditionParams['bus_area_third']){
+            if(isset($conditionParams['bus_area_parent']) &&
+                isset($conditionParams['bus_area_child']) &&
+                $this->validBusAuth($conditionParams['bus_area_parent'],$conditionParams['bus_area_child'],$conditionParams['bus_area_third'])
+            ){
+                $sqlWhere.=" AND $tableName.bus_area_third={$conditionParams['bus_area_third']} ";
+            }else{
+                $sqlWhere.=" AND 1=0 ";
+            }
+            $pageConditionUrl.="&bus_area_third=".$conditionParams['bus_area_third'];
         }
 
         if(isset($conditionParams['base_status'])  && $conditionParams['base_status']!==''){
@@ -481,7 +493,7 @@ class AssessDao extends BaseDao{
      *        int  $childId  二级部门Id (选填)
      *  输出 ：bool $authStatus  验证权限状态
      * */
-    static function validBusAuth($parentId,$childId=''){
+    static function validBusAuth($parentId,$childId='',$thirdId=''){
         global $p_userinfo;
         $authStatus = false;
         if(getIsRootGroup()){
@@ -512,12 +524,12 @@ class AssessDao extends BaseDao{
         //echo $sql."<br/>";
         $baseRecord = $this->db->GetRow($sql);
         if($baseRecord){
-            $baseRecord = $baseRecord+$this->getSelectBusName($baseRecord['bus_area_parent'],$baseRecord['bus_area_child']);
+            $baseRecord = $baseRecord+$this->getSelectBusName($baseRecord['bus_area_parent'],$baseRecord['bus_area_child'],$baseRecord['bus_area_third']);
         }
         return $baseRecord;
     }
 
-    public function getSelectBusName($parentId,$childId=''){
+    public function getSelectBusName($parentId,$childId='',$thirdId=''){
         global $cfg;
         $selectBusList = array();
         foreach($cfg['tixi'] as $k=>$v){
@@ -530,6 +542,18 @@ class AssessDao extends BaseDao{
                             break;
                         }
                     }
+
+                    if($thirdId){
+                        if(isset($v['thirdList'][$childId]) && $v['thirdList'][$childId]){
+                            foreach($v['thirdList'][$childId] as $t=>$third){
+                                if($t==$thirdId){
+                                    $selectBusList['bus_area_third_name'] = $third;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
                 }
                 break;
             }
@@ -542,8 +566,12 @@ class AssessDao extends BaseDao{
         $username = utfToGbk($params['s']);
         $tixi = $params['pid'];
         $comp_dept = $params['cid'];
+        $third = $params['tid'];
         if($username){
             $sql = "select userId,username,city,dept from sa_user where tixi={$tixi} and comp_dept={$comp_dept} and (username like '%{$username}%' or uid like '%{$username}%' )";
+            if($third){
+                $sql.= " and did={$third}";
+            }
             $userList = $this->db->GetAll($sql);
             if($userList){
                 foreach($userList as $k=>$data){

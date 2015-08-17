@@ -7,20 +7,50 @@
  */
 if($_REQUEST['act']=='ajaxBusClassify'){
     global $cfg,$p_tixi,$p_comp_dept;
+    loadThirdBus();
     $retData = array('data'=>array(),'status'=>'empty');
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $validAuth = $_REQUEST['validAuth'];
         require_once BATH_PATH . 'source/Dao/AssessDao.php';
         $assessDao = new AssessDao();
+
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                $curTx = ($bus_area_parent== $p_tixi) && ($p_comp_dept == $k);
-                if($assessDao->validBusAuth($bus_area_parent,$k) || $curTx){
+                if($assessDao->validBusAuth($bus_area_parent,$k)){
                     $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
                     $retData['data'][] = $tmp;
                 }
             }
+            $retData['status'] = 'success';
+        }
+    }
+    echo json_encode($retData);
+    die();
+}
+
+if($_REQUEST['act']=='ajaxBusThirdClassify'){
+    global $cfg,$p_tixi,$p_comp_dept;
+    loadThirdBus();
+    $retData = array('data'=>array(),'status'=>'empty');
+    if(isset($_REQUEST['bus_area_parent']) && isset($_REQUEST['bus_area_child']) && isset($cfg['tixi'])){
+        $bus_area_parent = $_REQUEST['bus_area_parent'];
+        $bus_area_child = $_REQUEST['bus_area_child'];
+        $validAuth = $_REQUEST['validAuth'];
+        require_once BATH_PATH . 'source/Dao/AssessDao.php';
+        $assessDao = new AssessDao();
+        if(isset($cfg['tixi'][$bus_area_parent])){
+            if(isset($cfg['tixi'][$bus_area_parent]['deptlist'][$bus_area_child])){
+                if($assessDao->validBusAuth($bus_area_parent,$bus_area_child)){
+                    if(isset($cfg['tixi'][$bus_area_parent]['thirdlist'])){
+                        foreach($cfg['tixi'][$bus_area_parent]['thirdlist'][$bus_area_child]  as $tId=>$data){
+                            $tmp = array('value'=>$tId,'name'=>iconv('GBK','UTF-8',$data));
+                            $retData['data'][] = $tmp;
+                        }
+                    }
+                }
+            }
+
             $retData['status'] = 'success';
         }
     }
@@ -41,6 +71,8 @@ if($_REQUEST['act'] =='ajaxIndicatorClassify'){
     echo json_encode($retData);
     die();
 }
+
+
 if($_REQUEST['act'] =='uploadFile'){
     require_once BATH_PATH . 'source/uploadFile.php';
     //print_r($_FILES);
@@ -60,6 +92,8 @@ if($_REQUEST['act'] =='uploadFile'){
 }
 
 if($_REQUEST['act']== 'downFile'){
+    ini_set('display_errors','off');
+    error_reporting(E_ALL & ~E_NOTICE);
     require_once BATH_PATH . 'source/Util/DownloadFile.php';
     $filePath = urldecode($_REQUEST['filePath']);
     $download = new DownloadFile('php,exe,html',false);
@@ -70,16 +104,3 @@ if($_REQUEST['act']== 'downFile'){
     die();
 }
 
-if($_REQUEST['act']=='test'){
-
-    require_once BATH_PATH . 'source/Util/DownloadFile.php';
-    $filePath = "E:\\www\\salary/tmp/1439542587812/1439542587.zip";
-    $download = new DownloadFile('php,exe,html',false);
-    $download->setFileInLocal();
-    if(!$download->downloadfile($filePath))
-    {
-        echo $download->geterrormsg();
-    }
-    die();
-
-}

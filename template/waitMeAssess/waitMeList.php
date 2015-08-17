@@ -17,6 +17,10 @@
                 AssessInstance.triggerBusSelect(1);
             });
 
+            $("#bus_area_child").change(function(){
+                AssessInstance.triggerBusThirdSelect(1);
+            });
+
             $("#assess_diy_set").click(function(){
                 AssessInstance.tableBtnHandler($('#table_style'),
                     true,
@@ -88,6 +92,13 @@
                     </select>
                     <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
                 </div>
+                <div class="jssel" style="z-index:49;float: left;">
+                    &nbsp;&nbsp;
+                    <select id="bus_area_third" name="bus_area_third" style="width: 150px;">
+                        <option value="">ÇëÑ¡Ôñ</option>
+                    </select>
+                    <input type="hidden" name="bus_area_third_hidden" id="bus_area_third_hidden" value="<?=isset($_REQUEST['bus_area_third'])?$_REQUEST['bus_area_third']:'';?>">
+                </div>
                 <div class="jssel" style="z-index:98;float: left;">
                     &nbsp;&nbsp;&nbsp;¿¼ºË×´Ì¬£º
                     <select name="base_status">
@@ -108,7 +119,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="z-index:98;float: left;">
+                <div class="jssel" style="z-index:98;float: left;margin-top: 5px;">
                     &nbsp;&nbsp;&nbsp;ÏÂÊô×´Ì¬£º
                     <select name="status">
                         <option value="1" <?php if(isset($_REQUEST['status']) && $_REQUEST['status']==1){?> selected="selected"<?php }?>>Ö±Êô</option>
@@ -116,7 +127,7 @@
                     </select>
                 </div>
 
-                <div class="jssel" style="float: left;z-index:98;margin-top: 5px;">
+                <div class="jssel" style="float: left;z-index:98;margin-top: 5px;margin-left: 10px;">
                     ¿¼ºËÆµÂÊ£º
                     <select name="assess_period_type">
                         <option value="">ÇëÑ¡Ôñ</option>
