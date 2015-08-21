@@ -64,7 +64,7 @@ class Mcache{
     }
 
     public function close(){
-        $this->_memcache->quit();
+        //$this->_memcache->quit();
     }
 
     function __destruct()

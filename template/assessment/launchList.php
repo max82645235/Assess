@@ -98,7 +98,7 @@
         <p class="icon1">HR考核管理 > 考核计划列表</p>
     </div>
     <div class="pad25">
-        <div class="brdbt zykc" style="height: 50px;">
+        <div class="brdbt zykc" style="height: 55px;">
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 90%;">
                 <input type="hidden" name="m" value="<?=getgpc('m')?>">
                 <input type="hidden" name="a" value="<?=getgpc('a')?>">
@@ -142,7 +142,7 @@
                        <option value="2"<?php if(isset($_REQUEST['byme_status']) && $_REQUEST['byme_status']==2){?> selected="selected"<?php }?>>全部</option>
                     </select>
                 </div>
-                <div class="jssel" style="z-index:98;margin-top: 5px;">
+                <div class="jssel" style="clear:both;float:left;z-index:98;margin-top: 5px;width: 180px;">
                     &nbsp;&nbsp;&nbsp;考核频率：
                     <select name="assess_period_type">
                         <option value="">请选择</option>
@@ -163,7 +163,7 @@
                 </div>
             </form>
             <?php if($auth->setIsMy(true)->validIsAuth('launchAssess')){?>
-                <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="text-align: left;">创建考核</a>
+                <a class="addfl-t add" href="?m=assessment&a=launchAssess&<?=$pageConditionUrl?>" style="position: absolute;right: 100px;">创建考核</a>
             <?php }?>
         </div>
         <div style="clear:both;background: none;border:none;"></div>

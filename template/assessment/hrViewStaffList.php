@@ -7,6 +7,9 @@
     <link href="<?=P_CSSPATH?>reset.css" rel="stylesheet" type="text/css" />
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
     <style>
         fieldset{
@@ -30,6 +33,7 @@
     </style>
 </head>
 <script>
+
     $(function(){
         $("#zip_assess_btn").click(function(){
             Assess.prototype.tableBtnHandler($('#table_style'),
@@ -51,6 +55,30 @@
                     },'hr');
                 });
         });
+    });
+
+    $.extend({
+        delItem:function(userId,baseId,username){
+            art.dialog.confirm('你确定删除 '+username+" 的考核么?",function(){
+                $.ajax({
+                    type:'get',
+                    url: '<?=P_SYSPATH."index.php?m=assessment&a=launchList&act=delUserAssess"?>',
+                    dataType: "json",
+                    data:{
+                        userId:userId,
+                        baseId:baseId
+                    },
+                    success:  function( data ) {
+                       if(data.status=='success'){
+                           art.dialog.tips('删除成功');
+                       }
+                        setTimeout(function(){
+                            location.reload();
+                        },1500);
+                    }
+                });
+            });
+        }
     });
 </script>
 <body>
@@ -111,6 +139,7 @@
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
                                 <a href="?m=assessment&a=launchList&act=hrViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
+                                <a href="javascript:$.delItem(<?=$data['userId']?>,<?=$data['base_id']?>,'<?=$data['username']?>')">删除</a>
                             </td>
                         </tr>
                     <?php }?>

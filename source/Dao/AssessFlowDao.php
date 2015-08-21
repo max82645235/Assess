@@ -348,6 +348,20 @@ class AssessFlowDao extends BaseDao{
             $addSql.=" and c.username like '%{$params['username']}%' ";
         }
 
+        //一级部门
+        if(isset($params['bus_area_parent']) && $params['bus_area_parent']){
+            $addSql.= " and b.bus_area_parent={$params['bus_area_parent']}";
+        }
+
+        //二级部门
+        if(isset($params['bus_area_child']) && $params['bus_area_child']){
+            $addSql.= " and b.bus_area_child={$params['bus_area_child']}";
+        }
+
+        //三级部门
+        if(isset($params['bus_area_third']) && $params['bus_area_third']){
+            $addSql.= " and b.bus_area_third={$params['bus_area_third']}";
+        }
 
         $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username from sa_assess_user_relation as a
                 inner join sa_assess_base as b on a.base_id=b.base_id
@@ -507,4 +521,31 @@ class AssessFlowDao extends BaseDao{
         return $userList;
     }
 
+    public function delUserAssess($userId,$baseId){
+        try{
+            //删除sa_assess_user_item表对应数据
+            $sql = "delete from sa_assess_user_item where base_id={$baseId} and userId={$userId}";
+            $this->db->Execute($sql);
+
+
+            $sql = "select rid from sa_assess_user_relation where base_id={$baseId} and userId={$userId}";
+            $relationData = $this->db->GetOne($sql);
+            $rid = $relationData['rid'];
+
+            //删除sa_assess_user_relation表对应数据
+            $sql = "delete from sa_assess_user_relation where base_id={$baseId} and userId={$userId}";
+            $this->db->Execute($sql);
+
+            if($rid){
+                //删除sa_upload_file表对应数据
+                $sql = "delete from sa_upload_file where rid={$rid}";
+                $this->db->Execute($sql);
+            }
+            admin_log('HR删除考核人_'.$userId,'bindid',$baseId);
+            return true;
+        }catch (Exception $e){
+            return false;
+        }
+
+    }
 }

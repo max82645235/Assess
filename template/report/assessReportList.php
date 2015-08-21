@@ -10,6 +10,16 @@
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>'
     <script>
         $(function(){
+            Assess.prototype.triggerBusSelect(1); //刚进页面时触发一次部门二级联动ajax查询
+            $("#bus_area_parent").change(function(){
+                Assess.prototype.triggerBusSelect(1);
+            });
+
+            $("#bus_area_child").change(function(){
+                Assess.prototype.triggerBusThirdSelect(1);
+            });
+
+
             $("#zip_assess_btn").click(function(){
                 Assess.prototype.tableBtnHandler($('#table_style'),
                     function(jInput){
@@ -52,7 +62,7 @@
         <p class="icon1">报表统计 > 绩效报表</p>
     </div>
     <div class="pad25">
-        <div class="brdbt zykc" style="height: 30px;">
+        <div class="brdbt zykc" style="height: 55px;">
             <form name="frm" action="" method="get" class="clearfix" style="float: left;width: 100%;">
                 <input type="hidden" name="m" value="report">
                 <input type="hidden" name="a" value="assessReport">
@@ -101,14 +111,40 @@
                     &nbsp;&nbsp;&nbsp;考核人姓名：
                     <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="请输入考核人姓名"  >
                 </div>
-                <div class="jssel" style="z-index:98;margin-bottom: 3px;">
-                    &nbsp;<input type="submit" value="搜索" class="btn48">
-                </div>
+
 
                 <div class="jssel" style="z-index:98;margin-bottom: 3px;">
                     &nbsp; <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;margin-left: 12px;">
                 </div>
 
+                <div class="jssel" style="clear:both;z-index:98;margin-left: 18px;">
+                    业务单元：
+                    <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
+                        <option value="">请选择</option>
+                        <?php foreach($bus_parent_list as $k=>$v){?>
+                            <option value="<?=$k?>" <?php if(isset($_REQUEST['bus_area_parent']) && $_REQUEST['bus_area_parent']==$k){?> selected="selected"<?php }?>><?=$v?></option>
+                        <?php }?>
+                    </select>
+                    <input type="hidden" name="bus_area_parent_hidden" id="bus_area_parent_hidden" value="<?=isset($_REQUEST['bus_area_parent'])?$_REQUEST['bus_area_parent']:'';?>">
+                </div>
+                <div class="jssel" style="z-index:49">
+                    &nbsp;&nbsp;
+                    <select id="bus_area_child" name="bus_area_child" style="width: 150px;">
+                        <option value="">请选择</option>
+                    </select>
+                    <input type="hidden" name="bus_area_child_hidden" id="bus_area_child_hidden" value="<?=isset($_REQUEST['bus_area_child'])?$_REQUEST['bus_area_child']:'';?>">
+                </div>
+                <div class="jssel" style="z-index:49">
+                    &nbsp;&nbsp;
+                    <select id="bus_area_third" name="bus_area_third" style="width: 150px;">
+                        <option value="">请选择</option>
+                    </select>
+                    <input type="hidden" name="bus_area_third_hidden" id="bus_area_third_hidden" value="<?=isset($_REQUEST['bus_area_third'])?$_REQUEST['bus_area_third']:'';?>">
+                </div>
+
+                <div class="jssel" style="z-index:98;margin-left: 5px;">
+                    &nbsp;<input type="submit" value="搜索" class="btn48">
+                </div>
             </form>
         </div>
 

@@ -31,8 +31,8 @@ if($a == 'refresh_relation'){
 if($a=='checkingAssessUpdate'){
     //获取今天所有需要提报的考核
     $base_status = 2; //考核中
-    //获取员工提报时间为今天且考核状态的所有考核
-    $sql = "select * from sa_assess_base where staff_sub_start_date=curdate() and base_status={$base_status}";
+    //获取员工提报时间为今天或已过今天的且考核状态的所有考核
+    $sql = "select * from sa_assess_base where staff_sub_start_date<=curdate() and base_status={$base_status}";
     $todayAssess = $db->getAll($sql);
     $baseIds = array();
     foreach($todayAssess as $k=>$data){
