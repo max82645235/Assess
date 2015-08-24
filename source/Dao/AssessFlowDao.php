@@ -251,6 +251,10 @@ class AssessFlowDao extends BaseDao{
             $relationRecord['updateTime'] = date("Y-m-d H:i:s");
             $sql = self::get_update_sql('sa_assess_user_relation',$relationRecord,$where);
             $this->db->Execute($sql);
+
+            $sql = "update sa_assess_base set base_status=1 where base_id={$baseId} and  base_status=2 ";
+            $this->db->Execute($sql);
+
             $conditionUrl = $this->getConditionParamUrl(array('act'));
             $location = P_SYSPATH."index.php?act=myStaffList&$conditionUrl";
             header("Location: $location");

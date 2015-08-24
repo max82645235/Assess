@@ -59,7 +59,7 @@
 
     $.extend({
         delItem:function(userId,baseId,username){
-            art.dialog.confirm('你确定删除 '+username+" 的考核么?",function(){
+            art.dialog.confirm('你确定删除 <span style="color: darkblue;">'+username+'</span> 的考核么?（<span style="color: red;">不能还原，请谨慎操作</span>）',function(){
                 $.ajax({
                     type:'get',
                     url: '<?=P_SYSPATH."index.php?m=assessment&a=launchList&act=delUserAssess"?>',
@@ -139,7 +139,7 @@
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td class="left">
                                 <a href="?m=assessment&a=launchList&act=hrViewStaffDetail&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
-                                <a href="javascript:$.delItem(<?=$data['userId']?>,<?=$data['base_id']?>,'<?=$data['username']?>')">删除</a>
+                                <a href="javascript:$.delItem(<?=$data['userId']?>,<?=$data['base_id']?>,'<?=$data['username']?>')" style="color: red;">删除</a>
                             </td>
                         </tr>
                     <?php }?>

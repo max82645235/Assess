@@ -138,11 +138,13 @@ if($_REQUEST['act']=='leaderSetFlow'){
                         $userRelationRecord['rpData'] = serialize($assessFlowDao->formatRpItem($_REQUEST['rpItem']));
                     }
 
+
                     $assessDao->triggerUserNewAttrTypeUpdate($userRelationRecord,$delStatus);
                 }
                 $assessDao->setAssessUserItemRecord($uids,$attrRecord);
+
                 //校验该考核下所有考核人状态，如果都已经设置为考核中（3） 需要变更base主表状态
-                if($_REQUEST['status']=='start'){
+                if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessChecking){
                     $assessDao->checkAssessAllUserCheckingStatus($base_id);
                 }
 

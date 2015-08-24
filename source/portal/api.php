@@ -53,6 +53,31 @@ if($a == 'update_user'){
     halt("OK");
 }
 
+if($a == 'update_user_name'){
+    $authcode = get_authcode($_GET['authcode']);
+    $userinfo = @unserialize($authcode);
+
+    if(!is_array($userinfo)){
+        halt("error input");
+    }
+
+    $uid = $userinfo['uid'];
+    $username = $userinfo['username'];
+
+    if(!$uid || !$username){
+        halt("error input");
+    }
+
+    $info = array();
+
+    $info['username'] = $username;
+
+    $sql = get_update_sql("`".DB_PREFIX."user`",$info,"uid='".$uid."'");
+    $db->Execute($sql);
+
+    halt("OK");
+}
+
 if($a == 'get_user_info'){
     if(!$_REQUEST['uid']){
         halt("error input");

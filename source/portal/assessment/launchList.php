@@ -264,12 +264,15 @@ if($_REQUEST['act']=='hrZipAssessPackage'){
 if($_REQUEST['act']=='delUserAssess'){
     $userId = $_REQUEST['userId'];
     $baseId = $_REQUEST['baseId'];
+    $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $auth = new Auth();
     $auth->addAuthItem('delUserAssess',array('m'=>$m,'a'=>$a,'act'=>'delUserAssess'));
     $jsonArr = array();
     if($auth->setIsMy(true)->validIsAuth('delUserAssess')){
         if($assessFlowDao->delUserAssess($userId,$baseId)){
+            //将已发布状态改为考核中
+            $assessDao->checkAssessAllUserCheckingStatus($baseId);
             $jsonArr['status'] = 'success';
         }else{
             $jsonArr['status'] = 'error';
