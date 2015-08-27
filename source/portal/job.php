@@ -5,7 +5,6 @@
  * Date: 15-8-4
  * Time: 上午9:16
  */
-
 global $db;
 global $ADODB_FETCH_MODE;
 $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;//只查询关联索引结果
@@ -27,8 +26,9 @@ if($a == 'refresh_relation'){
     halt("OK");
 }
 
+
 //更改提报状态
-if($a=='checkingAssessUpdate'){
+if($_REQUEST['a']=='checkingAssessUpdate'){
     //获取今天所有需要提报的考核
     $base_status = 2; //考核中
     //获取员工提报时间为今天或已过今天的且考核状态的所有考核
@@ -55,7 +55,7 @@ if($a=='checkingAssessUpdate'){
 }
 
 //复制达到按周期生成新考核
-if($a=='reachCopyDayAssess'){
+if($_REQUEST['a']=='reachCopyDayAssess'){
     $assessDao = new AssessDao();
     //获取按月生成状态位为1  且达到考核结束日期 且isNew状态位1的所有考核
     $sql = "select * from sa_assess_base where create_on_month_status=1 and base_end_date='".date("Y-m-d",strtotime("-1 day"))."' and isNew=1";

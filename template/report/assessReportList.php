@@ -117,7 +117,7 @@
                     &nbsp; <input type="button" name="" value="考核导出" class="btn139" id="zip_assess_btn" style="cursor:pointer;margin-left: 12px;">
                 </div>
 
-                <div class="jssel" style="clear:both;z-index:98;margin-left: 18px;">
+                <div class="jssel" style="clear:both;float:left;z-index:98;margin-left: 18px;width: 220px;">
                     业务单元：
                     <select id="bus_area_parent" name="bus_area_parent" style="width: 150px;">
                         <option value="">请选择</option>

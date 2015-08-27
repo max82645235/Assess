@@ -6,7 +6,7 @@
  * Date: 15-8-13
 * Time: ионГ9:33
 */
-require_once BATH_PATH."source/Util/ZipAssessFile/HZip.php";
+require_once BATH_PATH."source/Util/zipAssessFile/HZip.php";
 require_once BATH_PATH."source/Util/DownloadFile.php";
 class AssessZip{
     static function zipToLoad($tempDirPath){

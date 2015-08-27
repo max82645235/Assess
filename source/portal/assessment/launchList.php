@@ -200,8 +200,8 @@ if($_REQUEST['act']=='hrAssessReject'){
 
 //hr 用zip方式打包考核相关excel和上传文件
 if($_REQUEST['act']=='hrZipAssessPackage'){
-    require_once BATH_PATH."source/Util/ZipAssessFile/TemLoadFile.php";
-    require_once BATH_PATH."source/Util/ZipAssessFile/AssessZip.php";
+    require_once BATH_PATH."source/Util/zipAssessFile/TemLoadFile.php";
+    require_once BATH_PATH."source/Util/zipAssessFile/AssessZip.php";
     $baseList = explode(',',$_REQUEST['baseList']);
     $userList = explode(',',$_REQUEST['userList']);
     $pos = $_REQUEST['pos'];

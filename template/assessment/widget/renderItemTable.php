@@ -78,7 +78,7 @@
                                 if($data['qz'] && $data['leadScore']){
                                     $t = $data['qz']*$data['leadScore']/100;
                                     $totalScore+=$t;
-                                    echo intval($t);
+                                    echo ceil($t);
                                 }
 
                             ?>
@@ -110,7 +110,7 @@
                                  if($data['qz'] && $data['leadScore']){
                                     $t = $data['qz']*$data['leadScore']/100;
                                     $totalScore+=$t;
-                                    echo intval($t);
+                                    echo ceil($t);
                                  }
                             ?></td>
                     </tr>
@@ -119,7 +119,7 @@
         <?php }?>
         <tr>
             <td colspan="11">合计分</td>
-            <td><?=(intval($totalScore))?intval($totalScore):'';?></td>
+            <td><?=(ceil($totalScore))?ceil($totalScore):'';?></td>
         </tr>
     </table>
 <?php }elseif($assessAttrType==2){?>
@@ -159,14 +159,14 @@
                         if($itemInfo[0]['cash']&& $data['leadScore']){
                             $t = $itemInfo[0]['cash']*$data['leadScore'];
                             $totalScore+=$t;
-                            echo intval($t);
+                            echo ceil($t);
                         }
                     ?></td>
             </tr>
         <?php }?>
         <tr>
             <td colspan="6">合计分</td>
-            <td><?=(intval($totalScore))?intval($totalScore):'';?></td>
+            <td><?=(ceil($totalScore))?ceil($totalScore):'';?></td>
         </tr>
     </table>
 <?php }elseif($assessAttrType==3){?>
