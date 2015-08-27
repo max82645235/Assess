@@ -58,12 +58,12 @@ if($_REQUEST['a']=='checkingAssessUpdate'){
 if($_REQUEST['a']=='reachCopyDayAssess'){
     $assessDao = new AssessDao();
     //获取按月生成状态位为1  且达到考核结束日期 且isNew状态位1的所有考核
-    $sql = "select * from sa_assess_base where create_on_month_status=1 and base_end_date='".date("Y-m-d",strtotime("-1 day"))."' and isNew=1";
+    $sql = "select * from sa_assess_base where create_on_month_status=1 and base_end_date='".date("Y-m-d")."' and isNew=1";
     $baseRecord = $db->getAll($sql);
     foreach($baseRecord as $k=>$findBaseRecord){
         $baseId = $findBaseRecord['base_id'];
         //克隆数据
-        $findBaseRecord['base_start_date'] = date('Y-m-d');//将当前日期做为复制考核的开始日期
+        $findBaseRecord['base_start_date'] = date('Y-m-d',strtotime("+1 day"));//将当前日期做为复制考核的开始日期
         $findBaseRecord['base_end_date'] = AssessDao::getAssessBaseEndDate($findBaseRecord['assess_period_type'],$findBaseRecord['base_start_date']);
         $findBaseRecord['staff_sub_start_date'] = date('Y-m-d',strtotime('+'.$findBaseRecord['assess_period_type'].' month',strtotime($findBaseRecord['staff_sub_start_date'])));
         $yearMonthArr = $assessDao->getAssessYearMonth($findBaseRecord['base_start_date']);

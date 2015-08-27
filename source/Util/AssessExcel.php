@@ -41,6 +41,7 @@ class AssessExcel{
                 ),
             ),
         );
+
         foreach($assessData['attrList'] as $attrData){
             foreach($attrData['itemList'] as $itemData){
                 $objActSheet->setCellValue( 'A'.$rowIndex, gbkToUtf($itemData['detailName']))->getStyle('A'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);
@@ -74,11 +75,11 @@ class AssessExcel{
         $objActSheet->getStyle( 'E'.$rowIndex)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
         $objActSheet->getStyle( 'E'.$rowIndex)->getFill()->getStartColor()->setARGB('FFFFE7BA');
 
-        $objActSheet->setCellValue( 'G'.$rowIndex, gbkToUtf($totalResult['totalSelf']));
+        $objActSheet->setCellValue( 'G'.$rowIndex, gbkToUtf(ceil($totalResult['totalSelf'])));
         $objActSheet->getStyle( 'G'.$rowIndex)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
         $objActSheet->getStyle( 'G'.$rowIndex)->getFill()->getStartColor()->setARGB('FFFFE7BA');
 
-        $objActSheet->setCellValue( 'I'.$rowIndex, gbkToUtf($totalResult['totalLead']));
+        $objActSheet->setCellValue( 'I'.$rowIndex, gbkToUtf(ceil($totalResult['totalLead'])));
         $objActSheet->getStyle( 'I'.$rowIndex)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
         $objActSheet->getStyle( 'I'.$rowIndex)->getFill()->getStartColor()->setARGB('FFFFE7BA');
 
@@ -93,7 +94,11 @@ class AssessExcel{
                 ),
             ),
         );
+
         $objActSheet->getStyle( 'A1:J'.$rowIndex)->applyFromArray($styleMediumBlackBorderOutline);
+        $objActSheet->getStyle( 'A1:J'.$rowIndex)->getAlignment()->setWrapText(true);//自动换行
+        $objActSheet->getStyle('A1:J'.$rowIndex)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER); //垂直居中
+        $objPHPExcel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);//自适应高度
     }
 
     //为excel设置基础的模板数据框架
@@ -134,6 +139,7 @@ class AssessExcel{
             ->setCellValue( 'J10', gbkToUtf('上级评价'));
 
         $objActSheet = $objPHPExcel->getActiveSheet();
+
         $objActSheet->getColumnDimension('A')->setWidth('25');
         $objActSheet->getColumnDimension('C')->setWidth('16');
         $objActSheet->getColumnDimension('D')->setWidth('16');
@@ -142,7 +148,7 @@ class AssessExcel{
         $objActSheet->getColumnDimension('H')->setWidth('16');
         $objActSheet->getColumnDimension('I')->setWidth('16');
 
-        $objActSheet->getColumnDimension('B')->setWidth('25');
+        $objActSheet->getColumnDimension('B')->setWidth('30');
         $objActSheet->getColumnDimension('H')->setWidth('20');
         $objActSheet->getColumnDimension('J')->setWidth('20');
 
@@ -184,6 +190,7 @@ class AssessExcel{
         $salt = self::getExcelSaltKey($baseId,$userId);
         $excelPath = $dirPath."/".self::getEncodeFileName($userId,$salt);
         $objWriter->save($excelPath);
+        self::$excelInstance = null;
     }
 
     static function getExcelSaltKey($baseId,$userId){
