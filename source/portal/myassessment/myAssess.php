@@ -169,8 +169,6 @@ if($_REQUEST['act']=='triggerStatusUpdate'){
 
 //staff 用zip方式打包考核相关excel和上传文件
 if($_REQUEST['act']=='staffZipAssessPackage'){
-    ini_set('display_errors','on');
-    error_reporting(E_ALL & ~E_NOTICE);
     require_once BATH_PATH."source/Util/zipAssessFile/TemLoadFile.php";
     require_once BATH_PATH."source/Util/zipAssessFile/AssessZip.php";
     $baseList = explode(',',$_REQUEST['baseList']);

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 /**
  * 将生成临时目录的文件夹做压缩并下载输出
  * Created by PhpStorm.

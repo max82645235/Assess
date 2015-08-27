@@ -58,10 +58,7 @@ class DownloadFile
            }
             $fn = array_pop( explode( '/', strtr( $this->filename, '\\', '/' ) ) );
             $chunk = 10 * 1024 * 1024;
-            ob_get_clean();
-            header( "Pragma: public" );
-            header( "Expires: 0" ); // set expiration time
-            header( "Cache-Component: must-revalidate, post-check=0, pre-check=0" );
+            ob_clean();
             header( "Content-type:".$this->mineType );
             header( "Content-Length: ".$fileInfo['Content-Length'] ) ;
             header( "Content-Disposition: attachment; filename=\"$fn\"" );
