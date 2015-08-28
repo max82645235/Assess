@@ -256,8 +256,8 @@ if($_REQUEST['act']=='hrZipAssessPackage'){
                     $excelDataList[] = $excelData;
                 }
             }
-            require_once BATH_PATH."source/Util/excelFactory/excelForReport.php";
-            $excel = new ExcelForReport(new PHPExcel());
+            require_once BATH_PATH."source/Util/excelFactory/ExcelReport.php";
+            $excel = new ExcelReport(new PHPExcel());
             $excel->getReportExcel($excelDataList);//Êä³öexcel
         }
     }

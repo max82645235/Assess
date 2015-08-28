@@ -6,7 +6,7 @@
  * Time: ÉÏÎç10:11
  */
 require_once BATH_PATH."source/PHPExcel.php";
-class ExcelForReport{
+class ExcelReport{
     private $_phpexcel;
     public function __construct(PHPExcel $phpExcel){
         $this->_phpexcel = $phpExcel;
