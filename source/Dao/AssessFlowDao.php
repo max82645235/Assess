@@ -550,6 +550,55 @@ class AssessFlowDao extends BaseDao{
         }catch (Exception $e){
             return false;
         }
+    }
 
+    //获取报表excel导出单员工考核信息数据
+    public function getReportExcelData($userId,$baseId){
+        global $cfg;
+        $tixi = $cfg['tixi'];
+        $excelData = array();
+        $sql = "select a.assess_attr_type,a.score,a.rpData,b.username,c.base_name,c.bus_area_parent,c.bus_area_child,c.bus_area_third,c.assess_period_type,c.base_start_date,c.base_end_date from sa_assess_user_relation as a
+                    inner join sa_user as b on a.userId=b.userId and b.userId={$userId}
+                    inner join sa_assess_base as c on a.base_Id=c.base_Id and c.base_id={$baseId}";
+        $res = $this->db->GetRow($sql);
+        if($res){
+            $excelData['username'] = $res['username'];//考核人姓名
+            $excelData['basename'] = $res['base_name'];//考核名称
+            $excelData['assess_period_type'] = AssessDao::$AssessPeriodTypeMaps[$res['assess_period_type']];//频率
+            $excelData['time'] = date('Y/m/d',strtotime($res['base_start_date']))."-".date('Y/m/d',strtotime($res['base_end_date']));//考核时间
+            if(in_array($res['assess_attr_type'],array(1,2))){
+                $excelData['assess_attr_type'] = "量化指标/工作任务类";
+            }else{
+                $excelData['assess_attr_type'] = AssessDao::$attrTypeMaps[$res['assess_attr_type']];
+            }
+            $excelData['score'] = $res['score'];//绩效评分
+            if(!$res['rpData']){
+                $excelData['rpData'] = '无';
+            }else{
+                $rpData = unserialize($excelData['rpData']);
+                if(isset($rpData['total'][1]['totalValue'])){
+                    $excelData['rpData'] = "  金额：".$rpData['total'][1]['totalValue']."元"; //金额
+                }
+
+                if(isset($rpData['total'][2]['totalValue'])){
+                    $excelData['rpData'] = "  比例：".($rpData['total'][2]['totalValue']*100)."%"; //比例
+                }
+            }
+
+
+            //部门获取
+            if($res['bus_area_parent'] && isset($tixi[$res['bus_area_parent']])){
+                $secondList = $tixi[$res['bus_area_parent']];
+                $excelData['depart'] = $secondList['title'];
+                if($res['bus_area_child'] && isset($secondList['deptlist'][$res['bus_area_child']])){
+                    $excelData['depart'].= $secondList['deptlist'][$res['bus_area_child']];
+                    if($res['bus_area_third'] && isset($secondList['thirdlist'][$res['bus_area_child']][$res['bus_area_third']])){
+                        $excelData['depart'].= $secondList['thirdlist'][$res['bus_area_child']][$res['bus_area_third']];
+                    }
+                }
+            }
+
+        }
+        return $excelData;
     }
 }

@@ -145,6 +145,7 @@ class DownloadFile
     {
         $this->xlq_filetype['chm']='application/octet-stream';
         $this->xlq_filetype['ppt']='application/vnd.ms-powerpoint';
+        $this->xlq_filetype['xlsx']='application/vnd.ms-excel';
         $this->xlq_filetype['xls']='application/vnd.ms-excel';
         $this->xlq_filetype['doc']='application/msword';
         $this->xlq_filetype['docx']='application/msword';

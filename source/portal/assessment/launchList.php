@@ -245,16 +245,20 @@ if($_REQUEST['act']=='hrZipAssessPackage'){
 
     //在报表列表页
     if($pos=='onAssessReportList'){
+        $assessFlowDao = new AssessFlowDao();
         $userList = explode(',',$_REQUEST['userList']);
         $baseList = explode(',',$_REQUEST['baseList']);
+        $excelDataList = array();
         if($userList && $baseList){
             foreach($baseList as $k=>$baseId){
                 $userId = $userList[$k];
-                $tmpLoadFile->setBaseInfo($baseId,$userId);
-                $tmpLoadFile->run();
+                if($excelData = $assessFlowDao->getReportExcelData($userId,$baseId)){
+                    $excelDataList[] = $excelData;
+                }
             }
-            $tmpDirPath = $tmpLoadFile->createTmpDir();
-            AssessZip::zipToLoad($tmpDirPath);
+            require_once BATH_PATH."source/Util/excelFactory/excelForReport.php";
+            $excel = new ExcelForReport(new PHPExcel());
+            $excel->getReportExcel($excelDataList);//输出excel
         }
     }
     die();
