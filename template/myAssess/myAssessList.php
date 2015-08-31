@@ -18,7 +18,6 @@
         $.extend({
             usePrevData:function(base_id){
                 art.dialog.confirm('沿用上一期数据会导致当前考核数据被覆盖，您确定此操作么？',function(){
-                    var base_id = base_id;
                     var formData = {
                         m:'myassessment',
                         a:'myAssess',
@@ -168,9 +167,8 @@
                                         </span>
                                 <?php }?>
                                 <?php if($data['copy_id']){?>
-                                <a href="javascript:void();" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt"></a>
+                                <a href="javascript:;" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt" style="color: #20B2AA;">沿用</a>
                                 <?php }?>
-
                             </td>
                         </tr>
                     <?php }?>

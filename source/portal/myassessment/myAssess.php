@@ -207,7 +207,7 @@ if($_REQUEST['act']=='usePrevData'){
     $curBaseId = (int)$_REQUEST['baseId'];
     $userId = getUserId();
     $sql = "select a.cur_base_id,a.prev_base_id from sa_assess_copy_record as a
-                inner join sa_assess_relation as b on a.cur_base_id={$curBaseId} and a.prev_base_id=b.base_id and b.userId={$userId}";
+                inner join sa_assess_user_relation as b on a.cur_base_id={$curBaseId} and a.prev_base_id=b.base_id and b.userId={$userId}";
     $res = $assessDao->db->GetRow($sql);
     $resultArr = array();
     if($res){
@@ -223,12 +223,16 @@ if($_REQUEST['act']=='usePrevData'){
             $assessDao->setAssessUserRelation($userList,$baseRecord);//建立考核用户关系表设置
             //清除评价和打分属性后沿用上个周期的考核节点数据 设置为目前考核数据
             $filterAttr = array('selfScore','leadScore','selfAssess','leadAssess');
+
+            //沿用上一期节点表数据到本期
             foreach($record_info['item'] as $key=>$itemData){
-                $tmpArr = unserialize($itemData['itemData']);
+                $tmpArr = _unserialize($itemData['itemData']);
                 $itemData = array();
                 foreach($tmpArr as $k=>$v){
-                    if(in_array($k,$filterAttr)){
-                        unset($tmpArr[$k]);
+                    foreach($v as $attr=>$item){
+                        if(in_array($attr,$filterAttr)){
+                            unset($tmpArr[$k][$attr]);
+                        }
                     }
                 }
                 $record_info['item'][$key]['itemData'] = serialize($tmpArr);
@@ -240,11 +244,9 @@ if($_REQUEST['act']=='usePrevData'){
         }catch (Exception $e){
             $resultArr['status'] = 'fail';
         }
-
     }else{
         $resultArr['status'] = 'empty';
     }
-
     echo json_encode($resultArr);
     die();
 }
