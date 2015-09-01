@@ -575,15 +575,18 @@ class AssessFlowDao extends BaseDao{
             if(!$res['rpData']){
                 $excelData['rpData'] = '无';
             }else{
-                $rpData = unserialize($excelData['rpData']);
+                $rpData = unserialize($res['rpData']);
                 if(isset($rpData['total'][1]['totalValue'])){
-                    $excelData['rpData'] = "  金额：".$rpData['total'][1]['totalValue']."元"; //金额
+                    $rpType = ($rpData['total'][1]['totalValue']>0)?'奖励':'惩罚';
+                    $excelData['rpData'].= "  金额({$rpType})：".$rpData['total'][1]['totalValue']."元"; //金额
                 }
 
                 if(isset($rpData['total'][2]['totalValue'])){
-                    $excelData['rpData'] = "  比例：".($rpData['total'][2]['totalValue']*100)."%"; //比例
+                    $rpType = ($rpData['total'][2]['totalValue']>0)?'奖励':'惩罚';
+                    $excelData['rpData'].= "  百分比({$rpType})：".($rpData['total'][2]['totalValue']*100)."%"; //比例
                 }
             }
+
 
 
             //部门获取

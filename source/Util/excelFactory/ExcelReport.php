@@ -41,9 +41,9 @@ class ExcelReport{
         $objActSheet->getColumnDimension('D')->setWidth('25');
         $objActSheet->getColumnDimension('E')->setWidth('25');
         $objActSheet->getColumnDimension('F')->setWidth('30');
-        $objActSheet->getColumnDimension('G')->setWidth('50');
+        $objActSheet->getColumnDimension('G')->setWidth('40');
         $objActSheet->getColumnDimension('H')->setWidth('16');
-        $objActSheet->getColumnDimension('I')->setWidth('16');
+        $objActSheet->getColumnDimension('I')->setWidth('25');
         $objActSheet->getStyle( 'A1:I1')->getFont()->setBold(true);
         $objActSheet->getStyle( 'A1:I1')->getFont()->setSize(10);
 
@@ -75,7 +75,7 @@ class ExcelReport{
         if(!is_dir($dirPath)){
             mkdir($dirPath);
         }
-        $excelPath = $dirPath."/reportExcel.xlsx";
+        $excelPath = $dirPath."/reportExcel_".time().".xlsx";
         $objWriter->save($excelPath);
         require_once BATH_PATH."source/Util/DownloadFile.php";
         $download = new DownloadFile('php,exe,html',false);

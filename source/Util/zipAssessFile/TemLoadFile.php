@@ -62,6 +62,9 @@ class TemLoadFile{
                 if(!$localPath['status']){
                     file_put_contents($localPath['path'],file_get_contents($data['filePath']));//把远程文件下载到upload路径下
                 }
+
+                $data['cName'] = substr($data['cName'],0,strrpos($data['cName'],'.'));
+
                 $this->filePushList[$this->curIndex][$this->baseId]['remote'][] = array(
                     'cPath'=>$localPath['cPath'],
                     'localPath'=>$localPath['path'],

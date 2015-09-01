@@ -56,7 +56,7 @@ class OaUserAssess{
         $userId = $this->userRecord['userId'];
         $assessStatusMapIn = '1,4'; //待我填写计划 ，待我自评
         $sql = "select a.user_assess_status,a.rejectStatus,a.base_id,a.userId,b.assess_year,b.assess_month,b.base_name from sa_assess_user_relation as a
-                inner join sa_assess_base as b on a.base_id=b.base_id and a.userId={$userId} and a.user_assess_status in ($assessStatusMapIn)
+                inner join sa_assess_base as b on a.base_id=b.base_id and a.userId={$userId} and a.user_assess_status in ($assessStatusMapIn) and b.base_status>0
                 group by a.base_id order by a.updateTime desc";
         $res = $this->db->getAll($sql);
         $cnRes = array();
@@ -88,7 +88,7 @@ class OaUserAssess{
         $userIdInCond = implode(',',$lowList);
         $assessStatusMapIn = '0,2,5'; //待我创建计划 ，待我审核计划,待我评估确认
         $sql = "select a.userId,b.username,a.user_assess_status,a.rejectStatus,a.base_Id,c.base_name,c.assess_year,c.assess_month from sa_assess_user_relation as a
-                inner join sa_user as b on a.userId=b.userId and a.userId in ({$userIdInCond}) and a.user_assess_status in ({$assessStatusMapIn}) inner join sa_assess_base as c on a.base_id=c.base_id order by a.base_id desc";
+                inner join sa_user as b on a.userId=b.userId and a.userId in ({$userIdInCond}) and a.user_assess_status in ({$assessStatusMapIn}) inner join sa_assess_base as c on a.base_id=c.base_id and c.base_status>0 order by a.base_id desc";
         $relationList = $this->db->getAll($sql);
         foreach($relationList as $relationData){
             $rejectCn = '';

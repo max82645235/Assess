@@ -640,6 +640,10 @@ class AssessDao extends BaseDao{
                 //将base表[提报中]状态改为[考核结束]
                 $updateSql = "update sa_assess_base set base_status={$updateBaseStatus} where base_id={$base_id} and base_status =3";
                 $this->db->Execute($updateSql);
+
+                //当全部为考核完成状态时 更新此考核下所有人状态到 考核完成 状态
+                $updateSql = "update sa_assess_user_relation set user_assess_status=7 where base_id ={$base_id}";
+                $this->db->Execute($updateSql);
             }
         }
     }
