@@ -161,6 +161,67 @@ class AssessFlowDao extends BaseDao{
 
     }
 
+    //获取领导下属对应所有二级部门
+    public function getOneBusForLead(){
+        $list = array();
+        $userId = getUserId();
+        $sql = "SELECT b.tixi
+                FROM sa_user_relation AS a
+                INNER JOIN sa_user AS b ON a.super_userId =$userId
+                AND a.low_userId = b.userId
+                GROUP BY b.tixi";
+        $res = $this->db->GetAll($sql);
+
+        if($res){
+            foreach($res as $d){
+                $list[] = $d['tixi'];
+            }
+        }
+
+        return $list;
+    }
+
+    //获取领导下属对应所有二级部门
+    public function getSecondBusForLead(){
+        $list = array();
+        $userId = getUserId();
+        $sql = "SELECT b.comp_dept
+                FROM sa_user_relation AS a
+                INNER JOIN sa_user AS b ON a.super_userId =$userId
+                AND a.low_userId = b.userId
+                GROUP BY b.comp_dept";
+        $res = $this->db->GetAll($sql);
+
+        if($res){
+            foreach($res as $d){
+                $list[] = $d['comp_dept'];
+            }
+        }
+
+        return $list;
+    }
+
+
+    //获取领导下属对应所有三级部门
+    public function getThirdBusForLead(){
+        $list = array();
+        $userId = getUserId();
+        $sql = "SELECT b.did
+                FROM sa_user_relation AS a
+                INNER JOIN sa_user AS b ON a.super_userId =$userId
+                AND a.low_userId = b.userId
+                GROUP BY b.did";
+        $res = $this->db->GetAll($sql);
+
+        if($res){
+            foreach($res as $d){
+                $list[] = $d['did'];
+            }
+        }
+        return  $list;
+    }
+
+
     public function validLeaderSetFlow($userAssessStatus){
         $allowStatusList = array(
             self::AssessCreate,

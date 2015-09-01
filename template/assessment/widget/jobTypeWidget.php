@@ -3,7 +3,7 @@
     .ext_commission_table .w5{width: 10%;}
     .ext_commission_table .w40{width: 40%;}
     .ext_commission_table .textarea150{width: 100%;height: 150px;}
-    .ext_commission_table .input{width: 95%;padding:0 5px;color:#676767;height:24px;line-height:24px;border:1px solid #dedede;vertical-align:middle;}
+    .ext_commission_table .input{width: 95%;padding:0 5px;height:24px;line-height:24px;vertical-align:middle;}
     .padding0{padding:0 0;}
     .attr_form_1 .commission .sm_div{
         background: #fff;
@@ -84,17 +84,17 @@
                                                             $( "#time_old_j_<?=$key?>" ).datepicker();
                                                         });
                                                     </script>
-                                                <td class="w5">数据来源</td>
+                                                <td class="w5"><em class="c-yel">*</em>数据来源</td>
                                                 <td  class="w40">
                                                     <input  <?=$widget->disabled()?> type="text" name="j_sourceData_old_<?=$key?>" class="input sourceData {validate:{required:true}}" value="<?=$itemData['sourceData']?>">
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="w5">具体任务</td>
+                                                <td class="w5"><em class="c-yel">*</em>具体任务</td>
                                                 <td class="w40">
                                                     <textarea  <?=$widget->disabled()?> name="j_detailTxt_old_<?=$key?>" class="textarea150 detailJobTextarea {validate:{required:true}}"><?=$itemData['detailTxt']?></textarea>
                                                 </td>
-                                                <td class="w5">评价标准</td>
+                                                <td class="w5"><em class="c-yel">*</em>评价标准</td>
                                                 <td  class="w40">
                                                     <textarea  <?=$widget->disabled()?> name="j_assessStad_old_<?=$key?>" class="textarea150 assessStad {validate:{required:true}}" ><?=$itemData['assessStad']?></textarea>
                                                 </td>
@@ -183,17 +183,17 @@
                                                 $( ".reachTime" ).datepicker();
                                             });
                                         </script>
-                                    <td class="w5">数据来源</td>
+                                    <td class="w5"><em class="c-yel">*</em>数据来源</td>
                                     <td  class="w40">
                                         <input type="text" name="j_sourceData_new_-_-" class="input sourceData {validate:{required:true}}">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="w5">具体任务</td>
+                                    <td class="w5"><em class="c-yel">*</em>具体任务</td>
                                     <td class="w40">
                                         <textarea  name="j_detailTxt_new_-_-" class="textarea150 detailJobTextarea {validate:{required:true}} "></textarea>
                                     </td>
-                                    <td class="w5">评价标准</td>
+                                    <td class="w5"><em class="c-yel">*</em>评价标准</td>
                                     <td  class="w40">
                                         <textarea  name="j_assessStad_new_-_-"  class="textarea150 assessStad {validate:{required:true}}"></textarea>
                                     </td>

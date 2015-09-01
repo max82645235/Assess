@@ -324,31 +324,18 @@ class AssessDao extends BaseDao{
         }
 
         if(isset($conditionParams['bus_area_parent']) && $conditionParams['bus_area_parent']){
-            if($this->validBusAuth($conditionParams['bus_area_parent'])){
-                $sqlWhere.=" AND $tableName.bus_area_parent={$conditionParams['bus_area_parent']} ";
-            }else{
-                $sqlWhere.=" AND 1=0 ";
-            }
+            $sqlWhere.=" AND $tableName.bus_area_parent={$conditionParams['bus_area_parent']} ";
             $pageConditionUrl.="&bus_area_parent=".$conditionParams['bus_area_parent'];
         }
 
         if(isset($conditionParams['bus_area_child']) && $conditionParams['bus_area_child']){
-            if(isset($conditionParams['bus_area_parent']) && $this->validBusAuth($conditionParams['bus_area_parent'],$conditionParams['bus_area_child'])){
-                $sqlWhere.=" AND $tableName.bus_area_child={$conditionParams['bus_area_child']} ";
-            }else{
-                $sqlWhere.=" AND 1=0 ";
-            }
+            $sqlWhere.=" AND $tableName.bus_area_child={$conditionParams['bus_area_child']} ";
             $pageConditionUrl.="&bus_area_child=".$conditionParams['bus_area_child'];
         }
 
         if(isset($conditionParams['bus_area_third']) && $conditionParams['bus_area_third']){
-            if(isset($conditionParams['bus_area_parent']) &&
-                isset($conditionParams['bus_area_child']) &&
-                $this->validBusAuth($conditionParams['bus_area_parent'],$conditionParams['bus_area_child'],$conditionParams['bus_area_third'])
-            ){
+            if(isset($conditionParams['bus_area_parent']) &&isset($conditionParams['bus_area_child'])){
                 $sqlWhere.=" AND $tableName.bus_area_third={$conditionParams['bus_area_third']} ";
-            }else{
-                $sqlWhere.=" AND 1=0 ";
             }
             $pageConditionUrl.="&bus_area_third=".$conditionParams['bus_area_third'];
         }

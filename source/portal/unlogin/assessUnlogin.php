@@ -11,13 +11,17 @@ if($_REQUEST['act']=='ajaxBusClassify'){
     $retData = array('data'=>array(),'status'=>'empty');
     if(isset($_REQUEST['bus_area_parent']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
-        $validAuth = $_REQUEST['validAuth'];
         require_once BATH_PATH . 'source/Dao/AssessDao.php';
+        require_once BATH_PATH . 'source/Dao/AssessFlowDao.php';
         $assessDao = new AssessDao();
+        $assessFlowDao = new AssessFlowDao();
+        $secondBusList = $assessFlowDao->getSecondBusForLead();
+        $userId = getUserId();
 
         if(isset($cfg['tixi'][$bus_area_parent])){
             foreach($cfg['tixi'][$bus_area_parent]['deptlist'] as $k=>$v){
-                if($assessDao->validBusAuth($bus_area_parent,$k)){
+                //validBusAuth是为hr建立的部门列表获取，走的是API接口  ，其他人走查表
+                if($assessDao->validBusAuth($bus_area_parent,$k) || $p_comp_dept == $k || in_array($k,$secondBusList)){
                     $tmp = array('value'=>$k,'name'=>iconv('GBK','UTF-8',$v));
                     $retData['data'][] = $tmp;
                 }
@@ -30,24 +34,28 @@ if($_REQUEST['act']=='ajaxBusClassify'){
 }
 
 if($_REQUEST['act']=='ajaxBusThirdClassify'){
-    global $cfg,$p_tixi,$p_comp_dept;
+    global $cfg,$p_tixi,$p_comp_dept,$p_did;
     loadThirdBus();
+
     $retData = array('data'=>array(),'status'=>'empty');
     if(isset($_REQUEST['bus_area_parent']) && isset($_REQUEST['bus_area_child']) && isset($cfg['tixi'])){
         $bus_area_parent = $_REQUEST['bus_area_parent'];
         $bus_area_child = $_REQUEST['bus_area_child'];
-        $validAuth = $_REQUEST['validAuth'];
         require_once BATH_PATH . 'source/Dao/AssessDao.php';
+        require_once BATH_PATH . 'source/Dao/AssessFlowDao.php';
         $assessDao = new AssessDao();
+        $assessFlowDao = new AssessFlowDao();
+        $secondBusList = $assessFlowDao->getSecondBusForLead();
         if(isset($cfg['tixi'][$bus_area_parent])){
             if(isset($cfg['tixi'][$bus_area_parent]['deptlist'][$bus_area_child])){
-                if($assessDao->validBusAuth($bus_area_parent,$bus_area_child)){
-                    if(isset($cfg['tixi'][$bus_area_parent]['thirdlist'])){
+                if(isset($cfg['tixi'][$bus_area_parent]['thirdlist'])){
+                    if($assessDao->validBusAuth($bus_area_parent,$bus_area_child) || ($p_tixi == $bus_area_parent && $p_comp_dept==$bus_area_child) || in_array($bus_area_child,$secondBusList)){
                         foreach($cfg['tixi'][$bus_area_parent]['thirdlist'][$bus_area_child]  as $tId=>$data){
                             $tmp = array('value'=>$tId,'name'=>iconv('GBK','UTF-8',$data));
                             $retData['data'][] = $tmp;
                         }
                     }
+
                 }
             }
 

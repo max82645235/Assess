@@ -29,7 +29,6 @@ if($_REQUEST['act']=='waitMeList'){
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
     $sql = " select base_id,base_name,assess_period_type,base_start_date,base_end_date,base_status,publish_date,userId  from  sa_assess_base where 1=1 {$where}  order  by base_id desc limit {$offset},{$limit}";
-    //echo $sql;
     $tableData = $db->GetAll($sql);
     $tpl = new NewTpl('waitMeAssess/waitMeList.php',array(
         'tableData'=>$tableData,
