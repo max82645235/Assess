@@ -36,7 +36,7 @@ if($a == 'update_user'){
 
     $sql = "SELECT `uid` FROM `".DB_PREFIX."user` WHERE `uid`='".$uid."'";
     if($user = $db->GetRow($sql)){
-        $sql = get_update_sql("`".DB_PREFIX."user`",$info,"uid='".$uid."'");
+        $sql = get_update_sql("`".DB_PREFIX."user`",$info,"uid='".$uid."' and lockStatus=0");
         $db->Execute($sql);
     }
     else{
@@ -63,6 +63,8 @@ if($a == 'update_user_name'){
 
     $uid = $userinfo['uid'];
     $username = $userinfo['username'];
+    $mobile = $userinfo['mobile'];
+    $card_no = $userinfo['card_no'];
 
     if(!$uid || !$username){
         halt("error input");
@@ -71,6 +73,8 @@ if($a == 'update_user_name'){
     $info = array();
 
     $info['username'] = $username;
+    $info['card_no'] = $card_no;
+    $info['mobile'] = $mobile;
 
     $sql = get_update_sql("`".DB_PREFIX."user`",$info,"uid='".$uid."'");
     $db->Execute($sql);

@@ -618,13 +618,14 @@ class AssessFlowDao extends BaseDao{
         global $cfg;
         $tixi = $cfg['tixi'];
         $excelData = array();
-        $sql = "select a.assess_attr_type,a.score,a.rpData,b.username,c.base_name,c.bus_area_parent,c.bus_area_child,c.bus_area_third,c.assess_period_type,c.base_start_date,c.base_end_date from sa_assess_user_relation as a
+        $sql = "select a.assess_attr_type,a.score,a.rpData,b.username,b.card_no,c.base_name,c.bus_area_parent,c.bus_area_child,c.bus_area_third,c.assess_period_type,c.base_start_date,c.base_end_date from sa_assess_user_relation as a
                     inner join sa_user as b on a.userId=b.userId and b.userId={$userId}
                     inner join sa_assess_base as c on a.base_Id=c.base_Id and c.base_id={$baseId}";
         $res = $this->db->GetRow($sql);
         if($res){
             $excelData['username'] = $res['username'];//考核人姓名
             $excelData['basename'] = $res['base_name'];//考核名称
+            $excelData['card_no'] = $res['card_no'];//编号
             $excelData['assess_period_type'] = AssessDao::$AssessPeriodTypeMaps[$res['assess_period_type']];//频率
             $excelData['time'] = date('Y/m/d',strtotime($res['base_start_date']))."-".date('Y/m/d',strtotime($res['base_end_date']));//考核时间
             if(in_array($res['assess_attr_type'],array(1,2))){

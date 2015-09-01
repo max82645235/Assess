@@ -59,7 +59,7 @@ class ExcelReport{
         $rowIndex = 2;
         foreach($excelDataList as $excelData){
             $objActSheet->setCellValue( 'A'.$rowIndex, gbkToUtf($excelData['username']))->getStyle('A'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);
-            $objActSheet->setCellValue( 'B'.$rowIndex, gbkToUtf($excelData['code']))->getStyle('B'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);
+            $objActSheet->setCellValue( 'B'.$rowIndex, gbkToUtf($excelData['card_no']))->getStyle('B'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);
             $objActSheet->setCellValue( 'C'.$rowIndex, gbkToUtf($excelData['depart']))->getStyle('C'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);
             $objActSheet->setCellValue( 'D'.$rowIndex, gbkToUtf($excelData['basename']))->getStyle('D'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);
             $objActSheet->setCellValue( 'E'.$rowIndex, gbkToUtf($excelData['assess_period_type']))->getStyle('E'.$rowIndex)->applyFromArray($styleThinBlackBorderOutline);

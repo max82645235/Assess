@@ -40,7 +40,7 @@ $cfg['POWER'] = array(
         'name' => "HR考核管理",
         'detail' => array('launchAssess'=>'创建考核计划','launchList'=>'考核计划列表'),
         'launchAssess'=>array('launchAssess' => '编辑'),
-        'launchList' => array('launchList'=>'列表','launchAssess' => '编辑','cloneAssess'=>'复制','publishAssess'=>'发布','hrViewStaffList'=>'查看考核成员列表','hrViewStaffDetail'=>'查看成员考核信息','hrAssessReject'=>'驳回','hrZipAssessPackage'=>'考核导出'),
+        'launchList' => array('launchList'=>'列表','launchAssess' => '编辑','cloneAssess'=>'复制','publishAssess'=>'发布','hrViewStaffList'=>'查看考核成员列表','hrViewStaffDetail'=>'查看成员考核信息','hrAssessReject'=>'驳回','hrZipAssessPackage'=>'考核导出','delUserAssess'=>'删除考核人','userLockInfoForm'=>'属性设置'),
     ),
     'myassessment' => array(
         'name' => "我的考核",

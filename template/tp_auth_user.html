@@ -140,7 +140,10 @@
                     <td id="gid_{$r[uid]}">{$r[groupname]}</td>
                     <td><p class="zjtabp">{$r[deptlist]}</p></td>
                     <td><!--# echo($r['lastlogin'] ? date("Y/m/d H:i",$r['lastlogin']) : "-"); #--></td>
-                    <td><!--# if($r[canedit] == 1){ #--><a id="{$r[uid]}" href="javascript:void(0)" class="bjwrt edit">±‡º≠</a><!--# } #--></td>
+                    <td>
+                        <!--# if($r[canedit] == 1){ #--><a id="{$r[uid]}" href="javascript:void(0)" class="bjwrt edit">±‡º≠</a><!--# } #-->
+                        <a  href="?m=assessment&a=launchAssess&act=userLockInfoForm&userId={$r[userId]}" class="bjwrt"> Ù–‘…Ë÷√</a>
+                    </td>
                 </tr>
                 <!--#
                         }

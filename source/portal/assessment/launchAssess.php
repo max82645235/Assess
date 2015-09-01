@@ -123,3 +123,31 @@ if($_REQUEST['act']=='selectUserList'){
     $tpl->render();
     die();
 }
+
+//用户业务单元，锁定，第一人设置 表单
+if($_REQUEST['act']=='userLockInfoForm'){
+    $assessDao = new AssessDao();
+    $userId = $_REQUEST['userId'];
+    $record_info = array();
+    if($_REQUEST['ajax']==1){
+        $tixi = $_REQUEST['tixi'];
+        $comp_dept = $_REQUEST['comp_dept'];
+        $did = $_REQUEST['did'];
+        $lockStatus = $_REQUEST['lockStatus'];
+        $sql = "update sa_user set tixi={$tixi},comp_dept={$comp_dept}, did={$did}, lockStatus={$lockStatus} where userId={$userId}";
+       // echo $sql;exit;
+        $ret = array();
+        $rs = $assessDao->db->Execute($sql);
+        $ret['status'] = ($rs)?'success':'fail';
+        echo json_encode($ret);
+        die();
+    }
+    $sql = "select username,card_no,tixi,comp_dept,did,lockStatus,userId from sa_user where userId=$userId";
+    $record_info = $assessDao->db->GetRow($sql);
+    $tpl = new NewTpl('assessment/userLockInfoForm.php',array(
+        'record_info'=>$record_info,
+        'bus_parent_list'=>$assessDao->getBusParentDropList(),
+    ));
+    $tpl->render();
+    die();
+}

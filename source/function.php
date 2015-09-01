@@ -346,6 +346,11 @@ function loadThirdBus(){
         $depList = get_api_content($api_url);
     }
 
+    if(isset($depList['1']['deptlist'])){
+        $depList['1']['deptlist']['999'] = "第一人组";
+    }
+
+
     $cfg['tixi'] = $depList;
 }
 
