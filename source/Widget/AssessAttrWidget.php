@@ -151,7 +151,7 @@ class AssessAttrWidget{
 
     //½±³Ítable
     public function rewardPunish($relationData){
-        $rpData = unserialize($relationData['rpData']);
+        $rpData = _unserialize($relationData['rpData']);
         $renderPath = BATH_PATH."template/assessment/widget/rewardPunishWidget.php";
         $this->tpl->set_tpl($renderPath);
         $this->tpl->set_data(array('rpData'=>$rpData));

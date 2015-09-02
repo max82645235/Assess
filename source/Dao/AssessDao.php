@@ -670,8 +670,8 @@ class AssessDao extends BaseDao{
                 $diffData['type_differ'] = 0;
                 $diffData['same'] = 1;
                 foreach($newData['item'] as $i=>$data){
-                    $newItemData = unserialize($data['itemData']);
-                    $historyItemData = unserialize($historyData['item'][$i]['itemData']);
+                    $newItemData = _unserialize($data['itemData']);
+                    $historyItemData = _unserialize($historyData['item'][$i]['itemData']);
                     $itemDiffer = array();
                     foreach($newItemData as $k=>$trList){
                         foreach($trList as $attr=>$d){

@@ -185,7 +185,7 @@
                             <td><?=AssessFlowDao::$UserAssessStatusByHr[$data['user_assess_status']]?></td>
                             <td width="100" style="text-align: center;"><?=($data['score'])?$data['score']:'';?></td>
                             <td>
-                                <?php $rpData = unserialize($data['rpData']);?>
+                                <?php $rpData = _unserialize($data['rpData']);?>
                                 <?php if($rpData){?>
                                     <?php if(isset($rpData['total'][1]['totalValue'])){?>
                                         <?=$rpData['total'][1]['totalValue']?>Ԫ</br>

@@ -62,7 +62,7 @@
             <table class="sm_xsmbadd commission" width="100%">
                 <?php
                 if(isset($renderData['itemData']) && $renderData['itemData']){
-                    $itemDataList = unserialize($renderData['itemData']);
+                    $itemDataList = _unserialize($renderData['itemData']);
                     ?>
                     <?php if($itemDataList){?>
                         <?php foreach($itemDataList as $key=>$itemData){?>
