@@ -133,7 +133,7 @@
                         <?php $selected = (in_array($data['userId'],$uids))?true:false; ?>
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>" userId="<?=$data['userId']?>" username="<?=$data['username']?>">
                             <td><input type="checkbox" <?php if($selected){?>checked="checked" <?php }?>  class="table_item_checkbox"></td>
-                            <td class="left"><?=$data['username']?></td>
+                            <td class="left"><?=$data['username']."(".$data['card_no'].")"?></td>
                             <td class="left"><?=$data['deptlist']?></td>
                         </tr>
                     <?php }?>

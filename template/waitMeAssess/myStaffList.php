@@ -154,7 +154,7 @@
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
                             </td>
-                            <td ><?=$data['username']?></td>
+                            <td ><?=$data['username']."(".$data['card_no'].")"?></td>
                             <td class="left"><?=$data['deptlist']?></td>
                             <td>
                                 <?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?>

@@ -120,7 +120,7 @@
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
-                    <th class="left" width="100"  style="text-align: center;">被考核人</th>
+                    <th class="left" width="150"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
                     <th width="150" style="text-align: center;">流程状态</th>
                     <th width="150" style="text-align: center;">绩效评分</th>
@@ -133,7 +133,7 @@
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
                                 <input type="hidden" class="table_item_status" value="<?=$data['user_assess_status']?>">
                             </td>
-                            <td ><?=$data['username']?></td>
+                            <td ><?=$data['username']."(".$data['card_no'].")"?></td>
                             <td class="left"><?=$data['deptlist']?></td>
                             <td><?=AssessFlowDao::$UserAssessStatusByHr[$data['user_assess_status']]?></td>
                             <td><?=($data['score'])?$data['score']:'';?></td>

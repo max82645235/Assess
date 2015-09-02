@@ -169,7 +169,7 @@
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['rid']?>" baseId="<?=$data['base_id']?>" userId="<?=$data['userId']?>">
                                 <input type="hidden" class="table_item_status" value="<?=$data['user_assess_status']?>">
                             </td>
-                            <td ><?=$data['username']?></td>
+                            <td ><?=$data['username']."(".$data['card_no'].")"?></td>
                             <td ><?=AssessDao::$AssessPeriodTypeMaps[$data['assess_period_type']]?></td>
                             <td>
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -

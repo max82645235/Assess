@@ -670,7 +670,7 @@ Assess.prototype = {
                             score = targetData[0].tc_name*targetData[0].finishCash/100;
                     break;
             }
-            var retMsg = "预计最终得分：<span style='color: red;'>"+score+"</span> !";
+            var retMsg = "预计最终得分：<span style='color: red;'>"+Math.ceil(score)+"</span> !";
             return retMsg;
         }
     },

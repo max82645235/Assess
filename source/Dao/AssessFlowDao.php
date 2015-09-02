@@ -268,7 +268,7 @@ class AssessFlowDao extends BaseDao{
 
     //获取考核人状态信息
     public function getUserRelationRecord($baseId,$userId){
-        $userAssessRelationSql = "select a.*,b.username from sa_assess_user_relation as a
+        $userAssessRelationSql = "select a.*,b.username,b.card_no from sa_assess_user_relation as a
                                     inner join sa_user as b on a.userId=b.userId
                                      where a.userId={$userId} and a.base_id = {$baseId}";
         $relationRecord = $this->db->GetRow($userAssessRelationSql);
@@ -348,7 +348,7 @@ class AssessFlowDao extends BaseDao{
                 }
             }
         }
-        return $finalScore;
+        return ceil($finalScore);
     }
 
     //将领导设置转给员工设置
@@ -428,7 +428,7 @@ class AssessFlowDao extends BaseDao{
             $addSql.= " and b.bus_area_third={$params['bus_area_third']}";
         }
 
-        $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username from sa_assess_user_relation as a
+        $sql = "select a.*,b.assess_period_type,b.base_start_date,b.base_end_date,c.username,c.card_no from sa_assess_user_relation as a
                 inner join sa_assess_base as b on a.base_id=b.base_id
                 inner join sa_user as c on a.userId=c.userId
                 where 1=1 {$addSql} group  by a.base_id,a.userId ";

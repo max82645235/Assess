@@ -8,7 +8,7 @@
         <td align="right" valign="top">业务单元：&nbsp;</td>
         <td>
             <div class="jssel" style="z-index:98">
-                <?=$baseInfo['bus_area_parent_name']?> &nbsp;->&nbsp; <?=$baseInfo['bus_area_child_name']?>->&nbsp;<?=isset($baseInfo['bus_area_third_name'])?$baseInfo['bus_area_third_name']:'';?>
+                <?=$baseInfo['bus_area_parent_name']?> &nbsp;->&nbsp; <?=$baseInfo['bus_area_child_name']?><?=isset($baseInfo['bus_area_third_name'])?"->&nbsp;".$baseInfo['bus_area_third_name']:'';?>
             </div>
 
         </td>

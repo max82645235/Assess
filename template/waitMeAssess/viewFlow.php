@@ -35,7 +35,7 @@
         <p class="icon1">待我考核 > 查看考核</p>
     </div>
     <fieldset>
-        <legend>考核人姓名：<span style="color:#8DDB75;"><?=$record_info['relation']['username']?></span></legend>
+        <legend>考核人姓名：<span style="color:#8DDB75;"><?=$record_info['relation']['username']."(".$record_info['relation']['card_no'].")"?></span></legend>
         <div class="kctjcon">
             <p class="tjtip">考核基本信息</p>
             <form action="" method="post" id="sub_form" class="clearfix" >

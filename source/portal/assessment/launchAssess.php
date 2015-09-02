@@ -112,7 +112,7 @@ if($_REQUEST['act']=='selectUserList'){
     if($tid){
         $extSql = " and did={$tid}";
     }
-    $sql = "select userId,username,deptlist from sa_user where tixi={$pid} and comp_dept={$cid} and status=1 $extSql order by deptlist desc";
+    $sql = "select userId,username,deptlist,card_no from sa_user where tixi={$pid} and comp_dept={$cid} and status=1 $extSql order by deptlist desc";
     $userList = $assessDao->db->GetAll($sql);
     $tpl = new NewTpl('assessment/selectUserList.php',array(
         'userList'=>$userList,
@@ -134,11 +134,14 @@ if($_REQUEST['act']=='userLockInfoForm'){
         $comp_dept = $_REQUEST['comp_dept'];
         $did = $_REQUEST['did'];
         $lockStatus = $_REQUEST['lockStatus'];
-        $sql = "update sa_user set tixi={$tixi},comp_dept={$comp_dept}, did={$did}, lockStatus={$lockStatus} where userId={$userId}";
-       // echo $sql;exit;
-        $ret = array();
-        $rs = $assessDao->db->Execute($sql);
-        $ret['status'] = ($rs)?'success':'fail';
+        try{
+            $sql = "update sa_user set tixi={$tixi},comp_dept={$comp_dept}, did={$did}, lockStatus={$lockStatus} where userId={$userId}";
+            $ret = array();
+            $rs = $assessDao->db->Execute($sql);
+            $ret['status'] = 'success';
+        }catch (Exception $e){
+            $ret['status'] = 'fail';
+        }
         echo json_encode($ret);
         die();
     }

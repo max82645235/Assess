@@ -226,7 +226,7 @@
                     <tr>
                         <td width="188" align="right"> øº∫À»À–’√˚£∫&nbsp;</td>
                         <td>
-                            <?=$record_info['relation']['username']?>
+                            <?=$record_info['relation']['username']."(".$record_info['relation']['card_no'].")";?>
                         </td>
                     </tr>
                     <?=$assessAttrWidget->renderTableBaseInfo($record_info['relation']['base_id'],$record_info['relation']['userId'])?>
