@@ -278,7 +278,8 @@ class AssessFlowDao extends BaseDao{
     //获取用户考核列表页
     public function getMyAssessSearchHandlerListSql($userId,$conditionParams = array()){
         $sql = "select [*] from sa_assess_user_relation as a
-                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId} and b.base_status>0";
+                inner join sa_assess_base as b on a.base_id = b.base_id where a.userId={$userId} and b.base_status>0
+                left join sa_assess_copy_record as c on b.base_id=c.cur_base_id";
         $pageConditionUrl = '';
         $resultList = array();
         if(isset($conditionParams['assess_period_type']) && $conditionParams['assess_period_type']){
@@ -410,7 +411,11 @@ class AssessFlowDao extends BaseDao{
 
         //姓名
         if(isset($params['username']) && $params['username']){
-            $addSql.=" and c.username like '%{$params['username']}%' ";
+            if(preg_match("/[A-Za-z][0-9]{5,6}/i",trim($params['username']))){
+                $addSql.=" and c.card_no like '%{$params['username']}%' ";
+            }else{
+                $addSql.=" and c.username like '%{$params['username']}%' ";
+            }
         }
 
         //一级部门

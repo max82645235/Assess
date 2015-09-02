@@ -60,6 +60,7 @@ if($_REQUEST['a']=='reachCopyDayAssess'){
     //获取按月生成状态位为1  且达到考核结束日期 且isNew状态位1的所有考核
     $sql = "select * from sa_assess_base where create_on_month_status=1 and base_end_date=curdate() and isNew=1";
     $baseRecord = $db->getAll($sql);
+    $copyRecordList = array();
     foreach($baseRecord as $k=>$findBaseRecord){
         $baseId = $findBaseRecord['base_id'];
         //克隆数据
@@ -68,13 +69,25 @@ if($_REQUEST['a']=='reachCopyDayAssess'){
         $yearMonthArr = $assessDao->getAssessYearMonth($findBaseRecord['base_start_date']);
         $findBaseRecord['base_name'] = preg_replace('/(.*)(\_[0-9]{4}-[0-9]{2})/i','$1',$findBaseRecord['base_name']);
         $findBaseRecord['base_name'] = $findBaseRecord['base_name']."_".$yearMonthArr['assess_year']."-".$yearMonthArr['assess_month'];//默认在克隆的考核标题后面加上时间后缀
-        $assessDao->copyAssessDbHandler($findBaseRecord);
+        $copyBaseId = $assessDao->copyAssessDbHandler($findBaseRecord);
+        $copyRecordList[] = array('curBaseId'=>$copyBaseId,'prevBaseId'=>$baseId);
+
         $sql = "update sa_assess_base set isNew=0 where base_id={$baseId}";
         $dbRes = $db->Execute($sql);
         $resStatus = ($dbRes)?'success':'fail';
-        echo $resStatus;
         admin_log('按周期生成新考核脚本_'.$resStatus,'bindid',$baseId);
     }
+
+    //克隆baseId关系表建立
+    if($copyRecordList){
+        $sql = "insert into sa_assess_copy_record (cur_base_id,prev_base_id,create_time) values ";
+        foreach($copyRecordList as $record){
+            $sql.= "({$record['curBaseId']},{$record['prevBaseId']},now()),";
+        }
+        $sql = substr($sql,0,-1);
+        $db->Execute($sql);
+    }
+
     echo 'success';
 }
 die();

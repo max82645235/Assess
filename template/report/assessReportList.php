@@ -108,8 +108,8 @@
                     </select>
                 </div>
                 <div class="jssel" style="z-index:98;margin-bottom: 5px;"">
-                    &nbsp;&nbsp;&nbsp;考核人姓名：
-                    <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="请输入考核人姓名"  >
+                    &nbsp;&nbsp;&nbsp;姓名/编号：
+                    <input type="text" value="<?=(isset($_REQUEST['username']))?$_REQUEST['username']:'';?>" name="username" id="username" class="width135" placeholder="请输入姓名/编号"  >
                 </div>
 
 
@@ -154,7 +154,8 @@
                     <th width="50" style="text-align: center;" >
                         <input type="checkbox" id="top_check_input"  onclick="Assess.prototype.tableTopChecked(this)">
                     </th>
-                    <th width="100" style="text-align: center;">考核人姓名</th>
+                    <th width="100" style="text-align: center;">被考核人姓名</th>
+                    <th width="100" style="text-align: center;">编号</th>
                     <th width="100" style="text-align: center;">考核频率</th>
                     <th width="200" style="text-align: center;">考核时间</th>
                     <th width="200" style="text-align: center;">考核类型</th>
@@ -169,7 +170,8 @@
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['rid']?>" baseId="<?=$data['base_id']?>" userId="<?=$data['userId']?>">
                                 <input type="hidden" class="table_item_status" value="<?=$data['user_assess_status']?>">
                             </td>
-                            <td ><?=$data['username']."(".$data['card_no'].")"?></td>
+                            <td ><?=$data['username']?></td>
+                            <td><?=$data['card_no']?></td>
                             <td ><?=AssessDao::$AssessPeriodTypeMaps[$data['assess_period_type']]?></td>
                             <td>
                                 <?=date('Y/m/d',strtotime($data['base_start_date']))?> -

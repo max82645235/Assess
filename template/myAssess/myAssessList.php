@@ -8,9 +8,41 @@
     <link href="<?=P_CSSPATH?>right.css" rel="stylesheet" type="text/css" />
     <script src="<?=P_JSPATH?>jquery.1.11.1.js" type="text/javascript"></script>
     <script src="<?=P_SYSPATH?>static/js/assess/launchAssess.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="<?=P_SYSPATH?>static/js/artDialog/skins/idialog.css">
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/artDialog.js?skin=idialog"></script>
+    <script type="text/javascript" src="<?=P_SYSPATH?>static/js/artDialog/plugins/iframeTools.js"></script>
 </head>
 <script>
+
     $(function(){
+        $.extend({
+            usePrevData:function(base_id){
+                art.dialog.confirm('沿用上一期数据会导致当前考核数据被覆盖，您确定此操作么？',function(){
+                    var base_id = base_id;
+                    var formData = {
+                        m:'myassessment',
+                        a:'myAssess',
+                        act:'usePrevData',
+                        baseId:base_id
+                    };
+                    $.ajax({
+                        type:'post',
+                        url:'/salary/index.php',
+                        data:formData,
+                        dataType:'json',
+                        success:function(retData){
+                            if(retData.status=='success'){
+                                art.dialog.tips('设置成功！',1500);
+                                var url = "<?=P_SYSPATH."index.php?m=myassessment&a=myAssess&act=myAssessList&".$conditionUrl?>";
+                                Assess.prototype.jump(url,1500);
+                            }else {
+                                art.dialog.tips('设置失败！');
+                            }
+                        }
+                    });
+                });
+            }
+        });
         $("#zip_assess_btn").click(function(){
             Assess.prototype.tableBtnHandler($('#table_style'),
                 function(jInput){
@@ -128,13 +160,16 @@
                                 <?php }elseif($data['user_assess_status']==AssessFlowDao::AssessRealSuccess){echo "-";}?>
                             </td>
                             <td class="left">
+
                                 <a href="?m=myassessment&a=myAssess&act=staffViewStaffDetail&userId=<?=$data['user_Id']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt">查看</a>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
                                     <span>
                                              <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
                                 <?php }?>
-
+                                <?php if($data['copy_id']){?>
+                                <a href="javascript:void();" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt"></a>
+                                <?php }?>
 
                             </td>
                         </tr>

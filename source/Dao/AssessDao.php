@@ -447,6 +447,7 @@ class AssessDao extends BaseDao{
                     }
                 }
             }
+            return $base_id;
         }
         //¿ËÂ¡Êý¾Ý-end
     }

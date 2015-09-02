@@ -17,6 +17,7 @@
         });
     });
 </script>
+
 <?php if($assessAttrType==1){?>
     <?php
         require_once BATH_PATH.'source/Dao/IndicatorDao.php';
@@ -39,6 +40,12 @@
         </tr>
         <?php foreach($itemInfo as $item){?>
             <?php $itemList = unserialize($item['itemData']);?>
+
+            <?php if($_GET['test']){
+                echo "<pre>";
+                print_r($item['itemData']);
+                echo "</pre>";
+            }?>
             <?php if($item['attr_type']==1){?>
                 <?php foreach($itemList as $key=>$data){?>
                     <tr <?=$widget->getDifferShow(1);?>>
@@ -125,7 +132,9 @@
 <?php }elseif($assessAttrType==2){?>
 
     <?php $itemList = unserialize($itemInfo[0]['itemData']);?>
-    <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
+
+
+    <table cellpadding="0" cellspacing="0" width="100%" class="jbtab a">
         <tr>
             <th width="15%">考核类型</th>
             <th width="15%">分值金额转化率(元/分)</th>

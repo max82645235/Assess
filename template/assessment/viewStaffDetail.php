@@ -168,11 +168,16 @@
                 </table>
             </div>
             <div class="pad25">
+
                 <?php
                      $compareHtml = $assessAttrWidget->compareHistory($record_info);
                      echo $compareHtml;
                 ?>
-
+                <?php if($_GET['test1']){
+                    echo "<pre>";
+                    print_r($record_info);
+                    echo "</pre>";
+                }?>
                 <div class="attr_content">
                     <!--¿¼ºËÊôÐÔ±í¸ñ-->
                     <?php

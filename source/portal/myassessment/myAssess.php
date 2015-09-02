@@ -31,7 +31,7 @@ if($_REQUEST['act']=='myAssessList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,a.rejectStatus,b.*";
+    $findSql = " a.user_assess_status,a.score,a.userId as user_Id,a.rejectStatus,b.*,c.copy_id";
     $findSql = str_replace('[*]',$findSql,$sql);
     $findSql.= " order by b.base_id desc limit {$offset},{$limit}";
     $tableData = $db->GetAll($findSql);
@@ -197,5 +197,54 @@ if($_REQUEST['act']=='staffZipAssessPackage'){
         AssessZip::zipToLoad($tmpDirPath);
     }
 
+    die();
+}
+
+//用户沿用上个周期记录考核数据
+if($_REQUEST['act']=='usePrevData'){
+    $assessDao = new AssessDao();
+    $assessFlowDao = new AssessFlowDao();
+    $curBaseId = (int)$_REQUEST['baseId'];
+    $userId = getUserId();
+    $sql = "select a.cur_base_id,a.prev_base_id from sa_assess_copy_record as a
+                inner join sa_assess_relation as b on a.cur_base_id={$curBaseId} and a.prev_base_id=b.base_id and b.userId={$userId}";
+    $res = $assessDao->db->GetRow($sql);
+    $resultArr = array();
+    if($res){
+        try{
+            $prevBaseId = $res['prev_base_id'];
+            $userList = array($userId);
+            $record_info = $assessFlowDao->getUserAssessRecord($prevBaseId,$userId);
+            $baseRecord =  array(
+                'base_id'=>$curBaseId,
+                'assess_attr_type'=>$record_info['relation']['assess_attr_type']
+            );
+            $assessDao->clearDeleteUserItem($curBaseId,$userList,false); //清空当前考核已有的节点项
+            $assessDao->setAssessUserRelation($userList,$baseRecord);//建立考核用户关系表设置
+            //清除评价和打分属性后沿用上个周期的考核节点数据 设置为目前考核数据
+            $filterAttr = array('selfScore','leadScore','selfAssess','leadAssess');
+            foreach($record_info['item'] as $key=>$itemData){
+                $tmpArr = unserialize($itemData['itemData']);
+                $itemData = array();
+                foreach($tmpArr as $k=>$v){
+                    if(in_array($k,$filterAttr)){
+                        unset($tmpArr[$k]);
+                    }
+                }
+                $record_info['item'][$key]['itemData'] = serialize($tmpArr);
+                $record_info['item'][$key]['base_id'] = $curBaseId;
+                $record_info['item'][$key]['cash'] = 0;
+            }
+            $assessDao->setAssessUserItemRecord($userList,$record_info['item']);
+            $resultArr['status'] = 'success';
+        }catch (Exception $e){
+            $resultArr['status'] = 'fail';
+        }
+
+    }else{
+        $resultArr['status'] = 'empty';
+    }
+
+    echo json_encode($resultArr);
     die();
 }

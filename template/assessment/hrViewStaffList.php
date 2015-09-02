@@ -126,6 +126,7 @@
                     <th width="150" style="text-align: center;">¼¨Ð§ÆÀ·Ö</th>
                     <th  width="100" style="text-align: center;">²Ù×÷</th>
                 </tr>
+
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>">
