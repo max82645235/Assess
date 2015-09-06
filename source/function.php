@@ -323,6 +323,11 @@ function checkUserAuthority($filterActs=array()){
     loadThirdBus();
 }
 
+function _unserialize($string)
+{
+    return unserialize(preg_replace('!s:(\d+):"(.*?)";!se', '"s:".strlen("$2").":\"$2\";"', $string));
+}
+
 function loadThirdBus(){
     global $cfg;
     require_once BATH_PATH.'source/Util/Mcache.php';

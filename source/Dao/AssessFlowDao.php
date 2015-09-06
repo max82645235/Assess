@@ -327,7 +327,7 @@ class AssessFlowDao extends BaseDao{
         $finalScore = 0;
         if($attrRecord){
             foreach($attrRecord as $k=>$data){
-                $itemData = unserialize($data['itemData']);
+                $itemData = _unserialize($data['itemData']);
                 foreach($itemData as $i=>$item){
                     switch($data['attr_type']){
                         case 1://量化指标
@@ -543,7 +543,7 @@ class AssessFlowDao extends BaseDao{
         $itemRecord = $this->getUserAssessItemRecord($baseId,$userId);
         if($itemRecord){
             foreach($itemRecord as $record){
-                $itemData = unserialize($record['itemData']);
+                $itemData = _unserialize($record['itemData']);
                 $tmpArr = array();
                 $tmpArr['itemCtn'] = count($itemData);
                 foreach($itemData as $k=>$d){
@@ -642,7 +642,7 @@ class AssessFlowDao extends BaseDao{
             if(!$res['rpData']){
                 $excelData['rpData'] = '无';
             }else{
-                $rpData = unserialize($res['rpData']);
+                $rpData = _unserialize($res['rpData']);
                 if(isset($rpData['total'][1]['totalValue'])){
                     $rpType = ($rpData['total'][1]['totalValue']>0)?'奖励':'惩罚';
                     $excelData['rpData'].= "  金额({$rpType})：".$rpData['total'][1]['totalValue']."元"; //金额

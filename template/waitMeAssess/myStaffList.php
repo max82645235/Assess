@@ -162,7 +162,7 @@
                             </td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td>
-                                <?php $rpData = unserialize($data['rpData']);?>
+                                <?php $rpData = _unserialize($data['rpData']);?>
                                  <?php if($rpData){?>
                                      <?php if(isset($rpData['total'][1]['totalValue'])){?>
                                              <?=$rpData['total'][1]['totalValue']?>Ԫ</br>

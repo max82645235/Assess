@@ -17,7 +17,6 @@
         });
     });
 </script>
-
 <?php if($assessAttrType==1){?>
     <?php
         require_once BATH_PATH.'source/Dao/IndicatorDao.php';
@@ -39,13 +38,7 @@
             <th width="8%">汇总评分</th>
         </tr>
         <?php foreach($itemInfo as $item){?>
-            <?php $itemList = unserialize($item['itemData']);?>
-
-            <?php if($_GET['test']){
-                echo "<pre>";
-                print_r($item['itemData']);
-                echo "</pre>";
-            }?>
+            <?php $itemList = _unserialize($item['itemData']);?>
             <?php if($item['attr_type']==1){?>
                 <?php foreach($itemList as $key=>$data){?>
                     <tr <?=$widget->getDifferShow(1);?>>
@@ -131,9 +124,7 @@
     </table>
 <?php }elseif($assessAttrType==2){?>
 
-    <?php $itemList = unserialize($itemInfo[0]['itemData']);?>
-
-
+    <?php $itemList = _unserialize($itemInfo[0]['itemData']);?>
     <table cellpadding="0" cellspacing="0" width="100%" class="jbtab a">
         <tr>
             <th width="15%">考核类型</th>
@@ -199,7 +190,7 @@
 
 <?php }?>
 
-<?php $rpData = unserialize($relation['rpData']);?>
+<?php $rpData = _unserialize($relation['rpData']);?>
 <?php if($rpData['itemDataList']){?>
 <p class="tjtip">奖惩</p>
 <table cellpadding="0" cellspacing="0" width="100%" class="jbtab">
