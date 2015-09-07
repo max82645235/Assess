@@ -35,7 +35,7 @@
                                 <td  class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input   <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="job_qz" name="job_qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true}}" />&nbsp;%
+                                        <input   <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="job_qz" name="job_qz_old_<?=$key?>"  class="width40 j-notnull {validate:{totalQz:true,required:true}}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -134,7 +134,7 @@
                     <td  class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
-                            <input type="text"  style="margin-left: 32px;" value="" tagname="job_qz" name="job_qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true }}" />&nbsp;%
+                            <input type="text"  style="margin-left: 32px;" value="" tagname="job_qz" name="job_qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true,required:true}}" />&nbsp;%
                         </div>
                     </td>
                     <?php if(isset($scoreList['selfScore'])){?>

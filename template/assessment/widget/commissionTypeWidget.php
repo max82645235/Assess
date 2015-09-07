@@ -69,7 +69,7 @@
                             <tr class="yellow">
                                 <td >
                                     <em class="c-yel">*</em>
-                                    <select <?=$widget->disabled()?>  onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator_parent">
+                                    <select <?=$widget->disabled()?>  onchange="Assess.prototype.triggerIndicatorSelect($(this))"  name="indicator_parent" class="commission_indicator commission_indicator_parent">
                                         <?php if($indicatorList){?>
                                             <?php foreach($indicatorList as $k=>$data){?>
                                                 <option value="<?=$data['id']?>"
@@ -78,15 +78,15 @@
                                             <?php }?>
                                         <?php }?>
                                     </select>
-                                    <select  <?=$widget->disabled()?> name="indicator_child" class="commission_indicator_child" >
+                                    <select  <?=$widget->disabled()?> name="indicator_child" class="commission_indicator commission_indicator_child" >
                                     </select>
-                                    <input <?=$widget->disabled()?> type="hidden" name="indicator_child_hidden" class="indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
+                                    <input <?=$widget->disabled()?> type="hidden" name="indicator_child_hidden" class="commission_indicator indicator_parent_hidden" value="<?=$itemData['indicator_child']?>">
                                 </td>
 
                                 <td  class="sm_xsmbadd_td2">
                                     <div class="smfl">
                                         <span><em class="c-yel">*</em> 权重：</span>
-                                        <input  style="margin-left: 32px;" <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width105 j-notnull {validate:{totalQz:true }}" />&nbsp;%
+                                        <input  style="margin-left: 32px;" <?=$widget->disabled()?> type="text" value="<?=$itemData['qz']?>" tagname="qz" name="qz_old_<?=$key?>"  class="width105 j-notnull {validate:{totalQz:true,required:true}}" />&nbsp;%
                                     </div>
                                 </td>
                                 <?php if(isset($scoreList['selfScore'])){?>
@@ -177,14 +177,14 @@
                 <tr style="<?=$widget->getTrIsShow()?>" class="tpl_tr yellow">
                     <td >
                         <em class="c-yel">*</em>
-                        <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
+                        <select  <?=$widget->disabled()?> name="indicator_parent" class="commission_indicator commission_indicator_parent" onchange="Assess.prototype.triggerIndicatorSelect($(this))">
                             <?php if($indicatorList){?>
                                 <?php foreach($indicatorList as $k=>$data){?>
                                     <option value="<?=$data['id']?>"><?=$data['name']?></option>
                                 <?php }?>
                             <?php }?>
                         </select>
-                        <select name="indicator_child" class="commission_indicator_child">
+                        <select name="indicator_child" class="commission_indicator commission_indicator_child">
                             <option value="">请选择</option>
                         </select>
                     </td>
@@ -192,7 +192,7 @@
                     <td  class="sm_xsmbadd_td2">
                         <div class="smfl">
                             <span><em class="c-yel">*</em> 权重：</span>
-                            <input style="margin-left: 32px;" <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true}}" />&nbsp;%
+                            <input style="margin-left: 32px;" <?=$widget->disabled()?>  type="text" value="" tagname="qz" name="qz_new_[@]"  class="width105 j-notnull {validate:{totalQz:true,required:true}}" />&nbsp;%
                         </div>
                     </td>
                     <?php if(isset($scoreList['selfScore'])){?>

@@ -12,6 +12,7 @@ class IndicatorDao extends BaseDao{
         $sql = "select * from sa_indicator_type where status=1";
         $list = $this->db->GetAll($sql);
         if($list){
+            $retList[0] = array('id'=>'','name'=>'ÇëÑ¡Ôñ');
             foreach($list as $k=>$v){
                 $retList[] = array('id'=>$v['typeid'],'name'=>$v['type']);
             }

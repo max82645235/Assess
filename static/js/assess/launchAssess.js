@@ -400,9 +400,7 @@ Assess.prototype = {
         var ajax_cache = this.delTrCache.indicator_ajax_cache;
         ajax_cache.replaceChildSelect = function(jSelectDom,data){
             var opList = "";
-            if(indicator_parent==''){
-                 opList = "<option value=''>请选择</option>";
-            }
+            opList = "<option value=''>请选择</option>";
             var p_id = jSelectDom.parent().find('.indicator_parent_hidden').val();
             for(var i=0;i<data.length;i++){
                 var selected = (p_id==data[i].childId)?"selected=selected":"";
@@ -521,10 +519,10 @@ Assess.prototype = {
     },
     selectChildValid:function(select){
         if($(select).val()=='' && $(select).is(":visible")){
-            $(select).addClass('redBorder');
+            $(select).addClass('ui-state-error');
             return false;
         }else{
-            $(select).removeClass('redBorder');
+            $(select).removeClass('ui-state-error');
             return true;
         }
     },
@@ -536,14 +534,19 @@ Assess.prototype = {
                     return true;
                 }
             }
+
             if(Assess.prototype.selectChildValid(this)==false){
                 status = false;
             }
+
+            if(Assess.prototype.selectChildValid($(this).prev().get(0))==false){
+                status = false;
+            }
         });
-
-        if(this.getLeadDirectSetValue()==0){
-            status = this.validTrEmpty();
-
+        if(status){
+            if(this.getLeadDirectSetValue()==0){
+                status = this.validTrEmpty();
+            }
         }
         return status;
     },
@@ -620,15 +623,25 @@ Assess.prototype = {
     },
     //滚动到valid未通过的第一个元素
     scrollToErrorElement:function(){
+        var element = {};
         if($.myValidate.errorList.length!=0){
-            var element = $.myValidate.errorList[0].element;
-            var winScrollTop = $(window).scrollTop();
-            var eleTop = $(element).offset().top;
-            if(winScrollTop>0 && winScrollTop>eleTop){
-                $('html, body').animate({
-                    scrollTop: eleTop-60
-                }, 500);
-            }
+            element = $.myValidate.errorList[0].element;
+        }else if($("select.commission_indicator").hasClass('ui-state-error')){
+            $("select.commission_indicator").each(function(){
+                if($(this).hasClass('ui-state-error')){
+                    element = this;
+                    return false;
+                }
+            });
+        }else{
+            return false;
+        }
+        var winScrollTop = $(window).scrollTop();
+        var eleTop = $(element).offset().top;
+        if(winScrollTop>0 && winScrollTop>eleTop){
+            $('html, body').animate({
+                scrollTop: eleTop-60
+            }, 500);
         }
     },
     //获取预计得分信息

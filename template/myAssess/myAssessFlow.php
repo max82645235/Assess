@@ -55,7 +55,7 @@
                             return false;
                         }
 
-                        if(!AssessInstance.validTrEmpty()){
+                        if(!AssessInstance.submitSelectValid()){
                             return false;
                         }
                         var formData = {
@@ -91,7 +91,7 @@
                         return false;
                     }
 
-                    if(!AssessInstance.validTrEmpty()){
+                    if(!AssessInstance.submitSelectValid()){
                         return false;
                     }
 
