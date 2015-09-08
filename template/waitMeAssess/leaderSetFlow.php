@@ -47,16 +47,12 @@
                 AssessInstance.addRpItem();
             });
 
-            $('#saveBtn').click(function(){
+            $('#saveBtn,#freeBtn').click(function(){
                 if(!AssessInstance.validAssessType()){
                     return false;
                 }
 
-                if(!AssessInstance.validTrEmpty()){
-                    return false;
-                }
-
-                if($("#sub_form").valid()){
+                if($("#sub_form").valid() && AssessInstance.submitSelectValid()){
                     var formData = {
                         m:'myassessment',
                         a:'waitMeAssess',
@@ -68,6 +64,36 @@
                     formData.userId = $("#hidden_user_id").val();
                     formData.rpItem = AssessInstance.getRpItems();
                     formData.plupFileList = AssessInstance.getPlugList();
+                    if($(this).attr('id')=='freeBtn'){
+                        formData.status = 'free';
+                        formData.freeFlowUserId = $("#hidden_free_flow_userId").val();
+                        formData.description = $("#free_description").val();
+                        var username =   $("#free_user_name p").text();
+                        if(formData.freeFlowUserId!=''){
+                            art.dialog.confirm(
+                                "您确定转交给<font style='color: red;'>"+username+"</font>审核么？",
+                                function(){
+                                    $.ajax({
+                                        type:'post',
+                                        url:'/salary/index.php',
+                                        data:formData,
+                                        dataType:'json',
+                                        success:function(retData){
+                                            if(retData.status=='success'){
+                                                art.dialog({lock:true});
+                                                art.dialog.tips('转交成功',2);
+                                                var url = "<?=P_SYSPATH."index.php?m=myassessment&a=freeFlow&act=freeFlowList"?>";
+                                                AssessInstance.jump(url,2000);
+                                            }
+                                        }
+                                    });
+                                }
+                            );
+                        }else{
+                            art.dialog.tips('请先在[自由流]模块中选择您需要转交的审核人！',2);
+                        }
+                        return false;
+                    }
                     $.ajax({
                         type:'post',
                         url:'/salary/index.php',
@@ -128,14 +154,12 @@
                      valid = $("#sub_form").valid();
                 }
 
-                if(valid){
+                if(valid && AssessInstance.submitSelectValid()){
                     if($(this).attr('sp')!=1 && !AssessInstance.validAssessType()){
                         return false;
                     }
 
-                    if(!AssessInstance.validTrEmpty()){
-                        return false;
-                    }
+
 
                     var status = $(this).attr('tag');
                     var formData = {
@@ -260,6 +284,9 @@
                 <!--对比记录模块-->
                 <?=$assessAttrWidget->compareHistory($record_info);?>
 
+
+
+                <!--具体考核节点数据-->
                 <div class="attr_content">
                     <!--任务/指标类-->
                     <?=$assessAttrWidget->renderAttr($record_info['item'],1,$scoreList,$mValid)?>
@@ -271,11 +298,89 @@
                     <?=$assessAttrWidget->renderAttr($record_info['item'],3,$scoreList,$mValid)?>
                 </div>
                 <?php if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessRealLeadView){?>
+                    <!--奖惩-->
                     <?=$assessAttrWidget->rewardPunish($record_info['relation'])?>
+
+                    <!--附件上传-->
                     <?=$assessAttrWidget->pluploadPlugin($record_info['plupFileList'])?>
                 <?php }?>
 
+                <!--自由流模块-->
+                <div class="free_flow_module" style="border: 1px solid #aaaaaa;border-collapse:collapse;">
+                    <div class="rtop">
+                        <p class="icon1"><b class="sm_blue">自由流</b></p>
+                    </div>
+                    <?=$assessAttrWidget->freeFlowListArea($record_info['relation']['rid']);?>
+                    <?php if($record_info['relation']['user_assess_status']==5){?>
+                        <div class="set_free_flow">
+                            <table  cellpadding="0" cellspacing="0"  width="100%">
+                                <tbody>
+                                <tr>
+                                    <td width="90" align="right">输入匹配：</td>
+                                    <td>
+                                        <input type="text" value="" placeholder="请输入" name="free_username" id="free_username" class="width190" autocomplete="off">
+                                        <input type="hidden" id="hidden_free_flow_userId" value="">
+                                        <input type="button" class="btn48" value="清除" id="free_clear_btn" name="free_clear_btn"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right">转交审核人：</td>
+                                    <td id="free_user_name">
+                                        <p class="tjtip"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right">签办反馈意见：</td>
+                                    <td>
+                                        <textarea name='free_description' id="free_description" style="width: 600px;height: 150px;"></textarea>
+                                    </td>
 
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <script>
+                            $(function(){
+                                $("#free_clear_btn").click(function(){
+                                    $("#free_username").val('');
+                                    $("#hidden_free_flow_userId").val('');
+                                    $("#free_user_name p").text('');
+                                });
+
+                                //转交审核人模糊搜索
+                                $("#free_username").autocomplete({
+                                    source: function( request, response ) {
+                                        var s =   $("#free_username").val();
+                                        $("#free_username").addClass('ui-autocomplete-loading');
+                                        $.ajax({
+                                            type:'get',
+                                            url: '<?=P_SYSPATH."index.php?m=unlogin&a=assessUnlogin&act=autoUserName"?>',
+                                            dataType: "json",
+                                            data:{
+                                                s:s
+                                            },
+                                            success:  function( data ) {
+                                                $("#free_username").removeClass('ui-autocomplete-loading');
+                                                response($.map( data, function( item ) {
+                                                    var retList = {id:item.id,value:item.value,label:item.label};
+                                                    return retList;
+                                                }));
+                                            }
+                                        });
+                                    },
+                                    minLength: 1,
+                                    select:  function( event, ui ) {
+                                        var t =  ui.item.value.split('_');
+                                        var index = t.length-1;
+                                        var username = t[index];
+                                        $("#hidden_free_flow_userId").val(ui.item.id);
+                                        $("#free_user_name p").text(username);
+                                    }
+                                });
+                            });
+                        </script>
+                    <?php }?>
+                </div>
             </div>
             <div class="kctjbot">
                 <input type="button" name="saveBtn" class="bluebtn" value="保存" id="saveBtn" tag="save" />
@@ -284,9 +389,16 @@
                     <input name="startBtn"  type="button" class="bluebtn" value="开始考核" id="startBtn" tag="start" />
                 <?php }?>
 
+                <?php if($record_info['relation']['user_assess_status']==5){?>
+                    <input name="saveBtn" type="button" class="bluebtn" value="转交下一步" id="freeBtn" tag="free"/>
+                <?php }?>
+
+
                 <?php if(in_array($record_info['relation']['user_assess_status'],array(2,5))){?>
                     <input name="nextBtn"   type="button" class="bluebtn" value="审核通过" id="nextBtn" tag="next" />
-                    <input  name="backBtn"  type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" sp="3"/>
+                    <?php if(!FreeFlowDao::validIsMyFlowing($record_info['relation']['base_id'],$record_info['relation']['userId'])){?>
+                         <input  name="backBtn"  type="button" class="bluebtn" value="驳回" id="backBtn" tag="back" sp="3"/>
+                    <?php }?>
                 <?php }?>
                 <input type="button" name="back" class="btn67" value="返回"  onclick="history.go(-1);"/>
             </div>

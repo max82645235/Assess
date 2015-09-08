@@ -155,7 +155,8 @@ class AssessFlowDao extends BaseDao{
 
         $resultList['staffListSql'] = "select [*] from sa_user as a
                 inner join sa_assess_user_relation as b on a.userId=b.userId and b.base_id={$base_Id} $addSql
-                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId {$statusSql}";
+                inner join sa_user_relation as c on c.super_userId={$curUserId} and c.low_userId = a.userId {$statusSql}
+                left join sa_free_flow as d on b.rid=d.rid and d.isNew=1";
         $resultList['pageConditionUrl'] = $pageConditionUrl;
         return $resultList;
 

@@ -165,10 +165,11 @@
                                     <span>
                                              <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
+                                    <?php if($data['copy_id'] ){?>
+                                        <a href="javascript:;" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt" style="color: #20B2AA;">—ÿ”√</a>
+                                    <?php }?>
                                 <?php }?>
-                                <?php if($data['copy_id']){?>
-                                <a href="javascript:;" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt" style="color: #20B2AA;">—ÿ”√</a>
-                                <?php }?>
+
                             </td>
                         </tr>
                     <?php }?>

@@ -1,6 +1,6 @@
 <?php
-$diffData = unserialize($record_info['relation']['diffData']);
-$historyData = unserialize($diffData['history']);
+$diffData = _unserialize($record_info['relation']['diffData']);
+$historyData = _unserialize($diffData['history']);
 $record_info['relation']['diffData'] = $diffData;
 ?>
 <?php if(!empty($record_info['relation']['diffData']) && $diffData['same']==0){?>

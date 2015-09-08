@@ -112,3 +112,13 @@ if($_REQUEST['act']== 'downFile'){
     die();
 }
 
+
+//¿¼ºËÈËÄ£ºý²éÑ¯
+if($_REQUEST['act']=='autoUserName'){
+    require_once BATH_PATH . 'source/Dao/AssessDao.php';
+    $assessDao = new AssessDao();
+    $userList = $assessDao->getAutoUserList($_REQUEST);
+    echo json_encode($userList);
+    die();
+}
+

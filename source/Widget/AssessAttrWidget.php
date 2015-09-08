@@ -181,4 +181,14 @@ class AssessAttrWidget{
         $this->tpl->set_data(array('plupFileList'=>$plupFileList));
         $this->tpl->render();
     }
+
+    //自由流列表区
+    public function freeFlowListArea($rid){
+        require_once BATH_PATH.'source/Dao/FreeFlowDao.php';
+        $freeFlowList = FreeFlowDao::getFreeFlowList($rid);
+        $renderPath = BATH_PATH."template/assessment/widget/freeFlowListArea.php";
+        $this->tpl->set_tpl($renderPath);
+        $this->tpl->set_data(array('freeFlowList'=>$freeFlowList));
+        $this->tpl->render();
+    }
 }

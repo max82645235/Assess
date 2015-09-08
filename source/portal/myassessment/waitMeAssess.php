@@ -58,7 +58,7 @@ if($_REQUEST['act']=='myStaffList'){
     $offset = ($page-1)*$limit;
     $page_nav = page($count,$limit,$page,$pageurl);
     //获取表格查询结果
-    $findSql = " a.*,b.user_assess_status,b.base_id,b.score,b.rejectStatus,b.rpData";
+    $findSql = " a.*,b.user_assess_status,b.base_id,b.score,b.rejectStatus,b.rpData,d.userId as freeFlowUserId";
     $findSql = str_replace('[*]',$findSql,$getStaffSql." limit {$offset},{$limit}");
     $tableData = $db->GetAll($findSql);
     $tpl = new NewTpl('waitMeAssess/myStaffList.php',array(
@@ -76,13 +76,15 @@ if($_REQUEST['act']=='myStaffList'){
 if($_REQUEST['act']=='leaderSetFlow'){
     $userId = $_REQUEST['userId'];
     $base_id = $_REQUEST['base_id'];
-    if(!leaderAuth($userId)){
+    require_once BATH_PATH.'source/Dao/FreeFlowDao.php';
+    //当不属于自由流,又不属领导审核时，异常抛出
+    if(!FreeFlowDao::validIsMyFlowing($base_id,$userId) && !leaderAuth($userId)){
         throw new Exception('no power to visit this page');
     }
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $mValid = new LeaderValid($base_id,$userId);
-    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next','back','start'))){
+    if(isset($_REQUEST['status']) && in_array($_REQUEST['status'],array('save','next','back','start','free'))){
         $attrRecord = array();
         $attrRecordType = array_flip(AssessDao::$AttrRecordTypeMaps);
         foreach($_REQUEST['attrData']['fromData']['handlerData'] as $key=>$data){
@@ -152,6 +154,13 @@ if($_REQUEST['act']=='leaderSetFlow'){
                     $assessDao->plugFileSave($_REQUEST['plupFileList'],$userRelationRecord['rid']);
                 }
 
+                //自由流
+                if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealLeadView){
+                    if($_REQUEST['status']=='free' && $_REQUEST['freeFlowUserId']){
+                        FreeFlowDao::setNewFlowRecord($userRelationRecord['rid'],$_REQUEST);
+                    }
+                }
+
                 if($userRelationRecord['user_assess_status']==AssessFlowDao::AssessRealSuccess){
                     $assessDao->checkAssessAllUserSuccessStatus($base_id);
                     //如果为量化指标类型 需要生成excel文件
@@ -175,6 +184,9 @@ if($_REQUEST['act']=='leaderSetFlow'){
         die();
     }else{
         $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);
+        if(!$record_info['relation']){
+            throw new Exception('此人员考核不存在！');
+        }
         $assessFlowDao->validLeaderSetFlow($record_info['relation']['user_assess_status']);
         if($record_info['relation']['user_assess_status']==AssessFlowDao::AssessRealLeadView){
             $record_info['plupFileList'] = $assessFlowDao->getPlugFileList($record_info['relation']['rid']);
@@ -267,11 +279,12 @@ if($_REQUEST['act']=='changeCheckingStatus'){
 
 //hr查看具体成员考核进程
 if($_REQUEST['act']=='leadViewStaffDetail'){
+    require_once BATH_PATH.'source/Dao/FreeFlowDao.php';
     $assessDao = new AssessDao();
     $assessFlowDao = new AssessFlowDao();
     $base_id = $_REQUEST['base_id'];
     $userId = $_REQUEST['userId'];
-    if(!leaderAuth($userId)){
+    if(!FreeFlowDao::validIsMyFlowing($base_id,$userId) && !leaderAuth($userId)){
         throw new Exception('no power to visit this page');
     }
     $record_info = $assessFlowDao->getUserAssessRecord($base_id,$userId);

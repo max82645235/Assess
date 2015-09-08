@@ -44,9 +44,10 @@ $cfg['POWER'] = array(
     ),
     'myassessment' => array(
         'name' => "我的考核",
-        'detail' => array('waitMeAssess' => '待我考核','myAssess' => '我的考核'),
+        'detail' => array('waitMeAssess' => '待我考核','myAssess' => '我的考核','freeFlow'=>'我的自由流'),
         'waitMeAssess'=>array('waitMeList' => '考核审核列表','myStaffList'=>'考核员工列表','leaderSetFlow'=>"设置考核流程",'singleAssessDiySet'=>'员工自设(单)','mulAssessDiySet'=>'员工自设（多）','viewFlow'=>'查看','changeCheckingStatus'=>'状态变更','leadViewStaffDetail'=>'查看员工考核流程','mulCopyCreateAssess'=>'批量复制待我创建','leadZipAssessPackage'=>'考核导出'),
         'myAssess' => array('myAssessList'=>'我的列表','myAssessFlow' => '提审','staffViewStaffDetail'=>'查看','staffZipAssessPackage'=>'考核导出'),
+        'freeFlow'=>array('自由流列表')
     ),
     'report' => array(
         'name' => "报表统计",

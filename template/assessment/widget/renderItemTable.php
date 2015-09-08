@@ -2,6 +2,7 @@
     $totalScore = 0;
     if(!function_exists('spanFullStr')){
         function spanFullStr($str){
+            $str = str_replace('"',"'",$str);
             return "<span class='detailSpan' full=\"".$str."\" style=\"cursor:pointer;\">[²é¿´]</span>";
         }
     }
@@ -187,7 +188,6 @@
             <td><?=($itemList[0]['tc_name'] &&$itemList[0]['finishCash'])?$itemList[0]['tc_name']*$itemList[0]['finishCash']/100:''?></td>
         </tr>
     </table>
-
 <?php }?>
 
 <?php $rpData = _unserialize($relation['rpData']);?>

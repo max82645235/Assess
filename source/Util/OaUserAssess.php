@@ -44,10 +44,10 @@ class OaUserAssess{
         if(!$this->getErrorMsg()){
             $this->assessInfo['staff'] = $this->getStaffAssessInfo();
             $this->assessInfo['lead'] = $this->getLeadAssessInfo();
+            $this->assessInfo['freeFlow'] = $this->getFreeFlowInfo();
         }else{
             $this->assessInfo['errorMsg'] = $this->getErrorMsg();
         }
-
         return $this->assessInfo;
     }
 
@@ -62,7 +62,7 @@ class OaUserAssess{
         $cnRes = array();
         if($res){
             foreach($res as $key=>$data){
-                $cnRes[$key]['baseName'] = "(".$data['assess_year']."-".$data['assess_month'].")".$data['base_name'];
+                $cnRes[$key]['baseName'] = $data['base_name'];
                 $cnRes[$key]['assessStatusCn'] = AssessFlowDao::$UserAssessStatusByStaff[$data['user_assess_status']];
                 $cnRes[$key]['link'] = "?m=myassessment&a=myAssess&act=myAssessList&user_assess_status={$data['user_assess_status']}&base_name=".urlencode($data['base_name']);
                 if($data['rejectStatus']>0){
@@ -87,10 +87,16 @@ class OaUserAssess{
         }
         $userIdInCond = implode(',',$lowList);
         $assessStatusMapIn = '0,2,5'; //待我创建计划 ，待我审核计划,待我评估确认
-        $sql = "select a.userId,b.username,a.user_assess_status,a.rejectStatus,a.base_Id,c.base_name,c.assess_year,c.assess_month from sa_assess_user_relation as a
-                inner join sa_user as b on a.userId=b.userId and a.userId in ({$userIdInCond}) and a.user_assess_status in ({$assessStatusMapIn}) inner join sa_assess_base as c on a.base_id=c.base_id and c.base_status>0 order by a.base_id desc";
+        $sql = "select a.userId,b.username,a.user_assess_status,a.rejectStatus,a.base_Id,c.base_name,c.assess_year,c.assess_month,d.userId as freeFlowUserId from sa_assess_user_relation as a
+                inner join sa_user as b on a.userId=b.userId and a.userId in ({$userIdInCond}) and a.user_assess_status in ({$assessStatusMapIn})
+                inner join sa_assess_base as c on a.base_id=c.base_id and c.base_status>0
+                left join sa_free_flow as d on a.rid=d.rid and d.isNew = 1 order by a.base_id desc";
         $relationList = $this->db->getAll($sql);
         foreach($relationList as $relationData){
+            //过滤领导考核中 不指向当前考核人的自由流
+            if($relationData['user_assess_status']==5 && $relationData['freeFlowUserId'] && $relationData['freeFlowUserId']!=$userId){
+                continue;
+            }
             $rejectCn = '';
             if($relationData['rejectStatus']>0){
                 //增加驳回中文状态
@@ -98,7 +104,7 @@ class OaUserAssess{
             }
             $baseId = $relationData['base_Id'];
             $leadInfo[$baseId][] = array(
-                'baseName'=>"(".$relationData['assess_year']."-".$relationData['assess_month'].")".$relationData['base_name'].$rejectCn,
+                'baseName'=>$relationData['base_name'].$rejectCn,
                 'userName'=>$relationData['username'],
                 'assessStatusCn'=> AssessFlowDao::$UserAssessStatusByLeader[$relationData['user_assess_status']],
                 'link'=>"?m=myassessment&a=waitMeAssess&act=myStaffList&base_id={$baseId}&username=".urlencode($relationData['username'])
@@ -107,5 +113,26 @@ class OaUserAssess{
         }
 
         return $leadInfo;
+    }
+
+    //获取自由流考核信息项
+    public function getFreeFlowInfo(){
+        $userId = $this->userRecord['userId'];
+        $sql = "select b.user_assess_status,b.rejectStatus,b.base_id,b.userId,
+                        c.assess_year,c.assess_month,c.base_name
+                from sa_free_flow as a
+                inner join sa_assess_user_relation as b
+                  on a.isNew=1 and a.userId=$userId and  a.base_id=b.base_id  and b.user_assess_status=5
+                inner join sa_assess_base as c on b.base_id=c.base_id ";
+        $res = $this->db->getAll($sql);
+        $freeRes = array();
+        if($res){
+            foreach($res as $key=>$data){
+                $freeRes[$key]['baseName'] = $data['base_name'];
+                $freeRes[$key]['assessStatusCn'] = "待考核人评估确认（自由流）";
+                $freeRes[$key]['link'] = "?m=myassessment&a=freeFlow&act=freeFlowList&base_name=".urlencode($data['base_name']);
+            }
+        }
+        return $freeRes;
     }
 }

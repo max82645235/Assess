@@ -556,10 +556,21 @@ class AssessDao extends BaseDao{
         $comp_dept = $params['cid'];
         $third = $params['tid'];
         if($username){
-            $sql = "select userId,username,city,dept from sa_user where tixi={$tixi} and comp_dept={$comp_dept} and (username like '%{$username}%' or uid like '%{$username}%' )";
+            $sql = "select userId,username,city,dept from sa_user where 1=1";
+            if($tixi){
+                $sql.= " and tixi={$tixi}";
+            }
+
+            if($comp_dept){
+                $sql.= " and comp_dept={$comp_dept}";
+            }
+
             if($third){
                 $sql.= " and did={$third}";
             }
+
+            $sql.= " and (username like '%{$username}%' or uid like '%{$username}%' )";
+
             $userList = $this->db->GetAll($sql);
             if($userList){
                 foreach($userList as $k=>$data){

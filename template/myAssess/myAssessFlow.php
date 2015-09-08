@@ -50,14 +50,11 @@
 
             <?php if($record_info['relation']['user_assess_status']!=4){?>
                 $('#saveBtn').click(function(){
-                    if($("#sub_form").valid()){
+                    if($("#sub_form").valid() && AssessInstance.submitSelectValid()){
                         if(!AssessInstance.validAssessType()){
                             return false;
                         }
 
-                        if(!AssessInstance.submitSelectValid()){
-                            return false;
-                        }
                         var formData = {
                             m:'myassessment',
                             a:'myAssess',
@@ -85,15 +82,12 @@
                 });
             <?php }?>
             $("#nextBtn").click(function(){
-                if($("#sub_form").valid()){
+                if($("#sub_form").valid() && AssessInstance.submitSelectValid()){
                     var confirmMsg = '您确定提交考核审核申请么';
                     if(!AssessInstance.validAssessType()){
                         return false;
                     }
 
-                    if(!AssessInstance.submitSelectValid()){
-                        return false;
-                    }
 
                     var formData = {
                         m:'myassessment',

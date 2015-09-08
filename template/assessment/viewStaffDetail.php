@@ -173,12 +173,10 @@
                      $compareHtml = $assessAttrWidget->compareHistory($record_info);
                      echo $compareHtml;
                 ?>
-                <?php if($_GET['test1']){
-                    echo "<pre>";
-                    print_r($record_info);
-                    echo "</pre>";
-                }?>
                 <div class="attr_content">
+                    <div class="rtop">
+                        <p class="icon1"><b class="sm_blue">考核数据区</b></p>
+                    </div>
                     <!--考核属性表格-->
                     <?php
                         if($compareHtml==''){
@@ -191,6 +189,13 @@
                     <?php }?>
                 </div>
             </div>
+            <div class="free_flow_module pad25" style="margin-top:20px;border-collapse:collapse;">
+                <div class="rtop">
+                    <p class="icon1"><b class="sm_blue">自由流</b></p>
+                </div>
+                <?=$assessAttrWidget->freeFlowListArea($record_info['relation']['rid']);?>
+            </div>
+
             <div class="kctjbot">
                 <?php if($record_info['relation']['user_assess_status']>=AssessFlowDao::AssessRealSuccess && isset($auth) && $auth->setIsMy(true)->validIsAuth('hrAssessReject')){?>
                     <input type="button" id="hrRejectBtn" class="bluebtn" value="审查驳回"  />

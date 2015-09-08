@@ -178,9 +178,21 @@
                                     <a  class="bjwrt" onclick="Assess.prototype.copyUserAssess(<?=$data['base_id']?>,<?=$data['userId']?>)" >复制</a>
                                 <?php }?>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <span>
-                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color:<?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
+                                    <?php
+                                        $flowStatus = true;
+                                        //如果为终审 且 自由流 且 不是当前领导审核时，审核按钮不做渲染
+                                        if($data['user_assess_status']==AssessFlowDao::AssessRealLeadView && $data['freeFlowUserId'] && $data['freeFlowUserId']!=getUserId()){
+                                            $flowStatus = false;
+                                        }
+                                    ?>
+
+                                    <?php if($flowStatus){?>
+                                        <span>
+                                             <a href="?m=myassessment&a=waitMeAssess&act=leaderSetFlow&userId=<?=$data['userId']?>&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color:<?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>">
+                                                 <?=$btnArr[$data['user_assess_status']]?>
+                                             </a>
                                         </span>
+                                    <?php }?>
                                 <?php }?>
 
                                 <?php if($data['user_assess_status']==AssessFlowDao::AssessChecking && $assessBaseRecord['lead_direct_set_status']==1){?>
