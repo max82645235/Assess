@@ -284,8 +284,8 @@ function tbl_check_auth($m,$a,$act,$tbl,$inajax=0,$id=0,$authfield="deal_userid"
 
 function getUserId(){
     if(defined("LOCAL_EV")){
-        //return 381;
-        return 22;
+        return 381;
+        //return 22;
         //return 877;
     }
     return (isset($_SESSION[DB_PREFIX.'user_id']))?$_SESSION[DB_PREFIX.'user_id']:'';
