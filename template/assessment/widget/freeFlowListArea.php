@@ -15,7 +15,7 @@
                         <td><?=$data['username']."(".$data['card_no'].")"?></td>
                         <td><?=$data['deptlist']?></td>
                         <td>
-                            开始于：<?=$data['create_time']?></br>
+                            开始于：<?=($data['create_time']!='0000-00-00 00:00:00')?$data['over_time']:'-';?></br>
                             本步骤结束于：<?=($data['over_time']!='0000-00-00 00:00:00')?$data['over_time']:'审核中...';?>
                         </td>
                         <td>

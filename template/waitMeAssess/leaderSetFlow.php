@@ -316,7 +316,7 @@
                             <table  cellpadding="0" cellspacing="0"  width="100%">
                                 <tbody>
                                 <tr>
-                                    <td width="90" align="right">输入匹配：</td>
+                                    <td width="90" align="right">转交至：</td>
                                     <td>
                                         <input type="text" value="" placeholder="请输入" name="free_username" id="free_username" class="width190" autocomplete="off">
                                         <input type="hidden" id="hidden_free_flow_userId" value="">
@@ -332,7 +332,7 @@
                                 <tr>
                                     <td align="right">签办反馈意见：</td>
                                     <td>
-                                        <textarea name='free_description' id="free_description" style="width: 600px;height: 150px;"></textarea>
+                                        <textarea name='free_description' id="free_description" class="{validate:{freeFlowText:true}}" style="width: 600px;height: 150px;"></textarea>
                                     </td>
 
                                 </tr>

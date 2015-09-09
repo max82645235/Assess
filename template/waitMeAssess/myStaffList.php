@@ -136,7 +136,7 @@
                     </th>
                     <th  width="100"  style="text-align: center;">被考核人</th>
                     <th style="text-align: center;">部门</th>
-                    <th width="150" style="text-align: center;">流程状态</th>
+                    <th width="200" style="text-align: center;">流程状态</th>
                     <th width="150" style="text-align: center;">绩效评分</th>
                     <th width="150" style="text-align: center;">奖惩</th>
                     <th  width="150" style="text-align: center;">操作</th>
@@ -150,6 +150,14 @@
                 ?>
                 <?php if($tableData){?>
                     <?php foreach($tableData as $k=>$data){?>
+                        <?php
+                            $flowStatus = true;
+                            //如果为终审 且 自由流 且 不是当前领导审核时，审核按钮不做渲染
+                            if($data['user_assess_status']==AssessFlowDao::AssessRealLeadView && $data['freeFlowUserId'] && $data['freeFlowUserId']!=getUserId()){
+                                $flowStatus = false;
+                            }
+                        ?>
+
                         <tr class="<?=($k%2)?'bgfff':'bgf0';?>" assess_status="<?=$data['user_assess_status']?>">
                             <td>
                                 <input type="checkbox" class="table_item_checkbox" tag="<?=$data['userId']?>">
@@ -159,6 +167,7 @@
                             <td>
                                 <?=AssessFlowDao::$UserAssessStatusByLeader[$data['user_assess_status']]?>
                                 <?=AssessFlowDao::rejectTableMarkForLead($data['rejectStatus']);?>
+                                <?=!$flowStatus?"<span style='color: red'>[自由流]</span>":'';?>
                             </td>
                             <td><?=($data['score'])?$data['score']:'';?></td>
                             <td>
@@ -178,13 +187,7 @@
                                     <a  class="bjwrt" onclick="Assess.prototype.copyUserAssess(<?=$data['base_id']?>,<?=$data['userId']?>)" >复制</a>
                                 <?php }?>
                                 <?php if(array_key_exists($data['user_assess_status'],$btnArr)){?>
-                                    <?php
-                                        $flowStatus = true;
-                                        //如果为终审 且 自由流 且 不是当前领导审核时，审核按钮不做渲染
-                                        if($data['user_assess_status']==AssessFlowDao::AssessRealLeadView && $data['freeFlowUserId'] && $data['freeFlowUserId']!=getUserId()){
-                                            $flowStatus = false;
-                                        }
-                                    ?>
+
 
                                     <?php if($flowStatus){?>
                                         <span>

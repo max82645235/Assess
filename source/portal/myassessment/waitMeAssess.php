@@ -175,6 +175,9 @@ if($_REQUEST['act']=='leaderSetFlow'){
                             AssessExcel::createExcel($base_id,$userId);
                         }
                     }
+
+                    //触发自由流更新
+                    FreeFlowDao::triggerOverFlow($userRelationRecord['rid']);
                 }
             }
         }catch (Exception $e){

@@ -41,6 +41,13 @@ class FreeFlowDao extends BaseDao{
         return $res;
     }
 
+    static function triggerOverFlow($rid){
+        global $db;
+        $userId = getUserId();
+        $sql = "update sa_free_flow set isNew=0,over_time=now() where rid=$rid and userId=$userId and isNew=1";
+        $db->Execute($sql);
+    }
+
     static function setNewFlowRecord($rid,$requestParam){
         global $db;
         $userId = $requestParam['freeFlowUserId'];
@@ -48,7 +55,7 @@ class FreeFlowDao extends BaseDao{
         $curUserId = getUserId();
         $dateTime = date("Y-m-d H:i:s");
         if(!self::getFreeFlowList($rid)){
-            $sql = "insert into sa_free_flow (rid,userId,isNew,create_time) values($rid,$curUserId,0,'$dateTime')";
+            $sql = "insert into sa_free_flow (rid,userId,isNew,over_time) values($rid,$curUserId,0,'$dateTime')";
             $db->Execute($sql);
         }else{
             //将当前自由流状态isNew修改为0

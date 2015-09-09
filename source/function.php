@@ -317,7 +317,7 @@ function checkUserAuthority($filterActs=array()){
     $auth = new Auth();
     $auth->addAuthItem($act,array('m'=>$m,'a'=>$a,'act'=>$act));
     if(!$auth->setIsMy(true)->validIsAuth($act)){
-        echo "读不起,您没有权限访问该页面！";
+        echo "对不起,您没有权限访问该页面！";
         die();
     }
     loadThirdBus();

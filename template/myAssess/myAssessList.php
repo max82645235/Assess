@@ -17,7 +17,7 @@
     $(function(){
         $.extend({
             usePrevData:function(base_id){
-                art.dialog.confirm('沿用上一期数据会导致当前考核数据被覆盖，您确定此操作么？',function(){
+                art.dialog.confirm('复制上一期数据会导致当前考核数据被覆盖，您确定此操作么？',function(){
                     var formData = {
                         m:'myassessment',
                         a:'myAssess',
@@ -166,7 +166,7 @@
                                              <a href="?m=myassessment&a=myAssess&act=myAssessFlow&base_id=<?=$data['base_id'].$pageConditionUrl?>" class="bjwrt" style="color: <?=AssessFlowDao::$UserAssessFontColorMaps[$data['user_assess_status']]?>"><?=$btnArr[$data['user_assess_status']]?></a>
                                         </span>
                                     <?php if($data['copy_id'] ){?>
-                                        <a href="javascript:;" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt" style="color: #20B2AA;">沿用</a>
+                                        <a href="javascript:;" onclick="$.usePrevData(<?=$data['base_id']?>);" class="bjwrt" style="color: #20B2AA;">复制</a>
                                     <?php }?>
                                 <?php }?>
 

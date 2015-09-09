@@ -72,6 +72,13 @@ $(function(){
         return (value>=0 && value<=10000000 && re.test(value));
     },'请输出合适的金额');
 
+    $.validator.addMethod('freeFlowText',function(value,element,arg){
+       if($("#hidden_free_flow_userId").val()!='' && value==''){
+           return false;
+       }
+        return true;
+    },'请输出签办反馈意见');
+
 
     $.validator.addMethod('job_name',function(value,element,arg){
         if(value==''){
